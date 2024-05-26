@@ -18,9 +18,9 @@
 
 exprptr_t Expression::operator*(exprptr_t b)
 {
-    if (typeid(*this) != typeid(Add) && typeid(*b.get()) == typeid(Add))
+    if (!isinstance<Add>(this) && isinstance<Add>(b))
         return b * *this;
-    else if (typeid(*this) != typeid(Pow) && typeid(*b.get()) == typeid(Pow))
+    else if (!isinstance<Pow>(this) && isinstance<Pow>(b))
         return b * *this;
     return exprptr_t(new Mul({this->copyToExprPtr(), b}));
 }

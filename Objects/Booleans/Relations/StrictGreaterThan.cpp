@@ -2,6 +2,7 @@
 #include "LessThan.h"
 #include "Equality.h"
 #include "GreaterThan.h"
+#include "Common.h"
 
 boolptr_t StrictGreaterThan::operator||(Equality b)
 {
@@ -12,7 +13,7 @@ boolptr_t StrictGreaterThan::operator||(Equality b)
 
 boolptr_t StrictGreaterThan::operator||(boolptr_t b)
 {
-    if (typeid(*b.get()) == typeid(Equality))
+    if (isinstance<Equality>(b))
         return (*this) || *(Equality *)b.get();
     return Relation::operator||(b);
 }

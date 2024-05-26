@@ -1,4 +1,5 @@
 #include "Relation.h"
+#include "Common.h"
 
 prettystring_t Relation::toPrettyString()
 {

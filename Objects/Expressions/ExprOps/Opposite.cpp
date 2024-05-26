@@ -1,11 +1,12 @@
 #include "Opposite.h"
+#include "Common.h"
 
 exprptr_t Opposite::opposite()
 {
     expropargs_t result;
     for (size_t i = 0; i < this->args.size(); i++)
     {
-        if (typeid(*this->args[i].get()) == typeid(Integer))
+        if (isinstance<Integer>(this->args[i]))
         {
             Integer a = *(Integer *)this->args[i].get();
             if (a == -1)

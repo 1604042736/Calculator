@@ -5,6 +5,7 @@
 #include "Float.h"
 #include "Rational.h"
 #include "Pow.h"
+#include "Common.h"
 
 Float::Float(Integer significand, Integer exponent)
 {
@@ -225,93 +226,93 @@ exprptr_t Float::reciprocal()
 
 exprptr_t Float::operator+(exprptr_t _1)
 {
-    if (typeid(*_1.get()) == typeid(Rational))
+    if (isinstance<Rational>(_1))
         return exprptr_t(new Rational((*this) + *(Rational *)_1.get()));
-    if (typeid(*_1.get()) == typeid(Integer))
+    if (isinstance<Integer>(_1))
         return exprptr_t(new Float((*this) + *(Integer *)_1.get()));
-    if (typeid(*_1.get()) == typeid(Float))
+    if (isinstance<Float>(_1))
         return exprptr_t(new Float((*this) + *(Float *)_1.get()));
     return Number::operator+(_1);
 }
 
 exprptr_t Float::operator-(exprptr_t _1)
 {
-    if (typeid(*_1.get()) == typeid(Rational))
+    if (isinstance<Rational>(_1))
         return exprptr_t(new Rational((*this) - *(Rational *)_1.get()));
-    if (typeid(*_1.get()) == typeid(Integer))
+    if (isinstance<Integer>(_1))
         return exprptr_t(new Float((*this) - *(Integer *)_1.get()));
-    if (typeid(*_1.get()) == typeid(Float))
+    if (isinstance<Float>(_1))
         return exprptr_t(new Float((*this) - *(Float *)_1.get()));
     return Number::operator-(_1);
 }
 
 exprptr_t Float::operator*(exprptr_t _1)
 {
-    if (typeid(*_1.get()) == typeid(Rational))
+    if (isinstance<Rational>(_1))
         return exprptr_t(new Rational((*this) * *(Rational *)_1.get()));
-    if (typeid(*_1.get()) == typeid(Integer))
+    if (isinstance<Integer>(_1))
         return exprptr_t(new Float((*this) * *(Integer *)_1.get()));
-    if (typeid(*_1.get()) == typeid(Float))
+    if (isinstance<Float>(_1))
         return exprptr_t(new Float((*this) * *(Float *)_1.get()));
     return Number::operator*(_1);
 }
 
 exprptr_t Float::operator/(exprptr_t _1)
 {
-    if (typeid(*_1.get()) == typeid(Rational))
+    if (isinstance<Rational>(_1))
         return exprptr_t(new Rational((*this) / *(Rational *)_1.get()));
-    if (typeid(*_1.get()) == typeid(Integer))
+    if (isinstance<Integer>(_1))
         return exprptr_t(new Rational((*this) / *(Integer *)_1.get()));
-    if (typeid(*_1.get()) == typeid(Float))
+    if (isinstance<Float>(_1))
         return exprptr_t(new Rational((*this) / *(Float *)_1.get()));
     return Number::operator/(_1);
 }
 
 boolptr_t Float::operator>(exprptr_t _1)
 {
-    if (typeid(*_1.get()) == typeid(Rational))
+    if (isinstance<Rational>(_1))
         return to_boolean((*this) > *(Rational *)_1.get());
-    if (typeid(*_1.get()) == typeid(Integer))
+    if (isinstance<Integer>(_1))
         return to_boolean((*this) > *(Integer *)_1.get());
-    if (typeid(*_1.get()) == typeid(Float))
+    if (isinstance<Float>(_1))
         return to_boolean((*this) > *(Float *)_1.get());
     return Number::operator>(_1);
 }
 
 boolptr_t Float::operator<(exprptr_t _1)
 {
-    if (typeid(*_1.get()) == typeid(Rational))
+    if (isinstance<Rational>(_1))
         return to_boolean((*this) < *(Rational *)_1.get());
-    if (typeid(*_1.get()) == typeid(Integer))
+    if (isinstance<Integer>(_1))
         return to_boolean((*this) < *(Integer *)_1.get());
-    if (typeid(*_1.get()) == typeid(Float))
+    if (isinstance<Float>(_1))
         return to_boolean((*this) < *(Float *)_1.get());
     return Number::operator<(_1);
 }
 
 boolptr_t Float::operator==(exprptr_t _1)
 {
-    if (typeid(*_1.get()) == typeid(Rational))
-        return to_boolean ((*this) == *(Rational *)_1.get());
-    if (typeid(*_1.get()) == typeid(Integer))
+    if (isinstance<Rational>(_1))
+        return to_boolean((*this) == *(Rational *)_1.get());
+    if (isinstance<Integer>(_1))
         return to_boolean((*this) == *(Integer *)_1.get());
-    if (typeid(*_1.get()) == typeid(Float))
+    if (isinstance<Float>(_1))
         return to_boolean((*this) == *(Float *)_1.get());
     return Number::operator==(_1);
 }
 
 exprptr_t Float::pow(exprptr_t _1)
 {
-    if (typeid(*_1.get()) == typeid(Integer))
+    if (isinstance<Integer>(_1))
         return (*this).pow(*(Integer *)_1.get());
     return Number::pow(_1);
 }
 
 exprptr_t Float::pow(exprptr_t _1, Integer _2)
 {
-    if (typeid(*_1.get()) == typeid(Float))
+    if (isinstance<Float>(_1))
         return exprptr_t(new Float((*this).pow(*(Float *)_1.get(), _2)));
-    if (typeid(*_1.get()) == typeid(Integer))
+    if (isinstance<Integer>(_1))
         return exprptr_t(new Float((*this).pow(*(Integer *)_1.get(), _2)));
     return Number::pow(_1, _2);
 }
@@ -321,7 +322,7 @@ exprptr_t Float::eval(Integer keep)
     if (keep < 0)
         keep = 0;
     exprptr_t a = this->significand.eval(keep);
-    if (typeid(*a.get()) == typeid(Integer)) // 相当于Float的有效位数等于保留位数
+    if (isinstance<Integer>(a)) // 相当于Float的有效位数等于保留位数
         return exprptr_t(new Float(*(Integer *)a.get(), this->exponent));
     /*
     314.15926 = 3.1415926e+2

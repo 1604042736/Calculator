@@ -1,4 +1,5 @@
 #include "Logic.h"
+#include "Common.h"
 
 std::string Logic::toString()
 {

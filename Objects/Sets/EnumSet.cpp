@@ -81,7 +81,7 @@ EnumSet EnumSet::operator|(EnumSet b)
 
 setptr_t EnumSet::operator|(setptr_t b)
 {
-    if (typeid(*b.get()) == typeid(EnumSet))
+    if (isinstance<EnumSet>(b))
         return setptr_t(new EnumSet(*this | *(EnumSet *)b.get()));
     return Set::operator|(b);
 }
@@ -110,7 +110,7 @@ setptr_t EnumSet::operator&(EnumSet b)
 
 setptr_t EnumSet::operator&(setptr_t b)
 {
-    if (typeid(*b.get()) == typeid(EnumSet))
+    if (isinstance<EnumSet>(b))
         return *this & *(EnumSet *)b.get();
     return Set::operator|(b);
 }

@@ -1,5 +1,6 @@
 #include "Or.h"
 #include "And.h"
+#include "Common.h"
 
 boolptr_t Or::operator||(Or b)
 {
@@ -11,14 +12,14 @@ boolptr_t Or::operator||(Or b)
 
 boolptr_t Or::operator||(boolptr_t b)
 {
-    if (typeid(*b.get()) == typeid(Or))
+    if (isinstance<Or>(b))
         return (*this) || *(Or *)b.get();
     bool flag = false;
     logicargs_t args;
     for (size_t i = 0; i < this->args.size(); i++)
     {
         boolptr_t t = this->args[i] || b;
-        if (flag || typeid(*t.get()) == typeid(Or)) // 之前已经合并过或者不可以合并
+        if (flag || isinstance<Or>(t)) // 之前已经合并过或者不可以合并
             args.push_back(this->args[i]);
         else
         {

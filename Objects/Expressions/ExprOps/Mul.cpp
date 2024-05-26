@@ -64,7 +64,7 @@ exprptr_t Mul::operator+(Mul b)
 
 exprptr_t Mul::operator+(exprptr_t b)
 {
-    if (typeid(*b.get()) == typeid(Mul))
+    if (isinstance<Mul>(b))
         return *this + *(Mul *)b.get();
     return ExprOp::operator+(b);
 }
@@ -79,14 +79,14 @@ exprptr_t Mul::operator*(Mul b)
 
 exprptr_t Mul::operator*(exprptr_t b)
 {
-    if (typeid(*b.get()) == typeid(Mul))
+    if (isinstance<Mul>(b))
         return (*this) * *(Mul *)b.get();
     bool flag = false;
     expropargs_t args;
     for (size_t i = 0; i < this->args.size(); i++)
     {
         exprptr_t t = this->args[i] * b;
-        if (flag || typeid(*t.get()) == typeid(Mul)) // 之前已经合并过或者不可以合并
+        if (flag || isinstance<Mul>(t)) // 之前已经合并过或者不可以合并
             args.push_back(this->args[i]);
         else
         {
@@ -150,7 +150,7 @@ exprptr_t Mul::getDeno()
     expropargs_t result;
     for (size_t i = 0; i < this->args.size(); i++)
     {
-        if (typeid(*this->args[i].get()) == typeid(Reciprocal))
+        if (isinstance<Reciprocal>(this->args[i]))
             result.push_back(((Reciprocal *)this->args[i].get())->reciprocal());
     }
     if (result.size() == 0)

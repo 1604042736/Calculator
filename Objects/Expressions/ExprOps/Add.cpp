@@ -147,7 +147,7 @@ exprptr_t Add::pow(Integer exp)
 
 exprptr_t Add::pow(exprptr_t _1)
 {
-    if (typeid(*_1.get()) == typeid(Integer))
+    if (isinstance<Integer>(_1))
         return this->pow(*(Integer *)_1.get());
     return Expression::pow(_1);
 }

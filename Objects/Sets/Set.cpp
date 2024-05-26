@@ -11,9 +11,9 @@
 
 setptr_t Set::operator|(setptr_t b)
 {
-    if (typeid(*this->contains(b).get()) == typeid(True))
+    if (isinstance<True>(this->contains(b)))
         return setptr_t(dynamic_cast<Set *>(this->copyThis()));
-    if (typeid(*b->contains(setptr_t(dynamic_cast<Set *>(this->copyThis()))).get()) == typeid(True))
+    if (isinstance<True>(b->contains(setptr_t(dynamic_cast<Set *>(this->copyThis())))))
         return b;
     return setptr_t(new Union({setptr_t(dynamic_cast<Set *>(this->copyThis())), b}));
 }
@@ -24,9 +24,9 @@ setptr_t Set::operator|(objptr_t b)
 
 setptr_t Set::operator&(setptr_t b)
 {
-    if (typeid(*this->contains(b).get()) == typeid(True))
+    if (isinstance<True>(this->contains(b)))
         return b;
-    if (typeid(*b->contains(setptr_t(dynamic_cast<Set *>(this->copyThis()))).get()) == typeid(True))
+    if (isinstance<True>(b->contains(setptr_t(dynamic_cast<Set *>(this->copyThis())))))
         return setptr_t(dynamic_cast<Set *>(this->copyThis()));
     return setptr_t(new Intersection({setptr_t(dynamic_cast<Set *>(this->copyThis())), b}));
 }
@@ -37,7 +37,7 @@ setptr_t Set::operator&(objptr_t b)
 
 boolptr_t Set::contains(objptr_t element)
 {
-    if (typeid(*element.get()) == typeid(Expression))
+    if (isinstance<Expression>(element))
     {
         Expression *expr = dynamic_cast<Expression *>(element.get());
         setptr_t belongset = expr->belongto();

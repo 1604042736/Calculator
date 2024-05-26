@@ -30,7 +30,7 @@ exprptr_t E::operator/(exprptr_t _1)
 
 boolptr_t E::operator==(exprptr_t _1)
 {
-    if (typeid(*_1.get()) == typeid(E))
+    if (isinstance<E>(_1))
         return to_boolean((*this) == *(E *)_1.get());
     return Number::operator==(_1);
 }
