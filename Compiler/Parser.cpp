@@ -28,6 +28,8 @@ start : compound
 astptr_t Parser::parse_start()
 {
     this->token = lexer->getToken();
+    if (token.type == TK_EOF)
+        return nullptr;
     astptr_t a = parse_compound();
     if (token.type != TK_EOF)
         throw Error("解析已结束但文件未结束", lexer->context);
@@ -56,9 +58,6 @@ astptr_t Parser::parse_sentence()
     astptr_t a;
     switch (token.type)
     {
-    case TK_EOF:
-        a = nullptr;
-        break;
     case KW_EXPR:
         a = parse_exprmod();
         break;
