@@ -60,7 +60,16 @@ int main(int argc, char *argv[])
             std::stringstream buffer;
             buffer << file.rdbuf();
             std::string code(buffer.str());
-            exec(code, filename, verbose);
+            try
+            {
+                exec(code, filename, verbose);
+            }
+            catch (Error &e)
+            {
+                printf("%s:%d:%d 错误: %s\n",
+                       e.context.filename.data(), e.context.line, e.context.column,
+                       e.message.data());
+            }
         }
         else
             shell(verbose);

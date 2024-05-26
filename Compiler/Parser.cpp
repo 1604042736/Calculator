@@ -28,7 +28,10 @@ start : compound
 astptr_t Parser::parse_start()
 {
     this->token = lexer->getToken();
-    return parse_compound();
+    astptr_t a = parse_compound();
+    if (token.type != TK_EOF)
+        throw Error("解析已结束但文件未结束", lexer->context);
+    return a;
 }
 
 /*
@@ -39,9 +42,7 @@ astptr_t Parser::parse_compound()
     std::string indent = token.indent;
     std::vector<astptr_t> children({parse_sentence()});
     while (token.type != TK_EOF && token.indent == indent) // 缩进相同才能作为同一个compound
-    {
         children.push_back(parse_sentence());
-    }
     if (children.size() == 1)
         return children[0];
     return astptr_t(new CompoundAST(children, lexer->context));
