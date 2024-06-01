@@ -142,15 +142,21 @@ pow_expr : postfix_expr | pow_expr '^' postfix_expr
 */
 astptr_t Parser::parse_pow_expr()
 {
-    astptr_t l = parse_postfix_expr();
+    astptr_t a = parse_postfix_expr();
+    std::vector<astptr_t> children({a});
     while (token.type == TK_POW)
     {
         std::string op = token.str;
         match(token.type, token.type);
-        astptr_t r = parse_postfix_expr();
-        l = astptr_t(new BinOpAST(op, l, r, token.context));
+        astptr_t b = parse_postfix_expr();
+        children.push_back(b);
     }
-    return l;
+    if (children.size() == 1)
+        return children[0];
+    astptr_t b = children.back();
+    for (size_t i = children.size() - 2; i < children.size(); i--) // 防止溢出
+        b = astptr_t(new BinOpAST("^", children[i], b, children[i]->context));
+    return b;
 }
 
 /*
