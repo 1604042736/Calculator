@@ -81,6 +81,8 @@ exprptr_t Mul::operator*(exprptr_t b)
 {
     if (isinstance<Mul>(b))
         return (*this) * *(Mul *)b.get();
+    if (isinstance<Add>(b))
+        return b * *this;
     bool flag = false;
     expropargs_t args;
     for (size_t i = 0; i < this->args.size(); i++)

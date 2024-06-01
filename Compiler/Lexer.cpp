@@ -61,6 +61,21 @@ void Lexer::ungetChar()
     }
 }
 
+/*获取字符串*/
+std::string Lexer::getString(char mark)
+{
+    std::string token_str = "";
+    char ch = this->getChar();
+    while (ch != EOF && ch != mark)
+    {
+        token_str += ch;
+        ch = this->getChar();
+    }
+    if (ch == EOF)
+        throw Error("字符串未结束", this->context);
+    return token_str;
+}
+
 Token Lexer::getToken()
 {
     if (this->cur_token_index < this->tokens.size())
@@ -80,12 +95,16 @@ Token Lexer::getToken()
             token_str += ch;
             ch = this->getChar();
         } while (ch != EOF && isalpha(ch) || ch == '_' || isdigit(ch));
-        if (token_str == "expr")
-            this->tokens.push_back(Token(TK_EXPR, this->context, token_str, indent));
-        else if (token_str == "sym")
+        if (token_str == "sym")
             this->tokens.push_back(Token(TK_SYM, this->context, token_str, indent));
         else if (token_str == "let")
             this->tokens.push_back(Token(TK_LET, this->context, token_str, indent));
+        else if (token_str == "and")
+            this->tokens.push_back(Token(TK_AND, this->context, token_str, indent));
+        else if (token_str == "or")
+            this->tokens.push_back(Token(TK_OR, this->context, token_str, indent));
+        else if (token_str == "not")
+            this->tokens.push_back(Token(TK_NOT, this->context, token_str, indent));
         else
             this->tokens.push_back(Token(TK_NAME, this->context, token_str, indent));
         this->ungetChar();
@@ -127,8 +146,51 @@ Token Lexer::getToken()
         this->tokens.push_back(Token(TK_COMMA, this->context, ",", indent));
     else if (ch == '^')
         this->tokens.push_back(Token(TK_POW, this->context, "^", indent));
+    else if (ch == '"' || ch == '\'')
+        this->tokens.push_back(Token(TK_STRING, this->context, this->getString(ch), indent));
+    else if (ch == '@')
+    {
+        ch = this->getChar();
+        if (ch == '"' || ch == '\'')
+            this->tokens.push_back(Token(TK_NAME, this->context, this->getString(ch), indent));
+        else
+        {
+            this->ungetChar();
+            this->tokens.push_back(Token(TK_AT, this->context, "@", indent));
+        }
+    }
     else if (ch == '=')
         this->tokens.push_back(Token(TK_EQ, this->context, "=", indent));
+    else if (ch == '!')
+    {
+        ch = this->getChar();
+        if (ch == '=')
+            this->tokens.push_back(Token(TK_NE, this->context, "!=", indent));
+        else
+            throw Error("'!'后缺少'='", this->context);
+    }
+    else if (ch == '>')
+    {
+        ch = this->getChar();
+        if (ch == '=')
+            this->tokens.push_back(Token(TK_GE, this->context, ">=", indent));
+        else
+        {
+            this->ungetChar();
+            this->tokens.push_back(Token(TK_GT, this->context, ">", indent));
+        }
+    }
+    else if (ch == '<')
+    {
+        ch = this->getChar();
+        if (ch == '=')
+            this->tokens.push_back(Token(TK_LE, this->context, "<=", indent));
+        else
+        {
+            this->ungetChar();
+            this->tokens.push_back(Token(TK_LT, this->context, "<", indent));
+        }
+    }
     else
         throw SyntaxError("意料之外的字符: " + ch, this->context);
     return this->tokens[this->cur_token_index++];

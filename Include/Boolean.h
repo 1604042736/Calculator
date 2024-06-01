@@ -37,6 +37,9 @@ public:
     friend bool operator!=(boolptr_t, Boolean &);
     friend bool operator!=(boolptr_t, Boolean &&);
 
+    virtual boolptr_t operator&&(objptr_t);
+    virtual boolptr_t operator||(objptr_t);
+
     virtual boolptr_t inline copyToBoolPtr() { return boolptr_t(dynamic_cast<Boolean *>(this->copyThis())); }
 
     /*化简*/

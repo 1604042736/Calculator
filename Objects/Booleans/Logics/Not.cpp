@@ -3,9 +3,9 @@
 std::string Not::toString()
 {
     if (this->args[0]->getPriority() < this->getPriority())
-        return "~(" + this->args[0]->toString() + ")";
+        return this->getLogicStr() + "(" + this->args[0]->toString() + ")";
     else
-        return "~" + this->args[0]->toString();
+        return this->getLogicStr() + this->args[0]->toString();
 }
 
 prettystring_t Not::toPrettyString()
@@ -16,7 +16,7 @@ prettystring_t Not::toPrettyString()
     for (size_t i = 0; i < result.size(); i++)
     {
         if (i == result.size() / 2)
-            result[i] += "~";
+            result[i] += this->getLogicStr();
         else
             result[i] += " ";
     }

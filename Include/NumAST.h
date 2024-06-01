@@ -7,10 +7,7 @@ class NumAST : public AST
 public:
     NumAST(std::string num, Context context) : num(num), AST(context) {}
 
-    virtual std::string getInfo()
-    {
-        return AST::getInfo() + " " + this->num;
-    }
+    virtual std::string getInfo() { return AST::getInfo() + " " + this->num; }
 
     std::string num;
 };

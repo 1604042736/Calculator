@@ -6,12 +6,12 @@
 #include "FloatAST.h"
 #include "Error.h"
 #include "CallAST.h"
-#include "ExprModAST.h"
 #include "SymDefAST.h"
 #include "CompoundAST.h"
 #include "AssignAST.h"
 #include "UnaryOpAST.h"
 #include "TupleAST.h"
+#include "ModifyAST.h"
 
 void Parser::match(TokenType cur, TokenType expect)
 {
@@ -61,8 +61,8 @@ astptr_t Parser::parse_sentence()
     astptr_t a;
     switch (token.type)
     {
-    case TK_EXPR:
-        a = parse_exprmod();
+    case TK_AT:
+        a = parse_modify();
         break;
     case TK_SYM:
         a = parse_symdef();
@@ -90,12 +90,14 @@ astptr_t Parser::parse_let()
 }
 
 /*
-exprmod : 'expr' compound
+modify : '@' NAME compound
 */
-astptr_t Parser::parse_exprmod()
+astptr_t Parser::parse_modify()
 {
-    match(token.type, TK_EXPR);
-    return astptr_t(new ExprModAST(parse_compound(), lexer->context));
+    match(token.type, TK_AT);
+    std::string mode = token.str;
+    match(token.type, TK_NAME);
+    return astptr_t(new ModifyAST(mode, parse_compound(), lexer->context));
 }
 
 /*
@@ -117,11 +119,77 @@ astptr_t Parser::parse_symdef()
 }
 
 /*
-expr : add_expr
+expr : or_expr
 */
 astptr_t Parser::parse_expr()
 {
-    return parse_add_expr();
+    return parse_or_expr();
+}
+
+/*
+or_expr : and_expr | and_expr 'or' or_expr
+*/
+astptr_t Parser::parse_or_expr()
+{
+    astptr_t l = parse_and_expr();
+    while (token.type == TK_OR)
+    {
+        std::string op = token.str;
+        match(token.type, token.type);
+        astptr_t r = parse_and_expr();
+        l = astptr_t(new BinOpAST(op, l, r, token.context));
+    }
+    return l;
+}
+
+/*
+and_expr : not_expr | not_expr 'or' and_expr
+*/
+astptr_t Parser::parse_and_expr()
+{
+    astptr_t l = parse_not_expr();
+    while (token.type == TK_AND)
+    {
+        std::string op = token.str;
+        match(token.type, token.type);
+        astptr_t r = parse_not_expr();
+        l = astptr_t(new BinOpAST(op, l, r, token.context));
+    }
+    return l;
+}
+
+/*
+not_expr : compare_expr | 'not' not_expr
+*/
+astptr_t Parser::parse_not_expr()
+{
+    astptr_t a;
+    if (token.type == TK_NOT)
+    {
+        match(token.type, TK_NOT);
+        a = astptr_t(new UnaryOpAST("not", parse_not_expr(), lexer->context));
+    }
+    else
+        a = parse_compare_expr();
+    return a;
+}
+
+/*
+compare_expr : add_expr | add_expr '=' add_expr | add_expr '!=' add_expr
+                        | add_expr '>' add_expr | add_expr '>=' add_expr
+                        | add_expr '<' add_expr | add_expr '<=' add_expr
+*/
+astptr_t Parser::parse_compare_expr()
+{
+    astptr_t l = parse_add_expr();
+    if (token.type == TK_EQ || token.type == TK_NE || token.type == TK_GE || token.type == TK_GT || token.type == TK_LT || token.type == TK_LE)
+    {
+        std::string op = token.str;
+        match(token.type, token.type);
+        astptr_t r = parse_add_expr();
+        l = astptr_t(new BinOpAST(op, l, r, token.context));
+    }
+    return l;
 }
 
 /*

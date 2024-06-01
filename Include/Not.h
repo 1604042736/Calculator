@@ -18,7 +18,7 @@ public:
 
     virtual boolptr_t _simplify();
 
-    virtual std::string getLogicStr() { return "~"; }
+    virtual std::string getLogicStr() { return "¬"; }
 
     virtual size_t getPriority() { return 3; }
 };

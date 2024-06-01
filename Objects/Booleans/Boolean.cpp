@@ -4,9 +4,12 @@
 #include "Or.h"
 #include "True.h"
 #include "False.h"
+#include "Common.h"
 
 boolptr_t Boolean::operator&&(boolptr_t b)
 {
+    if (isinstance<False>(this) || isinstance<False>(b))
+        return boolptr_t(new False());
     return boolptr_t(new And({this->copyToBoolPtr(), b}));
 }
 boolptr_t Boolean::operator&&(Boolean &b)
@@ -23,6 +26,8 @@ boolptr_t operator&&(boolptr_t a, Boolean &&b) { return a->operator&&(b); }
 
 boolptr_t Boolean::operator||(boolptr_t b)
 {
+    if (isinstance<True>(this) || isinstance<True>(b))
+        return boolptr_t(new True());
     return boolptr_t(new Or({this->copyToBoolPtr(), b}));
 }
 boolptr_t Boolean::operator||(Boolean &b)
@@ -66,6 +71,20 @@ bool Boolean::operator!=(Boolean &&_1)
 bool operator!=(boolptr_t _1, boolptr_t _2) { return _1->operator!=(_2); }
 bool operator!=(boolptr_t _1, Boolean &_2) { return _1->operator!=(_2); }
 bool operator!=(boolptr_t _1, Boolean &&_2) { return _1->operator!=(_2); }
+
+boolptr_t Boolean::operator&&(objptr_t b)
+{
+    if (isinstance<Boolean>(b))
+        return this->operator&&(dynamic_cast<Boolean *>(b.get())->copyToBoolPtr());
+    return Object::operator&&(b);
+}
+
+boolptr_t Boolean::operator||(objptr_t b)
+{
+    if (isinstance<Boolean>(b))
+        return this->operator||(dynamic_cast<Boolean *>(b.get())->copyToBoolPtr());
+    return Object::operator||(b);
+}
 
 boolptr_t Boolean::simplify()
 {

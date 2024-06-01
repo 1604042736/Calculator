@@ -11,6 +11,7 @@
 #include "EmptySet.h"
 
 #define EXPR_FLAG 0
+#define BOOL_FLAG 1
 
 typedef std::bitset<16> flags_t;
 

@@ -13,6 +13,7 @@ enum TokenType
     TK_NAME,    // 标识符
     TK_INT,     // 整数
     TK_FLOAT,   // 浮点数
+    TK_STRING,  // 字符串
     TK_ADD,     // +
     TK_SUB,     // -
     TK_MUL,     // *
@@ -22,9 +23,17 @@ enum TokenType
     TK_COMMA,   // ,
     TK_POW,     // ^
     TK_EQ,      // =
-    TK_EXPR,
+    TK_NE,      // !=
+    TK_GT,      // >
+    TK_GE,      // >=
+    TK_LT,      // <
+    TK_LE,      // <=
+    TK_AT,      // @
     TK_SYM,
     TK_LET,
+    TK_AND,
+    TK_OR,
+    TK_NOT,
     TK_EOF
 };
 
@@ -53,6 +62,7 @@ public:
 
     char getChar();
     void ungetChar();
+    std::string getString(char);
     Token getToken();
     void ungetToken();
 

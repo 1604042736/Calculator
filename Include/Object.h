@@ -35,10 +35,25 @@ public:
     friend objptr_t operator/(objptr_t, objptr_t);
     virtual objptr_t pow(objptr_t);
 
+    virtual boolptr_t operator&&(objptr_t);
+    friend boolptr_t operator&&(objptr_t, objptr_t);
+    virtual boolptr_t operator||(objptr_t);
+    friend boolptr_t operator||(objptr_t, objptr_t);
+    virtual boolptr_t operator!();
+
     virtual boolptr_t operator==(objptr_t);
     friend boolptr_t operator==(objptr_t, objptr_t);
     virtual boolptr_t operator!=(objptr_t);
     friend boolptr_t operator!=(objptr_t, objptr_t);
+
+    virtual boolptr_t operator>(objptr_t);
+    friend boolptr_t operator>(objptr_t, objptr_t);
+    virtual boolptr_t operator>=(objptr_t);
+    friend boolptr_t operator>=(objptr_t, objptr_t);
+    virtual boolptr_t operator<(objptr_t);
+    friend boolptr_t operator<(objptr_t, objptr_t);
+    virtual boolptr_t operator<=(objptr_t);
+    friend boolptr_t operator<=(objptr_t, objptr_t);
 
     virtual objptr_t operator()(std::vector<objptr_t>);
     /*替换*/

@@ -1,6 +1,7 @@
 #include "SymDefAST.h"
 #include "Error.h"
 #include "ExprSymbol.h"
+#include "BoolSymbol.h"
 
 objptr_t SymDefAST::exec(Runtime *runtime)
 {
@@ -9,6 +10,11 @@ objptr_t SymDefAST::exec(Runtime *runtime)
     {
         f = [](std::string name)
         { return objptr_t(new ExprSymbol(name)); };
+    }
+    else if (runtime->flags.test(BOOL_FLAG))
+    {
+        f = [](std::string name)
+        { return objptr_t(new BoolSymbol(name)); };
     }
     else
         throw Error("无法确定如何定义符号", this->context);

@@ -15,10 +15,13 @@
 #include "StrictLessThan.h"
 #include "Common.h"
 #include "Derivative.h"
+#include "Equality.h"
 
 exprptr_t Expression::operator*(exprptr_t b)
 {
     if (!isinstance<Add>(this) && isinstance<Add>(b))
+        return b * *this;
+    if (!isinstance<Mul>(this) && isinstance<Mul>(b))
         return b * *this;
     else if (!isinstance<Pow>(this) && isinstance<Pow>(b))
         return b * *this;
@@ -89,7 +92,7 @@ boolptr_t Expression::operator<=(Expression &&_1) { return (*this) <= (_1.copyTo
 boolptr_t operator<=(exprptr_t _1, exprptr_t _2) { return _1->operator<=(_2); }
 boolptr_t operator<=(exprptr_t _1, Expression &_2) { return _1->operator<=(_2); }
 boolptr_t operator<=(exprptr_t _1, Expression &&_2) { return _1->operator<=(_2); }
-boolptr_t Expression::operator==(exprptr_t _1) { return to_boolean(false); }
+boolptr_t Expression::operator==(exprptr_t _1) { return boolptr_t(new Equality(this->copyToExprPtr(), _1)); }
 boolptr_t Expression::operator==(Expression &_1) { return (*this) == (_1.copyToExprPtr()); }
 boolptr_t Expression::operator==(Expression &&_1) { return (*this) == (_1.copyToExprPtr()); }
 boolptr_t operator==(exprptr_t _1, exprptr_t _2) { return _1->operator==(_2); }
@@ -181,6 +184,20 @@ boolptr_t Expression::operator==(objptr_t b)
     if (isinstance<Expression>(b))
         return this->operator==(dynamic_cast<Expression *>(b.get())->copyToExprPtr());
     return Object::operator==(b);
+}
+
+boolptr_t Expression::operator>(objptr_t b)
+{
+    if (isinstance<Expression>(b))
+        return this->operator>(dynamic_cast<Expression *>(b.get())->copyToExprPtr());
+    return Object::operator>(b);
+}
+
+boolptr_t Expression::operator<(objptr_t b)
+{
+    if (isinstance<Expression>(b))
+        return this->operator<(dynamic_cast<Expression *>(b.get())->copyToExprPtr());
+    return Object::operator<(b);
 }
 
 /*求导*/

@@ -11,6 +11,8 @@ objptr_t UnaryOpAST::exec(Runtime *runtime)
             return dynamic_cast<Expression *>(expr.get())->opposite();
         throw Error("'" + std::string(typeid(*expr.get()).name()) + "'不支持一元运算符: " + this->op, this->context);
     }
+    else if (this->op == "not")
+        return expr->operator!();
     else
         throw Error("意料之外的一元运算符: " + this->op, this->context);
 }

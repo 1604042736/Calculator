@@ -8,6 +8,8 @@
 #include "E.h"
 #include "Log.h"
 #include "Infinity.h"
+#include "True.h"
+#include "False.h"
 
 Runtime::Runtime()
 {
@@ -20,6 +22,8 @@ Runtime::Runtime()
         {"e", objptr_t(new E())},
         {"pi", objptr_t(new PI())},
         {"oo", objptr_t(new Infinity())},
+        {"True", objptr_t(new True())},
+        {"False", objptr_t(new False())},
     });
 }
 
