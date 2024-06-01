@@ -10,6 +10,7 @@
 #include "SymDefAST.h"
 #include "CompoundAST.h"
 #include "AssignAST.h"
+#include "UnaryOpAST.h"
 
 void Parser::match(TokenType cur, TokenType expect)
 {
@@ -139,19 +140,38 @@ astptr_t Parser::parse_add_expr()
 }
 
 /*
-mul_expr : pow_expr | mul_expr '*' pow_expr | mul_expr '/' pow_expr
+mul_expr : prefix_expr | mul_expr '*' prefix_expr | mul_expr '/' prefix_expr
 */
 astptr_t Parser::parse_mul_expr()
 {
-    astptr_t l = parse_pow_expr();
+    astptr_t l = parse_prefix_expr();
     while (token.type == TK_MUL || token.type == TK_DIV)
     {
         std::string op = token.str;
         match(token.type, token.type);
-        astptr_t r = parse_pow_expr();
+        astptr_t r = parse_prefix_expr();
         l = astptr_t(new BinOpAST(op, l, r, token.context));
     }
     return l;
+}
+
+/*
+prefix_expr : pow_expr | '-' prefix_expr
+*/
+astptr_t Parser::parse_prefix_expr()
+{
+    astptr_t a;
+    switch (token.type)
+    {
+    case TK_SUB:
+        match(token.type, TK_SUB);
+        a = astptr_t(new UnaryOpAST("-", parse_prefix_expr(), lexer->context));
+        break;
+
+    default:
+        a = parse_pow_expr();
+    }
+    return a;
 }
 
 /*

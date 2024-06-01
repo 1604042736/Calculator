@@ -21,6 +21,7 @@ public:
     astptr_t parse_expr();
     astptr_t parse_add_expr();
     astptr_t parse_mul_expr();
+    astptr_t parse_prefix_expr();
     astptr_t parse_pow_expr();
     astptr_t parse_postfix_expr();
     std::vector<astptr_t> parse_argument_list();

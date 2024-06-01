@@ -18,5 +18,5 @@ objptr_t BinOpAST::exec(Runtime *runtime)
     else if (this->op == "^")
         return l->pow(r);
     else
-        throw Error("Unexpected operator: " + this->op, this->context);
+        throw Error("意料之外的二元运算符: " + this->op, this->context);
 }
