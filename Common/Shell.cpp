@@ -5,14 +5,13 @@
 #include "Error.h"
 #include "Runtime.h"
 
-void shell(bool verbose)
+void shell(Runtime *runtime, bool verbose)
 {
     printf("Calculator %d.%d.%d (%s) [%s v%s %s (%s)] on %s\n",
            VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, COMPILE_TIME,
            COMPILER_ID, COMPILER_VERSION, ADDRESS_MODEL,
            SYSTEM_PROCESSOR, SYSTEM_NAME);
     size_t in_count = 1, out_count = 1;
-    Runtime runtime;
     while (true)
     {
         printf("In [%d]: ", in_count++);
@@ -22,7 +21,7 @@ void shell(bool verbose)
         {
             try
             {
-                objptr_t obj = exec(code, "<input>", &runtime, verbose);
+                objptr_t obj = exec(code, "<input>", runtime, verbose);
                 if (obj != nullptr)
                 {
                     printf("Out [%d]: \n", out_count++);
@@ -34,7 +33,7 @@ void shell(bool verbose)
                 std::string more;
                 printf("More[%d]:", in_count - 1);
                 std::getline(std::cin, more);
-                code += more;
+                code += "\n" + more;
                 continue;
             }
             catch (Error &e)
@@ -46,4 +45,10 @@ void shell(bool verbose)
             break;
         }
     }
+}
+
+void shell(bool verbose)
+{
+    Runtime runtime;
+    shell(&runtime, verbose);
 }

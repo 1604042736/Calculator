@@ -12,28 +12,8 @@ namespace Win
 }
 #endif
 
-#include "Integer.h"
-#include "Float.h"
-#include "Rational.h"
-#include "Add.h"
-#include "Sqrt.h"
-#include "PI.h"
-#include "E.h"
-#include "ExprSymbol.h"
-#include "Boolean.h"
-#include "Equality.h"
-#include "EnumSet.h"
-#include "Lambda.h"
-#include "DescribeSet.h"
-#include "Abs.h"
-#include "Matrix.h"
-#include "Parser.h"
-#include "Mapping.h"
-#include "DefinedFunction.h"
-#include "ExprDefFunction.h"
 #include "Common.h"
 #include "Error.h"
-#include "Config.h"
 
 int main(int argc, char *argv[])
 {
@@ -46,33 +26,48 @@ int main(int argc, char *argv[])
     else
     {
         bool verbose = false;
-        std::string filename = "";
+        bool open_shell = false; // 解析文件结束后是否打开shell
+        std::vector<std::string> filenames;
         for (int i = 1; i < argc; i++)
         {
-            if (std::string(argv[i]) == "--verbose")
+            std::string arg(argv[i]);
+            if (arg == "--verbose")
                 verbose = true;
+            else if (arg == "--shell")
+                open_shell = true;
             else
-                filename = std::string(argv[i]);
+                filenames.push_back(arg);
         }
-        if (filename != "")
+        Runtime runtime;
+        if (filenames.size() > 0)
         {
-            std::ifstream file(filename);
-            std::stringstream buffer;
-            buffer << file.rdbuf();
-            std::string code(buffer.str());
-            try
+            for (auto filename : filenames)
             {
-                exec(code, filename, verbose);
-            }
-            catch (Error &e)
-            {
-                printf("%s:%d:%d 错误: %s\n",
-                       e.context.filename.data(), e.context.line, e.context.column,
-                       e.message.data());
+                std::ifstream file(filename);
+                if (!file)
+                {
+                    printf("无法打开文件: %s\n", filename.data());
+                    continue;
+                }
+                std::stringstream buffer;
+                buffer << file.rdbuf();
+                std::string code(buffer.str());
+                try
+                {
+                    exec(code, filename, &runtime, verbose);
+                }
+                catch (Error &e)
+                {
+                    printf("%s:%d:%d 错误: %s\n",
+                           e.context.filename.data(), e.context.line, e.context.column,
+                           e.message.data());
+                }
             }
         }
         else
-            shell(verbose);
+            open_shell = true;
+        if (open_shell)
+            shell(&runtime, verbose);
     }
     return 0;
 }
