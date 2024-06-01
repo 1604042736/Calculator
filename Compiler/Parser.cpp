@@ -11,6 +11,7 @@
 #include "CompoundAST.h"
 #include "AssignAST.h"
 #include "UnaryOpAST.h"
+#include "TupleAST.h"
 
 void Parser::match(TokenType cur, TokenType expect)
 {
@@ -233,7 +234,7 @@ std::vector<astptr_t> Parser::parse_argument_list()
 }
 
 /*
-atom_expr : ID | INT | FLOAT | '(' expr ')'
+atom_expr : ID | INT | FLOAT | '(' expr ')' | '(' ( expr ',')+ ')'
 */
 astptr_t Parser::parse_atom_expr()
 {
@@ -256,6 +257,16 @@ astptr_t Parser::parse_atom_expr()
     {
         match(token.type, TK_LLITTLE);
         a = parse_expr();
+        if (token.type == TK_COMMA)
+        {
+            std::vector<astptr_t> args({a});
+            while (token.type == TK_COMMA)
+            {
+                match(token.type, TK_COMMA);
+                args.push_back(parse_expr());
+            }
+            a = astptr_t(new TupleAST(args, lexer->context));
+        }
         match(token.type, TK_RLITTLE);
         break;
     }
