@@ -9,6 +9,7 @@
 #include "ExprModAST.h"
 #include "SymDefAST.h"
 #include "CompoundAST.h"
+#include "AssignAST.h"
 
 void Parser::match(TokenType cur, TokenType expect)
 {
@@ -58,11 +59,14 @@ astptr_t Parser::parse_sentence()
     astptr_t a;
     switch (token.type)
     {
-    case KW_EXPR:
+    case TK_EXPR:
         a = parse_exprmod();
         break;
-    case KW_SYM:
+    case TK_SYM:
         a = parse_symdef();
+        break;
+    case TK_LET:
+        a = parse_let();
         break;
     default:
         a = parse_expr();
@@ -71,11 +75,24 @@ astptr_t Parser::parse_sentence()
 }
 
 /*
+let : 'let' NAME '=' expr
+*/
+astptr_t Parser::parse_let()
+{
+    match(token.type, TK_LET);
+    std::string name = token.str;
+    match(token.type, TK_NAME);
+    match(token.type, TK_EQ);
+    astptr_t expr = parse_expr();
+    return astptr_t(new AssignAST(name, expr, lexer->context));
+}
+
+/*
 exprmod : 'expr' compound
 */
 astptr_t Parser::parse_exprmod()
 {
-    match(token.type, KW_EXPR);
+    match(token.type, TK_EXPR);
     return astptr_t(new ExprModAST(parse_compound(), lexer->context));
 }
 
@@ -84,7 +101,7 @@ symdef : 'sym' NAME (',' NAME)*
 */
 astptr_t Parser::parse_symdef()
 {
-    match(token.type, KW_SYM);
+    match(token.type, TK_SYM);
     std::vector<std::string> names;
     names.push_back(token.str);
     match(token.type, TK_NAME);

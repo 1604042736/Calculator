@@ -16,6 +16,8 @@ public:
     astptr_t parse_sentence();
     astptr_t parse_exprmod();
     astptr_t parse_symdef();
+    astptr_t parse_let();
+
     astptr_t parse_expr();
     astptr_t parse_add_expr();
     astptr_t parse_mul_expr();

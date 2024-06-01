@@ -81,9 +81,11 @@ Token Lexer::getToken()
             ch = this->getChar();
         } while (ch != EOF && isalpha(ch) || ch == '_' || isdigit(ch));
         if (token_str == "expr")
-            this->tokens.push_back(Token(KW_EXPR, this->context, token_str, indent));
+            this->tokens.push_back(Token(TK_EXPR, this->context, token_str, indent));
         else if (token_str == "sym")
-            this->tokens.push_back(Token(KW_SYM, this->context, token_str, indent));
+            this->tokens.push_back(Token(TK_SYM, this->context, token_str, indent));
+        else if (token_str == "let")
+            this->tokens.push_back(Token(TK_LET, this->context, token_str, indent));
         else
             this->tokens.push_back(Token(TK_NAME, this->context, token_str, indent));
         this->ungetChar();
@@ -125,6 +127,8 @@ Token Lexer::getToken()
         this->tokens.push_back(Token(TK_COMMA, this->context, ",", indent));
     else if (ch == '^')
         this->tokens.push_back(Token(TK_POW, this->context, "^", indent));
+    else if (ch == '=')
+        this->tokens.push_back(Token(TK_EQ, this->context, "=", indent));
     else
         throw SyntaxError("意料之外的字符: " + ch, this->context);
     return this->tokens[this->cur_token_index++];

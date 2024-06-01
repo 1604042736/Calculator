@@ -9,6 +9,5 @@ objptr_t NameAST::exec(Runtime *runtime)
     objptr_t obj = runtime->findName(this->name);
     if (obj == nullptr)
         throw NameError(this->name, this->context);
-    // 暂时这样, 以后再改
     return obj;
 }

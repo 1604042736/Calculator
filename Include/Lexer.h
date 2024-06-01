@@ -21,8 +21,10 @@ enum TokenType
     TK_RLITTLE, // )
     TK_COMMA,   // ,
     TK_POW,     // ^
-    KW_EXPR,
-    KW_SYM,
+    TK_EQ,      // =
+    TK_EXPR,
+    TK_SYM,
+    TK_LET,
     TK_EOF
 };
 
