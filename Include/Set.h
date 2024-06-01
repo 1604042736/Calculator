@@ -6,6 +6,7 @@
 
 class Set;
 typedef std::shared_ptr<Set> setptr_t;
+class Integer;
 
 class EmptySet;
 /*集合*/
@@ -16,6 +17,12 @@ public:
     virtual setptr_t operator&(objptr_t);
     virtual setptr_t operator|(setptr_t);
     virtual setptr_t operator|(objptr_t);
+
+    virtual setptr_t operator*(setptr_t);
+    virtual setptr_t operator*(Set &b) { return this->operator*(b.copyToSetPtr()); }
+    virtual setptr_t operator*(Set &&b) { return this->operator*(b.copyToSetPtr()); }
+    friend setptr_t operator*(setptr_t a, setptr_t b) { return a->operator*(b); }
+    virtual setptr_t pow(Integer);
 
     virtual setptr_t inline copyToSetPtr() { return setptr_t(dynamic_cast<Set *>(this->copyThis())); }
 

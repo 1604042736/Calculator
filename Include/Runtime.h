@@ -39,7 +39,7 @@ public:
 class EvalMapping : public Mapping
 {
 public:
-    EvalMapping() : Mapping("eval", setptr_t(new RealSet()), setptr_t(new RationalSet())) {}
+    EvalMapping() : Mapping("eval", RealSet() * IntegerSet(), setptr_t(new RationalSet())) {}
 
     virtual exprptr_t operator()(exprptr_t b, Integer c) { return b->eval(c); }
     virtual objptr_t operator()(funcargs_t);

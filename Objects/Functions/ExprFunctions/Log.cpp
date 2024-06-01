@@ -40,15 +40,8 @@ LogMapping::LogMapping()
     exprptr_t _0(new Integer(0));
     exprptr_t _1(new Integer(1));
     exprptr_t inf(new Infinity());
-    setptr_t base_domain = setptr_t(new Interval(_0, inf, false, false));
-    setptr_t tnum_domain = setptr_t(new RealSet());
-    symptr_t s_a(new ExprSymbol("a"));
-    symptr_t s_x(new ExprSymbol("x"));
-    exprptr_t a(new ExprSymbol("a"));
-    exprptr_t x(new ExprSymbol("x"));
     //{(a,x)|a in (0,+oo) && x in R}
-    this->domain = setptr_t(new DescribeSet(Lambda({s_a, s_x}, objptr_t(new Tuple({a, x}))),
-                                            base_domain->contains(a) && tnum_domain->contains(x)));
+    this->domain = Interval(_0, inf, true, true) * RealSet();
 }
 
 exprptr_t LogMapping::operator()(exprptr_t base, exprptr_t tnum)
