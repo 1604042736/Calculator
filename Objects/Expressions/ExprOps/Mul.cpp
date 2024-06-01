@@ -56,10 +56,10 @@ exprptr_t Mul::operator+(Mul b)
     if (same != nullptr)
     {
         exprptr_t sum = a + c;
-        if (typeid(*sum.get()) != typeid(Add))
-            return sum * same;
+        if (!isinstance<Add>(sum))
+            return same * sum;
     }
-    return ExprOp::operator+(exprptr_t(dynamic_cast<Expression *>(b.copyThis())));
+    return ExprOp::operator+(b.copyToExprPtr());
 }
 
 exprptr_t Mul::operator+(exprptr_t b)

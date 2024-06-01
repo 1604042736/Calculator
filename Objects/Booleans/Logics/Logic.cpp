@@ -62,7 +62,7 @@ prettystring_t Logic::toPrettyString()
 
 bool Logic::operator==(boolptr_t b)
 {
-    if (typeid(*b.get()) == typeid(*this))
+    if (this->isSubclass(b))
     {
         Logic *a = this;
         Logic *c = (Logic *)b.get();
@@ -101,7 +101,7 @@ void Logic::sortArgs()
         logicargs_t args;
         for (size_t i = 0; i < this->args.size(); i++)
         {
-            if (typeid(*this->args[i].get()) == typeid(*this))
+            if (this->isSubclass(this->args[i]))
             {
                 Logic *t = (Logic *)this->args[i].get();
                 for (size_t j = 0; j < t->args.size(); j++)

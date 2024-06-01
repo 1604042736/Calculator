@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ExprOp.h"
+#include "Common.h"
 
 /*乘法运算*/
 class Mul : public ExprOp
@@ -34,4 +35,6 @@ public:
     Integer getWeight();
 
     virtual size_t getPriority() { return 2; }
+
+    virtual bool isSubclass(objptr_t b) { return isinstance<Mul>(b); }
 };

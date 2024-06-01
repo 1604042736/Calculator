@@ -1,6 +1,24 @@
 #include "Opposite.h"
 #include "Common.h"
 
+exprptr_t Opposite::operator+(exprptr_t b)
+{
+    //(-x)+b=-(x-b)
+    return (this->opposite() - b)->opposite();
+}
+
+exprptr_t Opposite::operator*(exprptr_t b)
+{
+    //(-x)*b=-(x*b)
+    return (this->opposite() * b)->opposite();
+}
+
+exprptr_t Opposite::reciprocal()
+{
+    // 1/(-x)=-(1/x)
+    return this->opposite()->reciprocal()->opposite();
+}
+
 exprptr_t Opposite::opposite()
 {
     expropargs_t result;

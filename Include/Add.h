@@ -2,6 +2,7 @@
 
 #include "Object.h"
 #include "ExprOp.h"
+#include "Common.h"
 
 /*加法运算*/
 class Add : public ExprOp
@@ -32,4 +33,6 @@ public:
     Integer getWeight();
 
     virtual size_t getPriority() { return 1; }
+
+    virtual bool isSubclass(objptr_t b) { return isinstance<Add>(b); }
 };

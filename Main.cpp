@@ -74,6 +74,5 @@ int main(int argc, char *argv[])
         else
             shell(verbose);
     }
-
     return 0;
 }

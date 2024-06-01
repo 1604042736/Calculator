@@ -55,7 +55,7 @@ boolptr_t Set::contains(Object &&element)
 
 boolptr_t Set::includes(setptr_t subset)
 {
-    if (typeid(*subset.get()) == typeid(*this)) // 自己包含自己
+    if (isinstance<True>(*this == subset)) // 自己包含自己
         return boolptr_t(new True());
     if (isinstance<EmptySet>(subset))
         return boolptr_t(new True());

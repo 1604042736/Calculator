@@ -7,6 +7,7 @@
 #include "PI.h"
 #include "E.h"
 #include "Log.h"
+#include "Infinity.h"
 
 Runtime::Runtime()
 {
@@ -18,6 +19,7 @@ Runtime::Runtime()
         {"log", objptr_t(new LogMapping())},
         {"e", objptr_t(new E())},
         {"pi", objptr_t(new PI())},
+        {"oo", objptr_t(new Infinity())},
     });
 }
 

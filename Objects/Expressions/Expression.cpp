@@ -22,10 +22,24 @@ exprptr_t Expression::operator*(exprptr_t b)
         return b * *this;
     else if (!isinstance<Pow>(this) && isinstance<Pow>(b))
         return b * *this;
+    else if (isinstance<True>(*this == Integer(0)) || isinstance<True>(b == Integer(0)))
+        return exprptr_t(new Integer(0));
+    else if (isinstance<True>(*this == Integer(1)))
+        return b;
+    else if (isinstance<True>(b == Integer(1)))
+        return this->copyToExprPtr();
     return exprptr_t(new Mul({this->copyToExprPtr(), b}));
 }
 
-exprptr_t Expression::operator+(exprptr_t _1) { return std::shared_ptr<Add>(new Add({this->copyToExprPtr(), _1})); }
+exprptr_t Expression::operator+(exprptr_t b)
+{
+    if (isinstance<True>(*this == Integer(0)))
+        return b;
+    else if (isinstance<True>(b == Integer(0)))
+        return this->copyToExprPtr();
+    return std::shared_ptr<Add>(new Add({this->copyToExprPtr(), b}));
+}
+
 exprptr_t Expression::operator+(Expression &_1) { return (*this) + (_1.copyToExprPtr()); }
 exprptr_t Expression::operator+(Expression &&_1) { return (*this) + (_1.copyToExprPtr()); }
 exprptr_t operator+(exprptr_t _1, exprptr_t _2) { return _1->operator+(_2); }
@@ -89,7 +103,10 @@ boolptr_t operator!=(exprptr_t _1, Expression &_2) { return _1->operator!=(_2); 
 boolptr_t operator!=(exprptr_t _1, Expression &&_2) { return _1->operator!=(_2); }
 exprptr_t Expression::sqrt()
 {
-    return std::shared_ptr<Sqrt>(new Sqrt(this->copyToExprPtr()));
+    exprptr_t t = this->pow(exprptr_t(new Float("0.5")));
+    if (isinstance<Pow>(t))
+        return std::shared_ptr<Sqrt>(new Sqrt(this->copyToExprPtr())); // 没有被化简掉就用默认的方式
+    return t;
 }
 exprptr_t Expression::sqrt(Integer _1) { return this->pow(exprptr_t(new Float("0.5")), _1); }
 exprptr_t sqrt(exprptr_t _1, Integer _2) { return _1->sqrt(_2); }

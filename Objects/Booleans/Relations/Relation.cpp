@@ -31,7 +31,7 @@ prettystring_t Relation::toPrettyString()
 
 bool Relation::operator==(boolptr_t b)
 {
-    if (typeid(*b.get()) == typeid(*this))
+    if (this->isSubclass(b))
     {
         Relation *x = this;
         Relation *y = (Relation *)b.get();

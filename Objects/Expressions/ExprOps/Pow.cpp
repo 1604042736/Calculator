@@ -41,7 +41,7 @@ std::string Pow::toLateX()
 
 exprptr_t Pow::operator*(Pow b)
 {
-    // a^m*a^n=a^(m+n) (a>0)
+    // a^m*a^n=a^(m+n)
     if (isinstance<True>(this->getBase() == b.getBase()))
     {
         exprptr_t sum = this->getExp() + b.getExp();
@@ -55,11 +55,11 @@ exprptr_t Pow::operator*(exprptr_t b)
 {
     if (isinstance<Pow>(b))
         return (*this) * *(Pow *)b.get();
-    // a^m*a^n=a^(m+n) (a>0)
     exprptr_t base = this->getBase();
     exprptr_t exp = this->getExp();
     if (isinstance<True>(base == b)) // 看成b^1
     {
+        // a^m*a=a^(m+1)
         exprptr_t sum = exp + Integer(1);
         if (typeid(*sum.get()) != typeid(Add))
             return base->pow(sum);
@@ -69,13 +69,10 @@ exprptr_t Pow::operator*(exprptr_t b)
 
 exprptr_t Pow::pow(exprptr_t b)
 {
-    //(a^m)^n=a^(m*n) (a>0)
-    if (isinstance<True>(b > Integer(0)))
-    {
-        exprptr_t e = this->getExp() * b;
-        if (typeid(*e.get()) != typeid(Mul)) // 可以合并
-            return this->getBase()->pow(e);
-    }
+    //(a^m)^n=a^(m*n)
+    exprptr_t e = this->getExp() * b;
+    if (!isinstance<Mul>(e)) // 可以合并
+        return this->getBase()->pow(e);
     return ExprOp::pow(b);
 }
 

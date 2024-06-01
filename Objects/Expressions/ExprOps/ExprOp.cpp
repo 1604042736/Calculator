@@ -15,7 +15,7 @@ ExprOp::ExprOp(expropargs_t args)
 
 boolptr_t ExprOp::operator==(exprptr_t b)
 {
-    if (typeid(*b.get()) == typeid(*this))
+    if (this->isSubclass(b))
     {
         ExprOp *a = this;
         ExprOp *c = (ExprOp *)b.get();
@@ -143,7 +143,7 @@ void ExprOp::sortArgs()
             expropargs_t args;
             for (size_t i = 0; i < this->args.size(); i++)
             {
-                if (typeid(*this->args[i].get()) == typeid(*this))
+                if (this->isSubclass(this->args[i]))
                 {
                     ExprOp *t = (ExprOp *)this->args[i].get(); // 可以保证this->args[i]一定是ExprOp
                     for (size_t j = 0; j < t->args.size(); j++)
