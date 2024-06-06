@@ -12,6 +12,7 @@
 #include "Common.h"
 #include "ProductSet.h"
 #include "Tuple.h"
+#include "UniversalSet.h"
 
 setptr_t Set::operator|(setptr_t b)
 {
@@ -78,4 +79,19 @@ boolptr_t Set::includes(setptr_t subset)
     if (isinstance<EmptySet>(subset))
         return boolptr_t(new True());
     return boolptr_t(new Includes(subset, this->copyToSetPtr()));
+}
+
+setptr_t Set::operator+(setptr_t)
+{
+    return setptr_t(new UniversalSet());
+}
+
+setptr_t Set::mul(setptr_t)
+{
+    return setptr_t(new UniversalSet());
+}
+
+setptr_t Set::pow(setptr_t)
+{
+    return setptr_t(new UniversalSet());
 }

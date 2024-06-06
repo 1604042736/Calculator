@@ -178,16 +178,3 @@ objptr_t ExprOp::replace(objptr_t old, objptr_t _new)
         o->args[i] = dynamic_cast<Expression *>(o->args[i]->replace(old, _new).get())->copyToExprPtr();
     return o->simplify();
 }
-
-setptr_t ExprOp::belongto()
-{
-    setptr_t cur = this->args[0]->belongto();
-    // 查找范围最大的集合
-    for (size_t i = 1; i < this->args.size(); i++)
-    {
-        setptr_t t = this->args[i]->belongto();
-        if (isinstance<True>(t->includes(cur)))
-            cur = t;
-    }
-    return cur;
-}

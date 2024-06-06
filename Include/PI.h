@@ -6,6 +6,7 @@
 #include "Mul.h"
 #include "Pow.h"
 #include "Integer.h"
+#include "Interval.h"
 
 class Integer;
 /*圆周率*/
@@ -33,5 +34,5 @@ public:
 
     virtual Object *copyThis() { return new PI(*this); }
 
-    virtual setptr_t belongto() { return setptr_t(new RealSet()); }
+    virtual setptr_t belongto() { return setptr_t(new Interval(exprptr_t(new Integer(3)), exprptr_t(new Integer(4)), true, true)); }
 };

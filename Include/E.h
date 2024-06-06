@@ -6,6 +6,7 @@
 #include "Mul.h"
 #include "Integer.h"
 #include "Pow.h"
+#include "Interval.h"
 
 /*自然常数*/
 class E : public Number
@@ -31,5 +32,5 @@ public:
 
     virtual Object *copyThis() { return new E(*this); }
 
-    virtual setptr_t belongto() { return setptr_t(new RealSet()); }
+    virtual setptr_t belongto() { return setptr_t(new Interval(exprptr_t(new Integer(2)), exprptr_t(new Integer(3)), true, true)); }
 };

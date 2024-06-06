@@ -120,8 +120,6 @@ public:
 
     virtual exprptr_t eval(Integer);
 
-    virtual setptr_t belongto() { return setptr_t(new IntegerSet()); }
-
     //  分段存储数字, 数组的每一个元素对应一个段, 每段能存储的最大数字由`section_t`决定
     //  保证长度不为0, 并且不存在前导0
     std::vector<section_t> sections;

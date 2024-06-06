@@ -116,3 +116,11 @@ Integer Pow::getWeight()
         weight = *(Integer *)weight.pow(this->args[i]->getWeight()).get();
     return weight;
 }
+
+setptr_t Pow::belongto()
+{
+    setptr_t result = this->args[0]->belongto();
+    for (size_t i = 1; i < this->args.size(); i++)
+        result = result->pow(this->args[i]->belongto());
+    return result;
+}

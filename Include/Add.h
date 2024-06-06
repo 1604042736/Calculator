@@ -34,5 +34,7 @@ public:
 
     virtual size_t getPriority() { return 1; }
 
+    virtual setptr_t belongto();
+
     virtual bool isBaseclass(objptr_t b) { return isinstance<Add>(b); }
 };

@@ -32,6 +32,8 @@ public:
     virtual exprptr_t _simplify();
     virtual exprptr_t _eval(Integer);
 
+    virtual setptr_t belongto();
+
     Integer getWeight();
 
     virtual size_t getPriority() { return 2; }

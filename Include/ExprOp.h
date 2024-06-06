@@ -37,7 +37,5 @@ public:
 
     virtual objptr_t replace(objptr_t, objptr_t);
 
-    virtual setptr_t belongto();
-
     expropargs_t args; // 参数
 };

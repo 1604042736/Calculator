@@ -24,7 +24,7 @@ public:
     virtual exprptr_t _simplify();
     virtual exprptr_t _eval(Integer);
 
-    setptr_t belongto() { return setptr_t(new RealSet()); }
+    virtual setptr_t belongto();
 
     Integer getWeight();
 

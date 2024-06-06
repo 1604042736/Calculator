@@ -78,8 +78,6 @@ public:
 
     virtual exprptr_t eval(Integer);
 
-    virtual setptr_t belongto() { return setptr_t(new RationalSet()); }
-
     Integer significand; // 尾数(有效数), 同时决定了Float的符号
     Integer exponent;    // 指数
 };

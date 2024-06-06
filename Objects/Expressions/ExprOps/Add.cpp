@@ -188,3 +188,11 @@ Integer Add::getWeight()
         weight = weight + this->args[i]->getWeight();
     return weight;
 }
+
+setptr_t Add::belongto()
+{
+    setptr_t result = this->args[0]->belongto();
+    for (size_t i = 1; i < this->args.size(); i++)
+        result = result->operator+(this->args[i]->belongto());
+    return result;
+}

@@ -86,8 +86,6 @@ public:
 
     void reduction();
 
-    virtual setptr_t belongto() { return setptr_t(new RationalSet()); }
-
     Integer nume; // 分子
     Integer deno; // 分母
 };
