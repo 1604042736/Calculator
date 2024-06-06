@@ -4,6 +4,7 @@
 #include "True.h"
 #include "EmptySet.h"
 #include "Common.h"
+#include "Tuple.h"
 
 std::string EnumSet::toString()
 {
@@ -113,4 +114,43 @@ setptr_t EnumSet::operator&(setptr_t b)
     if (isinstance<EnumSet>(b))
         return *this & *(EnumSet *)b.get();
     return Set::operator|(b);
+}
+
+setptr_t EnumSet::operator*(EnumSet b)
+{
+    elements_t elements;
+    for (size_t i = 0; i < this->elements.size(); i++)
+        for (size_t j = 0; j < b.elements.size(); j++)
+            elements.push_back(objptr_t(new Tuple({this->elements[i], b.elements[j]})));
+    if (elements.size() == 0)
+        return setptr_t(new EmptySet());
+    return setptr_t(new EnumSet(elements));
+}
+
+setptr_t EnumSet::operator*(setptr_t b)
+{
+    if (isinstance<EnumSet>(b))
+        return *this * *(EnumSet *)b.get();
+    return Set::operator*(b);
+}
+
+setptr_t EnumSet::pow(Integer n)
+{
+    Integer base(this->elements.size());
+    Integer end = dynamic_cast<Integer &>(*(base.pow(n)).get());
+    elements_t elements;
+    for (Integer i = 0; i < end; i = i + 1)
+    {
+        tupleargs_t args;
+        Integer t = i;
+        for (Integer j = 0; j < n; j = j + 1)
+        {
+            args.push_back(this->elements[(t % base).toUInt64()]);
+            t = floordiv(t, base);
+        }
+        elements.push_back(objptr_t(new Tuple(args)));
+    }
+    if (elements.size() == 0)
+        return setptr_t(new EmptySet());
+    return setptr_t(new EnumSet(elements));
 }

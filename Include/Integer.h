@@ -64,6 +64,14 @@ public:
 
     virtual Object *copyThis() { return new Integer(*this); }
 
+    uint64_t toUInt64()
+    {
+        uint64_t a = 0;
+        for (size_t i = this->sections.size() - 1; i < this->sections.size(); i--)
+            a = a * SECTION_MAX + this->sections[i];
+        return a;
+    }
+
     virtual bool operator>(const Integer a) const { return compare(*this, a, CF_GT); }
     virtual bool operator>=(const Integer a) const { return compare(*this, a, CF_GE); }
     virtual bool operator<(const Integer a) const { return compare(*this, a, CF_LT); }

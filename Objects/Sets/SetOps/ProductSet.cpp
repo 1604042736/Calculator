@@ -1,5 +1,6 @@
 #include "ProductSet.h"
 #include "Common.h"
+#include "Tuple.h"
 
 std::string ProductSet::toString()
 {
@@ -55,4 +56,15 @@ prettystring_t ProductSet::toPrettyString()
     }
 
     return normalize(result);
+}
+
+boolptr_t ProductSet::contains(objptr_t element)
+{
+    Tuple *tuple = dynamic_cast<Tuple *>(element.get());
+    if (tuple == nullptr || tuple->args.size() != this->args.size())
+        return to_boolean(false);
+    boolptr_t result(new False());
+    for (size_t i = 0; i < this->args.size(); i++)
+        result = result || (tuple->args[i]->operator==(this->args[i]));
+    return result;
 }

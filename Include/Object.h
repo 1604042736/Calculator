@@ -5,6 +5,9 @@
 #include <vector>
 #include <memory>
 
+class Set;
+typedef std::shared_ptr<Set> setptr_t;
+
 class Boolean;
 typedef std::shared_ptr<Boolean> boolptr_t;
 
@@ -60,6 +63,8 @@ public:
     virtual objptr_t replace(objptr_t, objptr_t);
     // 判断是否是自己的子类
     virtual bool isBaseclass(objptr_t b) { return typeid(*this) == typeid(*b.get()); }
+    /*属于哪个集合*/
+    virtual setptr_t belongto();
 };
 
 prettystring_t normalize(prettystring_t);

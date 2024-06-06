@@ -12,5 +12,7 @@ public:
     virtual std::string toString();
     virtual prettystring_t toPrettyString();
 
+    virtual boolptr_t contains(objptr_t element);
+
     virtual std::string getOpStr() { return "×"; }
 };

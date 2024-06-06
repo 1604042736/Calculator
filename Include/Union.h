@@ -10,5 +10,7 @@ public:
 
     virtual Object *copyThis() { return new Union(*this); }
 
+    virtual boolptr_t contains(objptr_t element);
+
     virtual std::string getOpStr() { return "∪"; }
 };

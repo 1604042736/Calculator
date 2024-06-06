@@ -20,6 +20,10 @@ public:
     virtual setptr_t operator&(EnumSet);
     virtual setptr_t operator&(setptr_t);
 
+    virtual setptr_t operator*(EnumSet);
+    virtual setptr_t operator*(setptr_t);
+    virtual setptr_t pow(Integer);
+
     virtual boolptr_t contains(objptr_t);
 
     virtual std::string toString();

@@ -6,6 +6,7 @@
 #include "Boolean.h"
 #include "True.h"
 #include "Common.h"
+#include "UniversalSet.h"
 
 /*转换成字符串*/
 std::string Object::toString()
@@ -96,6 +97,11 @@ objptr_t Object::replace(objptr_t old, objptr_t _new)
     if (isinstance<True>(this->operator==(old)))
         return _new;
     return objptr_t(this->copyThis());
+}
+
+setptr_t Object::belongto()
+{
+    return setptr_t(new UniversalSet());
 }
 
 /*

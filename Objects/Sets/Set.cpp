@@ -41,14 +41,10 @@ setptr_t Set::operator&(objptr_t b)
 
 boolptr_t Set::contains(objptr_t element)
 {
-    if (isinstance<Expression>(element))
-    {
-        Expression *expr = dynamic_cast<Expression *>(element.get());
-        setptr_t belongset = expr->belongto();
-        boolptr_t b = this->includes(belongset);
-        if (!isinstance<Includes>(b))
-            return b;
-    }
+    setptr_t belongset = element->belongto();
+    boolptr_t b = this->includes(belongset);
+    if (!isinstance<Includes>(b))
+        return b;
     return boolptr_t(new Contains(element, this->copyToSetPtr()));
 }
 
