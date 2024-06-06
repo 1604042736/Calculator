@@ -36,6 +36,7 @@ Runtime::Runtime()
         {"Q", objptr_t(new RationalSet())},
         {"Z", objptr_t(new IntegerSet())},
         {"factorint", objptr_t(new FactorintMapping())},
+        {"productset", objptr_t(new ProductSetMapping())},
     });
 }
 

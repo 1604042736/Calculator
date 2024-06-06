@@ -53,7 +53,7 @@ boolptr_t Set::contains(objptr_t element)
     return boolptr_t(new Contains(element, this->copyToSetPtr()));
 }
 
-setptr_t Set::operator*(setptr_t b)
+setptr_t Set::product(setptr_t b)
 {
     return setptr_t(new ProductSet({this->copyToSetPtr(), b}));
 }
@@ -90,7 +90,7 @@ setptr_t Set::operator+(setptr_t)
     return setptr_t(new UniversalSet());
 }
 
-setptr_t Set::mul(setptr_t)
+setptr_t Set::operator*(setptr_t)
 {
     return setptr_t(new UniversalSet());
 }
@@ -98,4 +98,13 @@ setptr_t Set::mul(setptr_t)
 setptr_t Set::pow(setptr_t)
 {
     return setptr_t(new UniversalSet());
+}
+
+objptr_t Set::pow(objptr_t b)
+{
+    if(isinstance<Integer>(b))
+    return this->pow(*dynamic_cast<Integer*>(b.get()));
+    else if(isinstance<Set>(b))
+    return this->pow(dynamic_cast<Set*>(b.get())->copyToSetPtr());
+    return Object::pow(b);
 }

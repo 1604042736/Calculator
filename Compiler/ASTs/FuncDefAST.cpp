@@ -26,7 +26,8 @@ objptr_t FuncDefAST::exec(Runtime *runtime)
         else
             func_builder = [](std::string name)
             { return objptr_t(new Mapping(name)); };
-        return func_builder(this->name);
+        runtime->defName(this->name, func_builder(this->name));
+        return nullptr;
     }
 
     funcargs_t args;

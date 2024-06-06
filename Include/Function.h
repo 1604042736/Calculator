@@ -13,6 +13,8 @@ public:
     Function(setptr_t domain = setptr_t(new UniversalSet()),
              setptr_t range = setptr_t(new UniversalSet()));
 
+    virtual boolptr_t inDomain(funcargs_t);
+
     setptr_t domain; // 作用域
     setptr_t range;  // 值域
 };

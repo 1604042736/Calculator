@@ -30,7 +30,7 @@ public:
 class EvalMapping : public Mapping
 {
 public:
-    EvalMapping() : Mapping("eval", RealSet() * IntegerSet(), setptr_t(new RationalSet())) {}
+    EvalMapping() : Mapping("eval", RealSet().product(IntegerSet()), setptr_t(new RationalSet())) {}
 
     virtual exprptr_t operator()(exprptr_t b, Integer c) { return b->eval(c); }
     virtual objptr_t operator()(funcargs_t);
@@ -56,6 +56,14 @@ class FactorintMapping : public Mapping
 {
 public:
     FactorintMapping();
+
+    virtual objptr_t operator()(funcargs_t);
+};
+
+class ProductSetMapping : public Mapping
+{
+public:
+    ProductSetMapping() : Mapping("productset") {}
 
     virtual objptr_t operator()(funcargs_t);
 };

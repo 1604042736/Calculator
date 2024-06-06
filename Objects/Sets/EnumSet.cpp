@@ -116,7 +116,7 @@ setptr_t EnumSet::operator&(setptr_t b)
     return Set::operator|(b);
 }
 
-setptr_t EnumSet::operator*(EnumSet b)
+setptr_t EnumSet::product(EnumSet b)
 {
     elements_t elements;
     for (size_t i = 0; i < this->elements.size(); i++)
@@ -127,11 +127,11 @@ setptr_t EnumSet::operator*(EnumSet b)
     return setptr_t(new EnumSet(elements));
 }
 
-setptr_t EnumSet::operator*(setptr_t b)
+setptr_t EnumSet::product(setptr_t b)
 {
     if (isinstance<EnumSet>(b))
-        return *this * *(EnumSet *)b.get();
-    return Set::operator*(b);
+        return this->product(*(EnumSet *)b.get());
+    return Set::product(b);
 }
 
 setptr_t EnumSet::pow(Integer n)

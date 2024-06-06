@@ -87,3 +87,18 @@ objptr_t FactorintMapping::operator()(funcargs_t args)
     }
     return exprptr_t(new Mul(exprop_args));
 }
+
+objptr_t ProductSetMapping::operator()(funcargs_t args)
+{
+    setptr_t result = nullptr;
+    for (size_t i = 0; i < args.size(); i++)
+    {
+        if (!isinstance<Set>(args[i]))
+            throw std::runtime_error("超出定义域");
+        if (result == nullptr)
+            result = dynamic_cast<Set *>(args[i].get())->copyToSetPtr();
+        else
+            result = result->product(dynamic_cast<Set *>(args[i].get())->copyToSetPtr());
+    }
+    return result;
+}
