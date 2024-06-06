@@ -58,6 +58,11 @@ public:
     virtual boolptr_t operator<=(objptr_t);
     friend boolptr_t operator<=(objptr_t, objptr_t);
 
+    virtual objptr_t operator&(objptr_t);
+    friend objptr_t operator&(objptr_t, objptr_t);
+    virtual objptr_t operator|(objptr_t);
+    friend objptr_t operator|(objptr_t, objptr_t);
+
     virtual objptr_t operator()(std::vector<objptr_t>);
     /*替换*/
     virtual objptr_t replace(objptr_t, objptr_t);

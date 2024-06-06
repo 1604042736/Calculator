@@ -14,9 +14,9 @@ class Set : public Object
 {
 public:
     virtual setptr_t operator&(setptr_t);
-    virtual setptr_t operator&(objptr_t);
+    virtual objptr_t operator&(objptr_t);
     virtual setptr_t operator|(setptr_t);
-    virtual setptr_t operator|(objptr_t);
+    virtual objptr_t operator|(objptr_t);
 
     virtual setptr_t operator*(setptr_t);
     virtual setptr_t operator*(Set &b) { return this->operator*(b.copyToSetPtr()); }

@@ -87,6 +87,18 @@ boolptr_t operator<(objptr_t a, objptr_t b) { return a->operator<(b); }
 boolptr_t Object::operator<=(objptr_t b) { return *this == b || *this < b; }
 boolptr_t operator<=(objptr_t a, objptr_t b) { return a->operator<=(b); }
 
+objptr_t Object::operator&(objptr_t b)
+{
+    throw std::runtime_error("Unsupported operator& for " + std::string(typeid(*this).name()) + " and " + std::string(typeid(*b.get()).name()));
+}
+objptr_t operator&(objptr_t a, objptr_t b) { return a->operator&(b); }
+
+objptr_t Object::operator|(objptr_t b)
+{
+    throw std::runtime_error("Unsupported operator& for " + std::string(typeid(*this).name()) + " and " + std::string(typeid(*b.get()).name()));
+}
+objptr_t operator|(objptr_t a, objptr_t b) { return a->operator|(b); }
+
 objptr_t Object::operator()(std::vector<objptr_t>)
 {
     throw std::runtime_error("Unsupported operator() for " + std::string(typeid(*this).name()));

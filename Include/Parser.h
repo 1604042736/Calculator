@@ -23,6 +23,8 @@ public:
     astptr_t parse_and_expr();
     astptr_t parse_not_expr();
     astptr_t parse_compare_expr();
+    astptr_t parse_bitor_expr();
+    astptr_t parse_bitand_expr();
     astptr_t parse_add_expr();
     astptr_t parse_mul_expr();
     astptr_t parse_prefix_expr();
@@ -30,6 +32,7 @@ public:
     astptr_t parse_postfix_expr();
     std::vector<astptr_t> parse_argument_list();
     astptr_t parse_atom_expr();
+    astptr_t parse_enumset();
 
     Lexer *lexer;
     Token token;

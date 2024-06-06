@@ -22,9 +22,11 @@ setptr_t Set::operator|(setptr_t b)
         return b;
     return setptr_t(new Union({setptr_t(dynamic_cast<Set *>(this->copyThis())), b}));
 }
-setptr_t Set::operator|(objptr_t b)
+objptr_t Set::operator|(objptr_t b)
 {
-    return this->operator|(setptr_t(new EnumSet({b})));
+    if (isinstance<Set>(b))
+        return this->operator|(dynamic_cast<Set *>(b.get())->copyToSetPtr());
+    return Object::operator|(b);
 }
 
 setptr_t Set::operator&(setptr_t b)
@@ -35,9 +37,11 @@ setptr_t Set::operator&(setptr_t b)
         return setptr_t(dynamic_cast<Set *>(this->copyThis()));
     return setptr_t(new Intersection({setptr_t(dynamic_cast<Set *>(this->copyThis())), b}));
 }
-setptr_t Set::operator&(objptr_t b)
+objptr_t Set::operator&(objptr_t b)
 {
-    return this->operator&(setptr_t(new EnumSet({b})));
+    if (isinstance<Set>(b))
+        return this->operator&(dynamic_cast<Set *>(b.get())->copyToSetPtr());
+    return Object::operator&(b);
 }
 
 boolptr_t Set::contains(objptr_t element)

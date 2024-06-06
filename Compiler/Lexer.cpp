@@ -142,6 +142,10 @@ Token Lexer::getToken()
         this->tokens.push_back(Token(TK_LLITTLE, this->context, "(", indent));
     else if (ch == ')')
         this->tokens.push_back(Token(TK_RLITTLE, this->context, ")", indent));
+    else if (ch == '{')
+        this->tokens.push_back(Token(TK_LLARGE, this->context, "{", indent));
+    else if (ch == '}')
+        this->tokens.push_back(Token(TK_RLARGE, this->context, "}", indent));
     else if (ch == ',')
         this->tokens.push_back(Token(TK_COMMA, this->context, ",", indent));
     else if (ch == '^')
@@ -190,6 +194,10 @@ Token Lexer::getToken()
             this->tokens.push_back(Token(TK_LT, this->context, "<", indent));
         }
     }
+    else if (ch == '|')
+        this->tokens.push_back(Token(TK_BITOR, this->context, "|", indent));
+    else if (ch == '&')
+        this->tokens.push_back(Token(TK_BITAND, this->context, "&", indent));
     else
         throw SyntaxError("意料之外的字符: " + ch, this->context);
     return this->tokens[this->cur_token_index++];

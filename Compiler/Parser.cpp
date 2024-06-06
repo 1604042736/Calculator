@@ -12,6 +12,7 @@
 #include "UnaryOpAST.h"
 #include "TupleAST.h"
 #include "ModifyAST.h"
+#include "EnumSetAST.h"
 
 void Parser::match(TokenType cur, TokenType expect)
 {
@@ -175,14 +176,46 @@ astptr_t Parser::parse_not_expr()
 }
 
 /*
-compare_expr : add_expr | add_expr '=' add_expr | add_expr '!=' add_expr
-                        | add_expr '>' add_expr | add_expr '>=' add_expr
-                        | add_expr '<' add_expr | add_expr '<=' add_expr
+compare_expr : bitor_expr | bitor_expr '=' bitor_expr | bitor_expr '!=' bitor_expr
+                          | bitor_expr '>' bitor_expr | bitor_expr '>=' bitor_expr
+                          | bitor_expr '<' bitor_expr | bitor_expr '<=' bitor_expr
 */
 astptr_t Parser::parse_compare_expr()
 {
-    astptr_t l = parse_add_expr();
+    astptr_t l = parse_bitor_expr();
     if (token.type == TK_EQ || token.type == TK_NE || token.type == TK_GE || token.type == TK_GT || token.type == TK_LT || token.type == TK_LE)
+    {
+        std::string op = token.str;
+        match(token.type, token.type);
+        astptr_t r = parse_bitor_expr();
+        l = astptr_t(new BinOpAST(op, l, r, token.context));
+    }
+    return l;
+}
+
+/*
+bitor_expr : bitand_expr | bitor_expr '|' bitand_expr
+*/
+astptr_t Parser::parse_bitor_expr()
+{
+    astptr_t l = parse_bitand_expr();
+    while (token.type == TK_BITOR)
+    {
+        std::string op = token.str;
+        match(token.type, token.type);
+        astptr_t r = parse_bitand_expr();
+        l = astptr_t(new BinOpAST(op, l, r, token.context));
+    }
+    return l;
+}
+
+/*
+bitand_expr : add_expr | bitand_expr '&' add_expr
+*/
+astptr_t Parser::parse_bitand_expr()
+{
+    astptr_t l = parse_add_expr();
+    while (token.type == TK_BITAND)
     {
         std::string op = token.str;
         match(token.type, token.type);
@@ -343,8 +376,33 @@ astptr_t Parser::parse_atom_expr()
         match(token.type, TK_RLITTLE);
         break;
     }
+    case TK_LLARGE:
+        a = parse_enumset();
+        break;
     default:
         throw SyntaxError("意料之外的Token: " + token.str, lexer->context);
     }
+    return a;
+}
+
+/*
+enumset : '{' [ sentence (',' sentence)* ] '}'
+*/
+astptr_t Parser::parse_enumset()
+{
+    astptr_t a(new EnumSetAST({}, lexer->context));
+    match(token.type, TK_LLARGE);
+    if (token.type != TK_RLARGE)
+    {
+        a->children.push_back(parse_sentence());
+        while (token.type == TK_COMMA)
+        {
+            match(token.type, TK_COMMA);
+            if (token.type == TK_RLARGE)
+                break;
+            a->children.push_back(parse_sentence());
+        }
+    }
+    match(token.type, TK_RLARGE);
     return a;
 }

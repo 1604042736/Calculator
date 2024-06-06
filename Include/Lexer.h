@@ -20,6 +20,8 @@ enum TokenType
     TK_DIV,     // /
     TK_LLITTLE, // (
     TK_RLITTLE, // )
+    TK_LLARGE,  // {
+    TK_RLARGE,  // }
     TK_COMMA,   // ,
     TK_POW,     // ^
     TK_EQ,      // =
@@ -29,6 +31,8 @@ enum TokenType
     TK_LT,      // <
     TK_LE,      // <=
     TK_AT,      // @
+    TK_BITOR,   // |
+    TK_BITAND,  // &
     TK_SYM,
     TK_LET,
     TK_AND,

@@ -35,6 +35,10 @@ objptr_t BinOpAST::exec(Runtime *runtime)
             return l < r;
         else if (this->op == "<=")
             return l <= r;
+        else if (this->op == "&")
+            return l & r;
+        else if (this->op == "|")
+            return l | r;
         else
             throw Error("意料之外的二元运算符: " + this->op, this->context);
     }
