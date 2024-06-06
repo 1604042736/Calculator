@@ -10,6 +10,11 @@
 #include "Infinity.h"
 #include "True.h"
 #include "False.h"
+#include "UniversalSet.h"
+#include "RealSet.h"
+#include "RationalSet.h"
+#include "IntegerSet.h"
+#include "EmptySet.h"
 
 Runtime::Runtime()
 {
@@ -24,6 +29,11 @@ Runtime::Runtime()
         {"oo", objptr_t(new Infinity())},
         {"True", objptr_t(new True())},
         {"False", objptr_t(new False())},
+        {"diff", objptr_t(new DiffMapping())},
+        {"U", objptr_t(new UniversalSet())},
+        {"R", objptr_t(new RealSet())},
+        {"Q", objptr_t(new RationalSet())},
+        {"Z", objptr_t(new IntegerSet())},
     });
 }
 
@@ -64,4 +74,21 @@ objptr_t PrintMapping::operator()(funcargs_t args)
     for (size_t i = 0; i < args.size(); i++)
         print(args[i]->toPrettyString());
     return nullptr;
+}
+
+objptr_t DiffMapping::operator()(funcargs_t args)
+{
+    if (args.size() < 2)
+        throw std::runtime_error("参数不够");
+    std::vector<exprptr_t> expr_args;
+    for (size_t i = 0; i < args.size(); i++)
+    {
+        if (!isinstance<Expression>(args[i]))
+            throw std::runtime_error("超出定义域");
+        expr_args.push_back(dynamic_cast<Expression *>(args[i].get())->copyToExprPtr());
+    }
+    exprptr_t result = expr_args[0]->diff(expr_args[1]);
+    for (size_t i = 2; i < expr_args.size(); i++)
+        result = result->diff(expr_args[i]);
+    return result;
 }

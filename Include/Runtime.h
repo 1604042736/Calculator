@@ -53,3 +53,11 @@ public:
 
     virtual objptr_t operator()(funcargs_t);
 };
+
+class DiffMapping : public Mapping
+{
+public:
+    DiffMapping() : Mapping("diff") {}
+
+    virtual objptr_t operator()(funcargs_t);
+};

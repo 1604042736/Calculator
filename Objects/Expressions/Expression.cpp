@@ -124,6 +124,8 @@ exprptr_t Expression::sqrt(Integer _1) { return this->pow(exprptr_t(new Float("0
 exprptr_t sqrt(exprptr_t _1, Integer _2) { return _1->sqrt(_2); }
 exprptr_t Expression::pow(exprptr_t _1)
 {
+    if (isinstance<True>(_1 == Integer(1)))
+        return this->copyToExprPtr();
     return std::shared_ptr<Pow>(new Pow({this->copyToExprPtr(), _1}));
 }
 exprptr_t Expression::pow(Expression &_1) { return (*this).pow(_1.copyToExprPtr()); }
@@ -212,9 +214,9 @@ boolptr_t Expression::operator<(objptr_t b)
 /*求导*/
 exprptr_t Expression::diff(exprptr_t target)
 {
-    if (isinstance<True>(target->replace(this->copyToExprPtr(),
-                                         exprptr_t(new ExprSymbol("_")))
-                             ->operator==(target))) // 当成常量
+    if (isinstance<True>(this->replace(target,
+                                       exprptr_t(new ExprSymbol("_")))
+                             ->operator==(this->copyToExprPtr()))) // 当成常量
         return exprptr_t(new Integer(0));
     if (isinstance<True>(this->operator==(target)))
         return exprptr_t(new Integer(1));
