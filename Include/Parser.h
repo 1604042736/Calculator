@@ -3,6 +3,7 @@
 #include "Lexer.h"
 #include "AST.h"
 
+class FuncBodyAST;
 /*语法分析器*/
 class Parser
 {
@@ -17,6 +18,8 @@ public:
     astptr_t parse_modify();
     astptr_t parse_symdef();
     astptr_t parse_let();
+    astptr_t parse_funcdef();
+    std::vector<std::shared_ptr<FuncBodyAST>> parse_funcbody();
 
     astptr_t parse_expr();
     astptr_t parse_or_expr();

@@ -8,5 +8,7 @@ class RationalSet : public Set
 public:
     virtual Object *copyThis() { return new RationalSet(); }
 
+    virtual boolptr_t contains(objptr_t);
+
     virtual std::string toString() { return "Q"; }
 };

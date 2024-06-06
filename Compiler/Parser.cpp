@@ -13,6 +13,7 @@
 #include "TupleAST.h"
 #include "ModifyAST.h"
 #include "EnumSetAST.h"
+#include "FuncDefAST.h"
 
 void Parser::match(TokenType cur, TokenType expect)
 {
@@ -71,6 +72,9 @@ astptr_t Parser::parse_sentence()
     case TK_LET:
         a = parse_let();
         break;
+    case TK_FUNC:
+        a = parse_funcdef();
+        break;
     default:
         a = parse_expr();
     }
@@ -117,6 +121,58 @@ astptr_t Parser::parse_symdef()
         match(token.type, TK_NAME);
     }
     return astptr_t(new SymDefAST(names, lexer->context));
+}
+
+/*
+funcdef : 'func' NAME | 'func' NAME '(' NAME (',' NAME)* ')' '=' funcbody
+*/
+astptr_t Parser::parse_funcdef()
+{
+    match(token.type, TK_FUNC);
+    std::string name = token.str;
+    match(token.type, TK_NAME);
+    astptr_t a;
+    if (token.type != TK_LLITTLE)
+        a = astptr_t(new FuncDefAST(name, {}, {}, lexer->context));
+    else
+    {
+        match(token.type, TK_LLITTLE);
+        std::vector<std::string> args_name;
+        args_name.push_back(token.str);
+        match(token.type, TK_NAME);
+        while (token.type == TK_COMMA)
+        {
+            match(token.type, TK_COMMA);
+            args_name.push_back(token.str);
+            match(token.type, TK_NAME);
+        }
+        match(token.type, TK_RLITTLE);
+        match(token.type, TK_EQ);
+        a = astptr_t(new FuncDefAST(name, args_name, parse_funcbody(), lexer->context));
+    }
+    return a;
+}
+
+/*
+funcbody : expr [',' expr]
+*/
+std::vector<funcbodyastptr_t> Parser::parse_funcbody()
+{
+    std::string indent = token.indent;
+    std::vector<funcbodyastptr_t> body;
+
+    while (token.indent == indent)
+    {
+        astptr_t expr = parse_expr();
+        astptr_t domain = nullptr;
+        if (token.type == TK_COMMA)
+        {
+            match(token.type, TK_COMMA);
+            domain = parse_expr();
+        }
+        body.push_back(funcbodyastptr_t(new FuncBodyAST(expr, domain, lexer->context)));
+    }
+    return body;
 }
 
 /*
@@ -380,7 +436,7 @@ astptr_t Parser::parse_atom_expr()
         a = parse_enumset();
         break;
     default:
-        throw SyntaxError("意料之外的Token: " + token.str, lexer->context);
+        throw SyntaxError("[parse_atom_expr]意料之外的Token: " + token.str, lexer->context);
     }
     return a;
 }

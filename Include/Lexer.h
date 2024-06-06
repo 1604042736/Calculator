@@ -38,6 +38,7 @@ enum TokenType
     TK_AND,
     TK_OR,
     TK_NOT,
+    TK_FUNC,
     TK_EOF
 };
 

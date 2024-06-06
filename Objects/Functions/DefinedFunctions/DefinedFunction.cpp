@@ -60,8 +60,8 @@ objptr_t DefinedFunction::operator()(funcargs_t args)
     if (flag)
         throw std::runtime_error("超出定义域");
     if (isinstance<ExprDefFunction>(this))
-        return objptr_t(new ExprDefFunction(this->name, n_args, sections, this->domain, this->range));
-    return objptr_t(new DefinedFunction(this->name, n_args, sections, this->domain, this->range));
+        return objptr_t(new ExprDefFunction(this->name, n_args, this->sections, this->domain, this->range));
+    return objptr_t(new DefinedFunction(this->name, n_args, this->sections, this->domain, this->range));
 }
 
 objptr_t DefinedFunction::replace(objptr_t old, objptr_t _new)

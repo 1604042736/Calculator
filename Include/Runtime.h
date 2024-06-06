@@ -27,37 +27,3 @@ public:
     std::vector<std::map<std::string, objptr_t>> scopes; // 作用域, 上层作用域放在大索引处
     flags_t flags;                                       // 标志位
 };
-
-class SimplifyMapping : public Mapping
-{
-public:
-    SimplifyMapping() : Mapping("simplify", setptr_t(new RealSet()), setptr_t(new RealSet())) {}
-
-    virtual exprptr_t operator()(exprptr_t b) { return b->simplify(); }
-    virtual objptr_t operator()(funcargs_t);
-};
-
-class EvalMapping : public Mapping
-{
-public:
-    EvalMapping() : Mapping("eval", RealSet() * IntegerSet(), setptr_t(new RationalSet())) {}
-
-    virtual exprptr_t operator()(exprptr_t b, Integer c) { return b->eval(c); }
-    virtual objptr_t operator()(funcargs_t);
-};
-
-class PrintMapping : public Mapping
-{
-public:
-    PrintMapping() : Mapping("print", setptr_t(new UniversalSet()), setptr_t(new EmptySet())) {}
-
-    virtual objptr_t operator()(funcargs_t);
-};
-
-class DiffMapping : public Mapping
-{
-public:
-    DiffMapping() : Mapping("diff") {}
-
-    virtual objptr_t operator()(funcargs_t);
-};

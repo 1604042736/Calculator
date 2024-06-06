@@ -105,6 +105,8 @@ Token Lexer::getToken()
             this->tokens.push_back(Token(TK_OR, this->context, token_str, indent));
         else if (token_str == "not")
             this->tokens.push_back(Token(TK_NOT, this->context, token_str, indent));
+        else if (token_str == "func")
+            this->tokens.push_back(Token(TK_FUNC, this->context, token_str, indent));
         else
             this->tokens.push_back(Token(TK_NAME, this->context, token_str, indent));
         this->ungetChar();
