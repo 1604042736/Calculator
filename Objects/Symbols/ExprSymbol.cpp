@@ -69,12 +69,3 @@ Integer ExprSymbol::getWeight()
 {
     return Integer(std::hash<std::string>()(this->name));
 }
-
-exprptr_t ExprSymbol::diff(exprptr_t target)
-{
-    exprptr_t result = Expression::diff(target);
-    if (isinstance<Derivative>(result))
-        // 看成常量
-        return exprptr_t(new Integer(0));
-    return result;
-}

@@ -5,6 +5,7 @@
 #include "Common.h"
 #include "Derivative.h"
 #include "Ln.h"
+#include "ExprSymbol.h"
 
 prettystring_t Pow::toPrettyString()
 {
@@ -81,10 +82,13 @@ exprptr_t Pow::diff(exprptr_t target)
     exprptr_t result = Expression::diff(target);
     if (!isinstance<Derivative>(result))
         return result;
-    // (a^b)'=(e^(b*ln(a)))'=(a^b)*(b'*ln(a)+b/a*a')
-    exprptr_t a = this->getBase();
-    exprptr_t b = this->getExp();
-    return a->pow(b) * (b->diff(target) * Ln(a) + b / a * a->diff(target));
+    if (isinstance<Symbol>(target))
+    { // (a^b)'=(e^(b*ln(a)))'=(a^b)*(b'*ln(a)+b/a*a')
+        exprptr_t a = this->getBase();
+        exprptr_t b = this->getExp();
+        return a->pow(b) * (b->diff(target) * Ln(a) + b / a * a->diff(target));
+    }
+    return result;
 }
 
 exprptr_t Pow::_simplify()

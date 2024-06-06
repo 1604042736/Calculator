@@ -16,6 +16,7 @@
 #include "Common.h"
 #include "Derivative.h"
 #include "Equality.h"
+#include "ExprSymbol.h"
 
 exprptr_t Expression::operator*(exprptr_t b)
 {
@@ -211,6 +212,10 @@ boolptr_t Expression::operator<(objptr_t b)
 /*求导*/
 exprptr_t Expression::diff(exprptr_t target)
 {
+    if (isinstance<True>(target->replace(this->copyToExprPtr(),
+                                         exprptr_t(new ExprSymbol("_")))
+                             ->operator==(target))) // 当成常量
+        return exprptr_t(new Integer(0));
     if (isinstance<True>(this->operator==(target)))
         return exprptr_t(new Integer(1));
     return exprptr_t(new Derivative(this->copyToExprPtr(), {{target, Integer(1)}}));

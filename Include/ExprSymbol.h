@@ -27,7 +27,5 @@ public:
     virtual exprptr_t operator/(exprptr_t);
     virtual boolptr_t operator==(exprptr_t);
 
-    virtual exprptr_t diff(exprptr_t);
-
     Integer getWeight();
 };

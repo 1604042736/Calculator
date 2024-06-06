@@ -6,6 +6,7 @@
 #include "Add.h"
 #include "Common.h"
 #include "Derivative.h"
+#include "ExprSymbol.h"
 
 exprptr_t Mul::operator+(Mul b)
 {
@@ -115,18 +116,21 @@ exprptr_t Mul::diff(exprptr_t target)
     exprptr_t result = Expression::diff(target);
     if (!isinstance<Derivative>(result))
         return result;
-    for (size_t i = 0; i < this->args.size(); i++)
+    if (isinstance<Symbol>(target))
     {
-        expropargs_t args;
-        for (size_t j = 0; j < i; j++)
-            args.push_back(this->args[j]);
-        args.push_back(this->args[i]->diff(target));
-        for (size_t j = i + 1; j < this->args.size(); j++)
-            args.push_back(this->args[j]);
-        if (i == 0)
-            result = Mul(args).simplify();
-        else
-            result = result + Mul(args).simplify();
+        for (size_t i = 0; i < this->args.size(); i++)
+        {
+            expropargs_t args;
+            for (size_t j = 0; j < i; j++)
+                args.push_back(this->args[j]);
+            args.push_back(this->args[i]->diff(target));
+            for (size_t j = i + 1; j < this->args.size(); j++)
+                args.push_back(this->args[j]);
+            if (i == 0)
+                result = Mul(args).simplify();
+            else
+                result = result + Mul(args).simplify();
+        }
     }
     return result;
 }
