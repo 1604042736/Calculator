@@ -34,5 +34,5 @@ public:
     /*获取指数*/
     exprptr_t inline getExp() { return this->args.size() == 2 ? this->args[1] : exprptr_t(new Pow(expropargs_t(this->args.begin() + 1, this->args.end()))); }
 
-    virtual bool isSubclass(objptr_t b) { return isinstance<Pow>(b); }
+    virtual bool isBaseclass(objptr_t b) { return isinstance<Pow>(b); }
 };

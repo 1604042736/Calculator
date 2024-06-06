@@ -59,7 +59,7 @@ public:
     /*替换*/
     virtual objptr_t replace(objptr_t, objptr_t);
     // 判断是否是自己的子类
-    virtual bool isSubclass(objptr_t b) { return typeid(*this) == typeid(*b.get()); }
+    virtual bool isBaseclass(objptr_t b) { return typeid(*this) == typeid(*b.get()); }
 };
 
 prettystring_t normalize(prettystring_t);

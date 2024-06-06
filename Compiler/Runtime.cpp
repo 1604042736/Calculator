@@ -46,7 +46,7 @@ void Runtime::defName(std::string name, objptr_t val)
 
 objptr_t SimplifyMapping::operator()(funcargs_t args)
 {
-    if (args.size() > 1 || !isinstance<Expression>(args[0]))
+    if (args.size() != 1 || !isinstance<Expression>(args[0]))
         throw std::runtime_error("超出定义域");
     return this->operator()(dynamic_cast<Expression *>(args[0].get())->copyToExprPtr());
 }

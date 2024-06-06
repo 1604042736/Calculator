@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Mapping.h"
-#include "Expression.h"
+#include "RealSet.h"
 
-class ExprMapping : public Mapping, public Expression
+class ExprMapping : public Mapping
 {
 public:
     ExprMapping(std::string name,
@@ -11,7 +11,6 @@ public:
                 setptr_t range = setptr_t(new RealSet())) : Mapping(name, domain, range) {}
 
     virtual Object *copyThis() { return new ExprMapping(*this); }
-    virtual exprptr_t copyToExprPtr() { return exprptr_t(new ExprMapping(*this)); }
 
     virtual objptr_t operator()(funcargs_t);
 };

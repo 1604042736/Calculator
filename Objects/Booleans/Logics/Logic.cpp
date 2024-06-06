@@ -62,7 +62,7 @@ prettystring_t Logic::toPrettyString()
 
 bool Logic::operator==(boolptr_t b)
 {
-    if (this->isSubclass(b))
+    if (this->isBaseclass(b))
     {
         Logic *a = this;
         Logic *c = (Logic *)b.get();
@@ -101,7 +101,7 @@ void Logic::sortArgs()
         logicargs_t args;
         for (size_t i = 0; i < this->args.size(); i++)
         {
-            if (this->isSubclass(this->args[i]))
+            if (this->isBaseclass(this->args[i]))
             {
                 Logic *t = (Logic *)this->args[i].get();
                 for (size_t j = 0; j < t->args.size(); j++)

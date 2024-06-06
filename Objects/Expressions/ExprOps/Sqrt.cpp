@@ -53,7 +53,7 @@ exprptr_t SqrtMapping::operator()(exprptr_t arg)
 
 objptr_t SqrtMapping::operator()(funcargs_t args)
 {
-    if (args.size() > 1)
+    if (args.size() != 1)
         throw std::runtime_error("Too many args");
     Expression *arg = dynamic_cast<Expression *>(args[0].get());
     if (arg == nullptr || isinstance<False>(arg->copyToExprPtr() >= Integer(0)))

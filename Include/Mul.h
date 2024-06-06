@@ -36,5 +36,5 @@ public:
 
     virtual size_t getPriority() { return 2; }
 
-    virtual bool isSubclass(objptr_t b) { return isinstance<Mul>(b); }
+    virtual bool isBaseclass(objptr_t b) { return isinstance<Mul>(b); }
 };
