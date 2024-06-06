@@ -324,16 +324,21 @@ astptr_t Parser::parse_atom_expr()
     case TK_LLITTLE:
     {
         match(token.type, TK_LLITTLE);
-        a = parse_expr();
-        if (token.type == TK_COMMA)
+        if (token.type != TK_RLITTLE)
         {
-            std::vector<astptr_t> args({a});
-            while (token.type == TK_COMMA)
+            a = parse_expr();
+            if (token.type == TK_COMMA)
             {
-                match(token.type, TK_COMMA);
-                args.push_back(parse_expr());
+                std::vector<astptr_t> args({a});
+                do
+                {
+                    match(token.type, TK_COMMA);
+                    if (token.type == TK_RLITTLE)
+                        break;
+                    args.push_back(parse_expr());
+                } while (token.type == TK_COMMA);
+                a = astptr_t(new TupleAST(args, lexer->context));
             }
-            a = astptr_t(new TupleAST(args, lexer->context));
         }
         match(token.type, TK_RLITTLE);
         break;
