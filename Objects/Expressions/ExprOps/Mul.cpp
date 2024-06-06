@@ -66,7 +66,8 @@ exprptr_t Mul::operator+(exprptr_t b)
 {
     if (isinstance<Mul>(b))
         return *this + *(Mul *)b.get();
-    return ExprOp::operator+(b);
+    else
+        return *this + Mul({b});
 }
 
 exprptr_t Mul::operator*(Mul b)

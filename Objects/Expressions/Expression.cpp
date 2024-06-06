@@ -21,7 +21,7 @@ exprptr_t Expression::operator*(exprptr_t b)
 {
     if (!isinstance<Add>(this) && isinstance<Add>(b))
         return b * *this;
-    if (!isinstance<Mul>(this) && isinstance<Mul>(b))
+    else if (!isinstance<Mul>(this) && isinstance<Mul>(b))
         return b * *this;
     else if (!isinstance<Pow>(this) && isinstance<Pow>(b))
         return b * *this;
@@ -36,11 +36,17 @@ exprptr_t Expression::operator*(exprptr_t b)
 
 exprptr_t Expression::operator+(exprptr_t b)
 {
-    if (isinstance<True>(*this == Integer(0)))
+    if (!isinstance<Infinity>(this) && isinstance<Infinity>(b))
+        return b + *this;
+    else if (!isinstance<Add>(this) && isinstance<Add>(b))
+        return b + *this;
+    else if (!isinstance<Mul>(this) && isinstance<Mul>(b))
+        return b + *this;
+    else if (isinstance<True>(*this == Integer(0)))
         return b;
     else if (isinstance<True>(b == Integer(0)))
         return this->copyToExprPtr();
-    return std::shared_ptr<Add>(new Add({this->copyToExprPtr(), b}));
+    return exprptr_t(new Add({this->copyToExprPtr(), b}));
 }
 
 exprptr_t Expression::operator+(Expression &_1) { return (*this) + (_1.copyToExprPtr()); }
@@ -106,8 +112,10 @@ boolptr_t operator!=(exprptr_t _1, Expression &_2) { return _1->operator!=(_2); 
 boolptr_t operator!=(exprptr_t _1, Expression &&_2) { return _1->operator!=(_2); }
 exprptr_t Expression::sqrt()
 {
-    exprptr_t t = this->pow(exprptr_t(new Float("0.5")));
-    if (isinstance<Pow>(t))
+    exprptr_t _0_5(new Float("0.5"));
+    exprptr_t t = this->pow(_0_5);
+    Pow *p = dynamic_cast<Pow *>(t.get());
+    if (p != nullptr && isinstance<True>(p->args.back() == _0_5))
         return std::shared_ptr<Sqrt>(new Sqrt(this->copyToExprPtr())); // 没有被化简掉就用默认的方式
     return t;
 }

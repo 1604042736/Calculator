@@ -149,15 +149,14 @@ Token Lexer::getToken()
     else if (ch == '"' || ch == '\'')
         this->tokens.push_back(Token(TK_STRING, this->context, this->getString(ch), indent));
     else if (ch == '@')
+        this->tokens.push_back(Token(TK_AT, this->context, "@", indent));
+    else if (ch == '$')
     {
         ch = this->getChar();
         if (ch == '"' || ch == '\'')
             this->tokens.push_back(Token(TK_NAME, this->context, this->getString(ch), indent));
         else
-        {
-            this->ungetChar();
-            this->tokens.push_back(Token(TK_AT, this->context, "@", indent));
-        }
+            throw Error("'$'后必须紧跟字符串", this->context);
     }
     else if (ch == '=')
         this->tokens.push_back(Token(TK_EQ, this->context, "=", indent));

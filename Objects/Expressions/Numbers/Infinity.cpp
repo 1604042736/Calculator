@@ -7,9 +7,7 @@
 exprptr_t Infinity::operator+(exprptr_t b)
 {
     // 1*oo + 1*b 这样如果b中含有oo就会进行合并
-    exprptr_t _1(new Integer(1));
-    exprptr_t t = Mul({_1, this->copyToExprPtr()}) + Mul({_1, b});
-    t = t->simplify();
+    exprptr_t t = Mul({this->copyToExprPtr()}) + b;
 
     if (isinstance<Add>(t))
         t = exprptr_t(new Infinity());

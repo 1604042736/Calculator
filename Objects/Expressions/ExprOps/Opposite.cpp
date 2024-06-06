@@ -19,24 +19,6 @@ exprptr_t Opposite::reciprocal()
     return this->opposite()->reciprocal()->opposite();
 }
 
-exprptr_t Opposite::opposite()
-{
-    expropargs_t result;
-    for (size_t i = 0; i < this->args.size(); i++)
-    {
-        if (isinstance<Integer>(this->args[i]))
-        {
-            Integer a = *(Integer *)this->args[i].get();
-            if (a == -1)
-                continue;
-        }
-        result.push_back(this->args[i]);
-    }
-    if (result.size() == 1)
-        return result[0];
-    return exprptr_t(new Mul(result));
-}
-
 std::string Opposite::toString()
 {
     return " - " + this->opposite()->toString();
