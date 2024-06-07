@@ -33,6 +33,7 @@ enum TokenType
     TK_AT,      // @
     TK_BITOR,   // |
     TK_BITAND,  // &
+    TK_DOLLAR,  // $
     TK_SYM,
     TK_LET,
     TK_AND,

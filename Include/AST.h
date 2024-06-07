@@ -18,7 +18,7 @@ public:
     AST(std::vector<astptr_t> children, Context context) : children(children), context(context) {}
     AST(Context context) : context(context) {}
 
-    virtual std::string getInfo() { return std::string(typeid(*this).name()) + "[" + this->context.filename + "," + std::to_string(this->context.line) + "," + std::to_string(this->context.column) + "]"; }
+    virtual std::string getInfo() { return std::string(typeid(*this).name()) + "[" + this->context.filename + "," + std::to_string(context.line) + "," + std::to_string(context.column) + "]"; }
     virtual void print(size_t level = 0, std::string indent = "    ");
 
     /*运行*/

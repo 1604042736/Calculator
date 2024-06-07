@@ -6,7 +6,8 @@
 class Context
 {
 public:
-    Context(std::string filename, size_t line, size_t column) : filename(filename), line(line), column(column) {}
+    Context(std::string filename, size_t line, size_t column)
+        : filename(filename), line(line), column(column) {}
 
     bool operator==(Context b) { return filename == b.filename && line == b.line && column == b.column; }
 

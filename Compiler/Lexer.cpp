@@ -40,7 +40,8 @@ void Lexer::ungetChar()
     this->pos--;
     this->context.column--;
     this->indent = this->indent.substr(0, this->indent.size() - 1);
-    if (this->code[this->pos] == '\n')
+    // this->pos是当前已经读到的
+    if (this->pos >= 1 && this->code[this->pos - 1] == '\n')
     {
         this->context.line--;
         this->context.column = 1;
@@ -162,7 +163,10 @@ Token Lexer::getToken()
         if (ch == '"' || ch == '\'')
             this->tokens.push_back(Token(TK_NAME, this->context, this->getString(ch), indent));
         else
-            throw Error("'$'后必须紧跟字符串", this->context);
+        {
+            this->ungetChar();
+            this->tokens.push_back(Token(TK_DOLLAR, this->context, "$", indent));
+        }
     }
     else if (ch == '=')
         this->tokens.push_back(Token(TK_EQ, this->context, "=", indent));

@@ -154,7 +154,7 @@ astptr_t Parser::parse_funcdef()
 }
 
 /*
-funcbody : expr [',' expr]
+funcbody : expr [',' expr] ['$' (expr [',' expr])+]
 */
 std::vector<funcbodyastptr_t> Parser::parse_funcbody()
 {
@@ -171,6 +171,18 @@ std::vector<funcbodyastptr_t> Parser::parse_funcbody()
             domain = parse_expr();
         }
         body.push_back(funcbodyastptr_t(new FuncBodyAST(expr, domain, lexer->context)));
+        if (token.type == TK_DOLLAR)
+        {
+            match(token.type, TK_DOLLAR);
+            expr = parse_expr();
+            domain = nullptr;
+            if (token.type == TK_COMMA)
+            {
+                match(token.type, TK_COMMA);
+                domain = parse_expr();
+            }
+            body.push_back(funcbodyastptr_t(new FuncBodyAST(expr, domain, lexer->context)));
+        }
     }
     return body;
 }
