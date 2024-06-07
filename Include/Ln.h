@@ -13,3 +13,10 @@ public:
 
     virtual std::string toString() { return "ln(" + this->tnum->toString() + ")"; }
 };
+
+class LnMapping : public ExprMapping
+{
+public:
+    LnMapping() : ExprMapping("ln", setptr_t(new RealSet())) {}
+    virtual objptr_t operator()(funcargs_t);
+};

@@ -14,6 +14,6 @@ objptr_t CallAST::exec(Runtime *runtime)
     }
     catch (std::exception &e)
     {
-        throw Error(e.what(), context);
+        throw Error("[CallAST(" + func->toString() + ")]: " + typeid(e).name() + ": " + e.what(), context);
     }
 }

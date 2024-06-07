@@ -40,22 +40,22 @@ std::string Pow::toLateX()
     return result;
 }
 
-exprptr_t Pow::operator*(Pow b)
+exprptr_t Pow::operator*(Pow *b)
 {
     // a^m*a^n=a^(m+n)
-    if (isinstance<True>(this->getBase() == b.getBase()))
+    if (isinstance<True>(this->getBase() == b->getBase()))
     {
-        exprptr_t sum = this->getExp() + b.getExp();
+        exprptr_t sum = this->getExp() + b->getExp();
         if (typeid(*sum.get()) != typeid(Add)) // 指数可合并
             return this->getBase()->pow(sum);
     }
-    return ExprOp::operator*(exprptr_t(dynamic_cast<Expression *>(b.copyThis())));
+    return ExprOp::operator*(exprptr_t(dynamic_cast<Expression *>(b->copyThis())));
 }
 
 exprptr_t Pow::operator*(exprptr_t b)
 {
     if (isinstance<Pow>(b))
-        return (*this) * *(Pow *)b.get();
+        return (*this) * (Pow *)b.get();
     exprptr_t base = this->getBase();
     exprptr_t exp = this->getExp();
     if (isinstance<True>(base == b)) // 看成b^1
@@ -86,7 +86,7 @@ exprptr_t Pow::diff(exprptr_t target)
     { // (a^b)'=(e^(b*ln(a)))'=(a^b)*(b'*ln(a)+b/a*a')
         exprptr_t a = this->getBase();
         exprptr_t b = this->getExp();
-        return a->pow(b) * (b->diff(target) * Ln(a) + b / a * a->diff(target));
+        result = a->pow(b) * (b->diff(target) * Ln(a) + b / a * a->diff(target));
     }
     return result;
 }

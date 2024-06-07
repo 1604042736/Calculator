@@ -15,6 +15,10 @@ public:
     virtual std::string toString();
     virtual prettystring_t toPrettyString();
 
+    virtual boolptr_t operator==(objptr_t);
+
+    virtual objptr_t replace(objptr_t, objptr_t);
+
     std::string name;
     funcargs_t args;
 };

@@ -1,9 +1,19 @@
+#include <algorithm>
+
 #include "ExprSymbol.h"
 #include "Mul.h"
 #include "Integer.h"
 #include "Pow.h"
 #include "Common.h"
 #include "Derivative.h"
+
+std::vector<std::string> names; // 已经创建过的名字
+
+ExprSymbol::ExprSymbol(std::string name) : Symbol(name)
+{
+    if (std::find(names.begin(), names.end(), name) == names.end())
+        names.push_back(name);
+}
 
 exprptr_t ExprSymbol::operator+(exprptr_t _1)
 {
@@ -67,5 +77,5 @@ exprptr_t ExprSymbol::operator/(ExprSymbol b)
 
 Integer ExprSymbol::getWeight()
 {
-    return Integer(std::hash<std::string>()(this->name));
+    return std::distance(names.begin(), std::find(names.begin(), names.end(), this->name));
 }

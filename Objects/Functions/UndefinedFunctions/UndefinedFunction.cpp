@@ -1,4 +1,6 @@
 #include "UndefinedFunction.h"
+#include "Common.h"
+#include "ExprUndefFunction.h"
 
 UndefinedFunction::UndefinedFunction(std::string name, funcargs_t args, setptr_t domain, setptr_t range)
     : Function(domain, range)
@@ -55,4 +57,32 @@ prettystring_t UndefinedFunction::toPrettyString()
     }
 
     return normalize(result);
+}
+
+boolptr_t UndefinedFunction::operator==(objptr_t b)
+{
+    if (isinstance<UndefinedFunction>(b))
+    {
+        // 表达式和参数一样它们才算相同
+        UndefinedFunction *t = dynamic_cast<UndefinedFunction *>(b.get());
+        if (t->args.size() != this->args.size() || this->name != t->name)
+            return to_boolean(false);
+        for (size_t i = 0; i < this->args.size(); i++)
+        {
+            if (isinstance<False>(this->args[i] == t->args[i]))
+                return to_boolean(false);
+        }
+        return to_boolean(true);
+    }
+    return Function::operator==(b);
+}
+
+objptr_t UndefinedFunction::replace(objptr_t old, objptr_t _new)
+{
+    funcargs_t n_args(this->args);
+    for (size_t i = 0; i < n_args.size(); i++)
+        n_args[i] = n_args[i]->replace(old, _new);
+    if (isinstance<ExprUndefFunction>(this))
+        return objptr_t(new ExprUndefFunction(this->name, n_args, this->domain, this->range));
+    return objptr_t(new UndefinedFunction(this->name, n_args, this->domain, this->range));
 }

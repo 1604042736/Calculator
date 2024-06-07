@@ -7,7 +7,7 @@
 class Mul : public ExprOp
 {
 public:
-    Mul(expropargs_t args) : ExprOp(args) { this->sortArgs(); }
+    Mul(expropargs_t args) : ExprOp(args) { /*this->sortArgs();*/ }
 
     virtual Object *copyThis() { return new Mul(*this); }
 

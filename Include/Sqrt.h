@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Pow.h"
-#include "Mapping.h"
+#include "ExprMapping.h"
 #include "Interval.h"
 #include "Integer.h"
 #include "Infinity.h"
@@ -30,14 +30,14 @@ public:
     exprptr_t arg;
 };
 
-class SqrtMapping : public Mapping
+class SqrtMapping : public ExprMapping
 {
 public:
-    SqrtMapping() : Mapping("sqrt",
-                            setptr_t(new Interval(exprptr_t(new Integer(0)),
-                                                  exprptr_t(new Infinity()), false, true)),
-                            setptr_t(new Interval(exprptr_t(new Integer(0)),
-                                                  exprptr_t(new Infinity()), false, true))) {}
+    SqrtMapping() : ExprMapping("sqrt",
+                                setptr_t(new Interval(exprptr_t(new Integer(0)),
+                                                      exprptr_t(new Infinity()), false, true)),
+                                setptr_t(new Interval(exprptr_t(new Integer(0)),
+                                                      exprptr_t(new Infinity()), false, true))) {}
     virtual exprptr_t operator()(exprptr_t);
     virtual objptr_t operator()(funcargs_t);
 };

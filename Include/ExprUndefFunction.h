@@ -13,4 +13,9 @@ public:
 
     virtual Object *copyThis() { return new ExprUndefFunction(*this); }
     virtual exprptr_t copyToExprPtr() { return exprptr_t(new ExprUndefFunction(*this)); }
+
+    virtual boolptr_t operator==(exprptr_t b) { return UndefinedFunction::operator==(b); }
+    virtual boolptr_t operator==(objptr_t b) { return UndefinedFunction::operator==(b); }
+
+    virtual exprptr_t diff(exprptr_t);
 };

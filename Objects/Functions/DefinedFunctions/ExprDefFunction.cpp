@@ -30,3 +30,13 @@ exprptr_t ExprDefFunction::_simplify()
         throw std::runtime_error("超出定义域");
     return exprptr_t(new ExprDefFunction(this->name, args, this->sections, DefinedFunction::domain, DefinedFunction::range));
 }
+
+exprptr_t ExprDefFunction::diff(exprptr_t target)
+{
+    exprptr_t result = Expression::diff(target);
+    if (this->args.size() > 1)
+        throw std::runtime_error("暂不支持对对参函数求导");
+    if (isinstance<Expression>(this->args[0]))
+        result = result * (dynamic_cast<Expression *>(this->args[0].get()))->diff(target);
+    return result;
+}

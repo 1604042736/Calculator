@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cstring>
+#include <iostream>
 
 #include "ExprOp.h"
 #include "Add.h"
@@ -47,7 +48,7 @@ boolptr_t ExprOp::operator==(exprptr_t b)
         {
             for (size_t i = 0; i < aargs.size(); i++)
             {
-                if (isinstance<True>(aargs[i] != cargs[i]))
+                if (!isinstance<True>(aargs[i] == cargs[i]))
                     return to_boolean(false);
             }
         }
@@ -86,7 +87,7 @@ prettystring_t ExprOp::toPrettyString()
     for (size_t i = 0; i < args_str.size(); i++)
     {
         size_t y = (max_height - args_str[i].size()) / 2; // 居中
-        if (typeid(*this->args[i].get()) == typeid(Pow))
+        /*if (typeid(*this->args[i].get()) == typeid(Pow))
         {
             if ((max_height - 1) / 2 < args_str[i].size() - 1)
             {
@@ -96,7 +97,7 @@ prettystring_t ExprOp::toPrettyString()
                 max_height += d;
             }
             y = (max_height - 1) / 2 - (args_str[i].size() - 1);
-        }
+        }*/
 
         bool flag = this->args[i]->getPriority() < this->getPriority();
 
@@ -125,7 +126,7 @@ prettystring_t ExprOp::toPrettyString()
 
 exprptr_t ExprOp::operator+(exprptr_t b)
 {
-    if (isinstance<True>(*this == b))
+    if (isinstance<True>(this->operator==(b)))
         return this->operator*(Integer(2));
     return Expression::operator+(b);
 }
@@ -155,7 +156,6 @@ void ExprOp::sortArgs()
             }
             this->args = args;
         }
-
         std::sort(this->args.begin(), this->args.end(),
                   [](exprptr_t &a, exprptr_t &b)
                   {
@@ -176,5 +176,7 @@ objptr_t ExprOp::replace(objptr_t old, objptr_t _new)
     for (size_t i = 0; i < o->args.size(); i++)
         // 假设替换完后一定为Expression
         o->args[i] = dynamic_cast<Expression *>(o->args[i]->replace(old, _new).get())->copyToExprPtr();
-    return o->simplify();
+    exprptr_t result = o->simplify();
+    delete o;
+    return result;
 }

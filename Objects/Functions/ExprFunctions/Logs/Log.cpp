@@ -10,6 +10,7 @@
 #include "Lambda.h"
 #include "ExprSymbol.h"
 #include "Common.h"
+#include "Ln.h"
 
 Log::Log(exprptr_t base, exprptr_t tnum) : base(base), tnum(tnum)
 {
@@ -27,8 +28,47 @@ std::string Log::toString()
     return "log(" + this->base->toString() + "," + this->tnum->toString() + ")";
 }
 
+exprptr_t Log::diff(exprptr_t target)
+{
+    return (this->tnum * Ln(this->base).simplify())->reciprocal() * this->tnum->diff(target);
+}
+
+exprptr_t Log::_simplify()
+{
+    if (isinstance<Pow>(this->tnum))
+    {
+        Pow *p = dynamic_cast<Pow *>(this->tnum.get());
+        std::shared_ptr<Log> l(dynamic_cast<Log *>(this->copyThis()));
+        l->tnum = p->getBase();
+        return p->getExp() * l;
+    }
+    else if (isinstance<True>(this->base == this->tnum))
+        return exprptr_t(new Integer(1));
+    return ExprFunction::_simplify();
+}
+
+boolptr_t Log::operator==(exprptr_t b)
+{
+    if (isinstance<Log>(b))
+    {
+        Log *c = dynamic_cast<Log *>(b.get());
+        return this->base == c->base && this->tnum == c->tnum;
+    }
+    return to_boolean(false);
+}
+
+objptr_t Log::replace(objptr_t old, objptr_t _new)
+{
+    objptr_t base = this->base->replace(old, _new);
+    objptr_t tnum = this->tnum->replace(old, _new);
+    if (!isinstance<Expression>(base) || !isinstance<Expression>(tnum))
+        throw std::runtime_error("[Log::replace]超出定义域");
+    return exprptr_t(new Log(dynamic_cast<Expression *>(base.get())->copyToExprPtr(),
+                             dynamic_cast<Expression *>(tnum.get())->copyToExprPtr()));
+}
+
 LogMapping::LogMapping()
-    : Mapping("log", setptr_t(new RealSet()), setptr_t(new RealSet()))
+    : ExprMapping("log", setptr_t(new RealSet()), setptr_t(new RealSet()))
 {
     exprptr_t _0(new Integer(0));
     exprptr_t _1(new Integer(1));

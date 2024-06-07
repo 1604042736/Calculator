@@ -5,6 +5,7 @@
 #include "Object.h"
 #include "Mapping.h"
 #include "Runtime.h"
+#include "ExprMapping.h"
 
 template <typename T, typename T2>
 bool inline isinstance(std::shared_ptr<T2> a) { return dynamic_cast<T *>(a.get()) != nullptr; }
@@ -18,19 +19,19 @@ objptr_t exec(std::string, std::string, bool verbose = false);
 void shell(Runtime *, bool verbose = false);
 void shell(bool verbose = false);
 
-class SimplifyMapping : public Mapping
+class SimplifyMapping : public ExprMapping
 {
 public:
-    SimplifyMapping() : Mapping("simplify", setptr_t(new RealSet()), setptr_t(new RealSet())) {}
+    SimplifyMapping() : ExprMapping("simplify", setptr_t(new RealSet()), setptr_t(new RealSet())) {}
 
     virtual exprptr_t operator()(exprptr_t b) { return b->simplify(); }
     virtual objptr_t operator()(funcargs_t);
 };
 
-class EvalMapping : public Mapping
+class EvalMapping : public ExprMapping
 {
 public:
-    EvalMapping() : Mapping("eval", RealSet().product(IntegerSet()), setptr_t(new RationalSet())) {}
+    EvalMapping() : ExprMapping("eval", RealSet().product(IntegerSet()), setptr_t(new RationalSet())) {}
 
     virtual exprptr_t operator()(exprptr_t b, Integer c) { return b->eval(c); }
     virtual objptr_t operator()(funcargs_t);
@@ -44,15 +45,15 @@ public:
     virtual objptr_t operator()(funcargs_t);
 };
 
-class DiffMapping : public Mapping
+class DiffMapping : public ExprMapping
 {
 public:
-    DiffMapping() : Mapping("diff") {}
+    DiffMapping() : ExprMapping("diff") {}
 
     virtual objptr_t operator()(funcargs_t);
 };
 
-class FactorintMapping : public Mapping
+class FactorintMapping : public ExprMapping
 {
 public:
     FactorintMapping();

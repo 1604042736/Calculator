@@ -9,7 +9,7 @@
 class ExprSymbol : public Expression, public Symbol
 {
 public:
-    ExprSymbol(std::string name) : Symbol(name) {}
+    ExprSymbol(std::string name);
 
     virtual Object *copyThis() { return new ExprSymbol(*this); }
     virtual exprptr_t copyToExprPtr() { return exprptr_t(new ExprSymbol(*this)); }

@@ -58,7 +58,7 @@ objptr_t DiffMapping::operator()(funcargs_t args)
     return result;
 }
 
-FactorintMapping::FactorintMapping() : Mapping("factorint")
+FactorintMapping::FactorintMapping() : ExprMapping("factorint")
 {
     this->domain = Interval(exprptr_t(new Integer(2)), exprptr_t(new Infinity()), false, true) & setptr_t(new IntegerSet());
     this->range = this->domain;

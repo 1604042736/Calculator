@@ -16,7 +16,7 @@ public:
     virtual prettystring_t toPrettyString();
     virtual std::string toLateX();
 
-    virtual exprptr_t operator*(Pow);
+    virtual exprptr_t operator*(Pow *);
     virtual exprptr_t operator*(exprptr_t);
     virtual exprptr_t pow(exprptr_t);
     virtual exprptr_t diff(exprptr_t);

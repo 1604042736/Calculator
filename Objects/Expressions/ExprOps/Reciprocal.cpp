@@ -22,7 +22,10 @@ std::string Reciprocal::toLateX()
 exprptr_t Reciprocal::reciprocal()
 {
     // this->args的最后一个为-1
-    return exprptr_t(new Pow(expropargs_t(this->args.begin(), this->args.end() - 1)));
+    expropargs_t args(this->args.begin(), this->args.end() - 1);
+    if (args.size() == 1)
+        return args[0];
+    return exprptr_t(new Pow(args));
 }
 
 exprptr_t Reciprocal::_simplify()

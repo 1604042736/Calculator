@@ -10,6 +10,10 @@ boolptr_t Boolean::operator&&(boolptr_t b)
 {
     if (isinstance<False>(this) || isinstance<False>(b))
         return boolptr_t(new False());
+    if (isinstance<True>(this))
+        return b;
+    if (isinstance<True>(b))
+        return this->copyToBoolPtr();
     return boolptr_t(new And({this->copyToBoolPtr(), b}));
 }
 boolptr_t Boolean::operator&&(Boolean &b)
@@ -28,6 +32,10 @@ boolptr_t Boolean::operator||(boolptr_t b)
 {
     if (isinstance<True>(this) || isinstance<True>(b))
         return boolptr_t(new True());
+    if (isinstance<False>(this))
+        return b;
+    if (isinstance<False>(b))
+        return this->copyToBoolPtr();
     return boolptr_t(new Or({this->copyToBoolPtr(), b}));
 }
 boolptr_t Boolean::operator||(Boolean &b)

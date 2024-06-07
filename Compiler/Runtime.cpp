@@ -16,6 +16,9 @@
 #include "IntegerSet.h"
 #include "EmptySet.h"
 #include "DefinedFunction.h"
+#include "Abs.h"
+#include "Ln.h"
+#include "Lg.h"
 
 Runtime::Runtime()
 {
@@ -37,6 +40,9 @@ Runtime::Runtime()
         {"Z", objptr_t(new IntegerSet())},
         {"factorint", objptr_t(new FactorintMapping())},
         {"productset", objptr_t(new ProductSetMapping())},
+        {"abs", objptr_t(new AbsMapping())},
+        {"ln", objptr_t(new LnMapping())},
+        {"lg", objptr_t(new LgMapping())},
     });
 }
 

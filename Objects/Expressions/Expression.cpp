@@ -20,7 +20,9 @@
 
 exprptr_t Expression::operator*(exprptr_t b)
 {
-    if (!isinstance<Add>(this) && isinstance<Add>(b))
+    if (isinstance<True>(this->operator==(b)))
+        return this->pow(Integer(2));
+    else if (!isinstance<Add>(this) && isinstance<Add>(b))
         return b * *this;
     else if (!isinstance<Mul>(this) && isinstance<Mul>(b))
         return b * *this;
@@ -37,16 +39,16 @@ exprptr_t Expression::operator*(exprptr_t b)
 
 exprptr_t Expression::operator+(exprptr_t b)
 {
-    if (!isinstance<Infinity>(this) && isinstance<Infinity>(b))
+    if (isinstance<True>(*this == Integer(0)))
+        return b;
+    else if (isinstance<True>(b == Integer(0)))
+        return this->copyToExprPtr();
+    else if (!isinstance<Infinity>(this) && isinstance<Infinity>(b))
         return b + *this;
     else if (!isinstance<Add>(this) && isinstance<Add>(b))
         return b + *this;
     else if (!isinstance<Mul>(this) && isinstance<Mul>(b))
         return b + *this;
-    else if (isinstance<True>(*this == Integer(0)))
-        return b;
-    else if (isinstance<True>(b == Integer(0)))
-        return this->copyToExprPtr();
     return exprptr_t(new Add({this->copyToExprPtr(), b}));
 }
 

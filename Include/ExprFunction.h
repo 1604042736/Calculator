@@ -8,5 +8,6 @@
 class ExprFunction : public Function, public Expression
 {
 public:
-    ExprFunction() : Function(setptr_t(new UniversalSet()), setptr_t(new RealSet())) {}
+    ExprFunction(setptr_t domain = setptr_t(new UniversalSet()), setptr_t range = setptr_t(new RealSet()))
+        : Function(domain, range) {}
 };
