@@ -119,6 +119,11 @@ exprptr_t Add::operator*(exprptr_t b)
 
 exprptr_t Add::opposite()
 {
+    expropargs_t args;
+    for (size_t i = 0; i < this->args.size(); i++)
+        args.push_back(this->args[i]->opposite());
+    return exprptr_t(new Add(args));
+
     exprptr_t result = this->args[0]->opposite();
     for (size_t i = 1; i < this->args.size(); i++)
         result = result + this->args[i]->opposite();
@@ -148,7 +153,7 @@ exprptr_t Add::pow(Integer exp)
 exprptr_t Add::pow(exprptr_t _1)
 {
     if (isinstance<Integer>(_1))
-        return this->pow(*(Integer *)_1.get());
+        return this->pow(*dynamic_cast<Integer *>(_1.get()));
     return Expression::pow(_1);
 }
 
@@ -193,6 +198,6 @@ setptr_t Add::belongto()
 {
     setptr_t result = this->args[0]->belongto();
     for (size_t i = 1; i < this->args.size(); i++)
-        result = result->operator+(this->args[i]->belongto());
+        result = result->add(this->args[i]->belongto());
     return result;
 }

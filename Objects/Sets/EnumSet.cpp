@@ -134,7 +134,7 @@ setptr_t EnumSet::product(setptr_t b)
     return Set::product(b);
 }
 
-setptr_t EnumSet::pow(Integer n)
+setptr_t EnumSet::productpow(Integer n)
 {
     Integer base(this->elements.size());
     Integer end = dynamic_cast<Integer &>(*(base.pow(n)).get());

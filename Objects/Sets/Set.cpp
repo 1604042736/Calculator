@@ -33,9 +33,9 @@ setptr_t Set::operator&(setptr_t b)
 {
     if (isinstance<True>(this->contains(b)))
         return b;
-    if (isinstance<True>(b->contains(setptr_t(dynamic_cast<Set *>(this->copyThis())))))
+    if (isinstance<True>(b->contains(this->copyToSetPtr())))
         return setptr_t(dynamic_cast<Set *>(this->copyThis()));
-    return setptr_t(new Intersection({setptr_t(dynamic_cast<Set *>(this->copyThis())), b}));
+    return setptr_t(new Intersection({this->copyToSetPtr(), b}));
 }
 objptr_t Set::operator&(objptr_t b)
 {
@@ -48,7 +48,7 @@ boolptr_t Set::contains(objptr_t element)
 {
     setptr_t belongset = element->belongto();
     boolptr_t b = this->includes(belongset);
-    if (!isinstance<Includes>(b))
+    if (isinstance<True>(b))
         return b;
     return boolptr_t(new Contains(element, this->copyToSetPtr()));
 }
@@ -58,7 +58,7 @@ setptr_t Set::product(setptr_t b)
     return setptr_t(new ProductSet({this->copyToSetPtr(), b}));
 }
 
-setptr_t Set::pow(Integer b)
+setptr_t Set::productpow(Integer b)
 {
     if (b < 0)
         throw std::runtime_error("集合的pow运算指数必须>=0");
@@ -85,12 +85,12 @@ boolptr_t Set::includes(setptr_t subset)
     return boolptr_t(new Includes(subset, this->copyToSetPtr()));
 }
 
-setptr_t Set::operator+(setptr_t)
+setptr_t Set::add(setptr_t)
 {
     return setptr_t(new UniversalSet());
 }
 
-setptr_t Set::operator*(setptr_t)
+setptr_t Set::mul(setptr_t)
 {
     return setptr_t(new UniversalSet());
 }
@@ -102,9 +102,9 @@ setptr_t Set::pow(setptr_t)
 
 objptr_t Set::pow(objptr_t b)
 {
-    if(isinstance<Integer>(b))
-    return this->pow(*dynamic_cast<Integer*>(b.get()));
-    else if(isinstance<Set>(b))
-    return this->pow(dynamic_cast<Set*>(b.get())->copyToSetPtr());
+    if (isinstance<Integer>(b))
+        return this->productpow(*dynamic_cast<Integer *>(b.get()));
+    else if (isinstance<Set>(b))
+        return this->pow(dynamic_cast<Set *>(b.get())->copyToSetPtr());
     return Object::pow(b);
 }

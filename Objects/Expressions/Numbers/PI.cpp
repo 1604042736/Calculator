@@ -3,38 +3,6 @@
 #include "Rational.h"
 #include "Common.h"
 
-exprptr_t PI::operator+(exprptr_t _1)
-{
-    if (isinstance<PI>(_1))
-        return ((*this) + *(PI *)_1.get()).copyToExprPtr();
-    return Number::operator+(_1);
-}
-exprptr_t PI::operator-(exprptr_t _1)
-{
-    if (isinstance<PI>(_1))
-        return ((*this) - *(PI *)_1.get()).copyToExprPtr();
-    return Number::operator-(_1);
-}
-exprptr_t PI::operator*(exprptr_t _1)
-{
-    if (isinstance<PI>(_1))
-        return ((*this) * *(PI *)_1.get()).copyToExprPtr();
-    return Number::operator*(_1);
-}
-exprptr_t PI::operator/(exprptr_t _1)
-{
-    if (isinstance<PI>(_1))
-        return ((*this) / *(PI *)_1.get()).copyToExprPtr();
-    return Number::operator/(_1);
-}
-
-boolptr_t PI::operator==(exprptr_t _1)
-{
-    if (isinstance<PI>(_1))
-        return to_boolean((*this) == *(PI *)_1.get());
-    return Number::operator==(_1);
-}
-
 /*
 梅钦公式求pi
 参考 https://zhuanlan.zhihu.com/p/114320417
