@@ -135,6 +135,27 @@ exprptr_t Mul::diff(exprptr_t target)
     return result;
 }
 
+exprptr_t Mul::opposite()
+{
+    exprptr_t result = nullptr;
+    bool has__1 = false;
+    for (size_t i = 0; i < this->args.size(); i++)
+    {
+        if (!has__1 && isinstance<True>(this->args[i] == Integer(-1)))
+            has__1 = true;
+        else
+        {
+            if (result == nullptr)
+                result = this->args[i];
+            else
+                result = result * this->args[i];
+        }
+    }
+    if (has__1)
+        return result;
+    return result * Integer(-1);
+}
+
 /*获取分子*/
 exprptr_t Mul::getNume()
 {
@@ -237,6 +258,6 @@ setptr_t Mul::belongto()
 {
     setptr_t result = this->args[0]->belongto();
     for (size_t i = 1; i < this->args.size(); i++)
-        result = result->operator*(this->args[i]->belongto());
+        result = result->mul(this->args[i]->belongto());
     return result;
 }

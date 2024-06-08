@@ -37,7 +37,7 @@ prettystring_t Add::toPrettyString()
     for (size_t i = 0; i < args_str.size(); i++)
     {
         size_t y = (max_height - args_str[i].size()) / 2; // 居中
-        /*if (isinstance<Pow>(this->args[i]))
+        if (isinstance<Pow>(this->args[i]))
         {
             // Pow与加号对齐
             if ((max_height - 1) / 2 < args_str[i].size() - 1)
@@ -48,7 +48,7 @@ prettystring_t Add::toPrettyString()
                 max_height += d;
             }
             y = (max_height - 1) / 2 - (args_str[i].size() - 1);
-        }*/
+        }
 
         // 如果不是Opposite就在前面加上+号
         if (i > 0 && !isinstance<Opposite>(this->args[i]))

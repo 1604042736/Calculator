@@ -1,10 +1,11 @@
 #include "Opposite.h"
 #include "Common.h"
+#include "Integer.h"
 
 exprptr_t Opposite::operator+(exprptr_t b)
 {
     //(-x)+b=-(x-b)
-    return (this->opposite() - b)->opposite();
+    return (this->opposite() + b * Integer(-1))->opposite();
 }
 
 exprptr_t Opposite::operator*(exprptr_t b)

@@ -87,7 +87,7 @@ prettystring_t ExprOp::toPrettyString()
     for (size_t i = 0; i < args_str.size(); i++)
     {
         size_t y = (max_height - args_str[i].size()) / 2; // 居中
-        /*if (typeid(*this->args[i].get()) == typeid(Pow))
+        if (typeid(*this->args[i].get()) == typeid(Pow))
         {
             if ((max_height - 1) / 2 < args_str[i].size() - 1)
             {
@@ -97,7 +97,7 @@ prettystring_t ExprOp::toPrettyString()
                 max_height += d;
             }
             y = (max_height - 1) / 2 - (args_str[i].size() - 1);
-        }*/
+        }
 
         bool flag = this->args[i]->getPriority() < this->getPriority();
 

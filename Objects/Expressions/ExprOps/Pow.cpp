@@ -113,7 +113,7 @@ Integer Pow::getWeight()
 {
     Integer weight = this->args[0]->getWeight();
     for (size_t i = 1; i < this->args.size(); i++)
-        weight = *(Integer *)weight.pow(this->args[i]->getWeight()).get();
+        weight = *dynamic_cast<Integer *>(weight.pow(this->args[i]->getWeight()).get());
     return weight;
 }
 

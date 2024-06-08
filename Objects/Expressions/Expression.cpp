@@ -145,11 +145,30 @@ exprptr_t Expression::pow(Expression &&_1, Integer _2)
 exprptr_t pow(exprptr_t _1, exprptr_t _2, Integer _3) { return _1->pow(_2, _3); }
 exprptr_t Expression::reciprocal()
 {
-    return std::shared_ptr<Reciprocal>(new Reciprocal(this->copyToExprPtr()));
+    exprptr_t __1(new Integer(-1));
+    exprptr_t t = this->pow(__1);
+    Pow *p = dynamic_cast<Pow *>(t.get());
+    if (p != nullptr && isinstance<True>(p->getExp() == __1))
+        return std::shared_ptr<Reciprocal>(new Reciprocal(this->copyToExprPtr()));
+    return t;
 }
+
 exprptr_t Expression::opposite()
 {
     return std::shared_ptr<Opposite>(new Opposite(this->copyToExprPtr()));
+    // 下面这种方法问题太多
+    exprptr_t __1(new Integer(-1));
+    exprptr_t t = this->operator*(__1);
+    Mul *m = dynamic_cast<Mul *>(t.get());
+    if (m != nullptr)
+    {
+        for (size_t i = 0; i < m->args.size(); i++)
+        {
+            if (isinstance<True>(m->args[i] == __1))
+                return std::shared_ptr<Opposite>(new Opposite(this->copyToExprPtr()));
+        }
+    }
+    return t;
 }
 
 exprptr_t Expression::abs()
