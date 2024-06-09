@@ -2,24 +2,6 @@
 #include "Common.h"
 #include "Integer.h"
 
-exprptr_t Opposite::operator+(exprptr_t b)
-{
-    //(-x)+b=-(x-b)
-    return (this->opposite() + b * Integer(-1))->opposite();
-}
-
-exprptr_t Opposite::operator*(exprptr_t b)
-{
-    //(-x)*b=-(x*b)
-    return (this->opposite() * b)->opposite();
-}
-
-exprptr_t Opposite::reciprocal()
-{
-    // 1/(-x)=-(1/x)
-    return this->opposite()->reciprocal()->opposite();
-}
-
 std::string Opposite::toString()
 {
     return " - " + this->opposite()->toString();

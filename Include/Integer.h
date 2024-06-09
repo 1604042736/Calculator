@@ -21,8 +21,8 @@ const uint64_t SECTION_MAX = std::pow(10, SECTION_LEN); // 为了方便计算, �
 
 enum Sign
 {
-    SIGN_POSITIVE,
-    SIGN_NEGATIVE
+    SIGN_POSITIVE = 1,
+    SIGN_NEGATIVE = -1
 };
 
 /*
@@ -71,6 +71,16 @@ public:
             a = a * SECTION_MAX + this->sections[i];
         return a;
     }
+
+    int64_t toInt64()
+    {
+        int64_t a = 0;
+        for (size_t i = this->sections.size() - 1; i < this->sections.size(); i--)
+            a = a * SECTION_MAX + this->sections[i];
+        return a * (sign == SIGN_POSITIVE ? 1 : -1);
+    }
+
+    virtual double toDouble() { return this->toInt64(); }
 
     virtual bool operator>(const Integer a) const { return compare(*this, a, CF_GT); }
     virtual bool operator>=(const Integer a) const { return compare(*this, a, CF_GE); }

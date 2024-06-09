@@ -6,29 +6,29 @@
 
 exprptr_t Infinity::operator+(exprptr_t b)
 {
-    // 1*oo + 1*b 这样如果b中含有oo就会进行合并
-    exprptr_t t = Mul({this->copyToExprPtr()}) + b;
-
-    if (isinstance<Add>(t))
-        t = exprptr_t(new Infinity());
-    return t;
+    if (!isinstance<Infinity>(b))
+        return this->copyToExprPtr();
+    Infinity *t = dynamic_cast<Infinity *>(b.get());
+    if (t->sign == this->sign)
+        return this->copyToExprPtr();
+    return exprptr_t(new Integer(0));
 }
 
 exprptr_t Infinity::operator*(exprptr_t b)
 {
     if (isinstance<True>(b > Integer(0)))
-        return exprptr_t(new Infinity());
+        return this->copyToExprPtr();
     else if (isinstance<True>(b == Integer(0)))
         return exprptr_t(new Integer(0));
     else if (isinstance<True>(b < Integer(0)))
-        return Infinity().opposite();
+        return this->opposite();
     return Number::operator*(b);
 }
 
 exprptr_t Infinity::pow(exprptr_t b)
 {
     if (isinstance<True>(b > Integer(0)))
-        return exprptr_t(new Infinity());
+        return this->copyToExprPtr();
     else if (isinstance<True>(b == Integer(0)))
         return exprptr_t(new Integer(1));
     else if (isinstance<True>(b < Integer(0)))
@@ -43,7 +43,7 @@ exprptr_t Infinity::reciprocal()
 
 boolptr_t Infinity::operator==(exprptr_t b)
 {
-    if (isinstance<Infinity>(b))
+    if (isinstance<Infinity>(b) && dynamic_cast<Infinity *>(b.get())->sign == this->sign)
         return boolptr_t(new True());
     return boolptr_t(new False());
 }

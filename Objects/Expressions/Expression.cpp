@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "Expression.h"
 #include "Add.h"
 #include "Mul.h"
@@ -22,6 +24,8 @@ exprptr_t Expression::operator*(exprptr_t b)
 {
     if (isinstance<True>(this->operator==(b)))
         return this->pow(Integer(2));
+    else if (!isinstance<Infinity>(this) && isinstance<Infinity>(b))
+        return b * *this;
     else if (!isinstance<Add>(this) && isinstance<Add>(b))
         return b * *this;
     else if (!isinstance<Mul>(this) && isinstance<Mul>(b))
@@ -39,7 +43,7 @@ exprptr_t Expression::operator*(exprptr_t b)
 
 exprptr_t Expression::operator+(exprptr_t b)
 {
-    if (isinstance<True>(*this == Integer(0)))
+    if (isinstance<True>(this->operator==(Integer(0))))
         return b;
     else if (isinstance<True>(b == Integer(0)))
         return this->copyToExprPtr();
@@ -155,8 +159,6 @@ exprptr_t Expression::reciprocal()
 
 exprptr_t Expression::opposite()
 {
-    return std::shared_ptr<Opposite>(new Opposite(this->copyToExprPtr()));
-    // 下面这种方法问题太多
     exprptr_t __1(new Integer(-1));
     exprptr_t t = this->operator*(__1);
     Mul *m = dynamic_cast<Mul *>(t.get());
