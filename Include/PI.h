@@ -16,7 +16,7 @@ class PI : public Number, public ExprSymbol
 public:
     PI() : ExprSymbol("pi") {}
 
-    virtual double toDouble() { return 3.1415926535897932; }
+    virtual double toDouble() { return M_PI; }
 
     virtual std::string toLateX() { return "\\pi"; }
 

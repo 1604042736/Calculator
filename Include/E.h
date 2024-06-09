@@ -15,7 +15,7 @@ class E : public Number, public ExprSymbol
 public:
     E() : ExprSymbol("e") {}
 
-    virtual double toDouble() { return 2.7182818284590452; }
+    virtual double toDouble() { return M_E; }
 
     virtual exprptr_t eval(Integer);
 
