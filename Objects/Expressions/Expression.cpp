@@ -246,6 +246,14 @@ exprptr_t Expression::diff(exprptr_t target)
     return exprptr_t(new Derivative(this->copyToExprPtr(), {{target, Integer(1)}}));
 }
 
+/*获取系数*/
+exprptr_t Expression::getCoef(exprptr_t target)
+{
+    if (isinstance<True>(this->operator==(target)))
+        return exprptr_t(new Integer(1));
+    return exprptr_t(new Integer(0));
+}
+
 exprptr_t Expression::simplify()
 {
     exprptr_t result = this->_simplify();

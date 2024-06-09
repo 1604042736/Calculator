@@ -22,7 +22,7 @@ public:
 
     virtual setptr_t product(EnumSet);
     virtual setptr_t product(setptr_t);
-    virtual setptr_t pow(Integer);
+    virtual setptr_t productpow(Integer);
 
     virtual boolptr_t contains(objptr_t);
 

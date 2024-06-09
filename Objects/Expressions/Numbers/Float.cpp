@@ -6,6 +6,7 @@
 #include "Rational.h"
 #include "Pow.h"
 #include "Common.h"
+#include "Infinity.h"
 
 Float::Float(Integer significand, Integer exponent)
 {
@@ -135,8 +136,8 @@ std::string Float::toString()
 Float Float::operator+(Float b)
 {
     Float a(*this);
-    std::vector<Integer> t = exponent_matching(a, b);
-    Integer x = t[0], y = t[1];
+    std::tuple<Integer, Integer> t = exponent_matching(a, b);
+    Integer x = std::get<0>(t), y = std::get<1>(t);
 
     Integer significand = x + y;
     Integer exponent = std::max(a.exponent, b.exponent);
@@ -146,8 +147,8 @@ Float Float::operator+(Float b)
 Float Float::operator-(Float b)
 {
     Float a(*this);
-    std::vector<Integer> t = exponent_matching(a, b);
-    Integer x = t[0], y = t[1];
+    std::tuple<Integer, Integer> t = exponent_matching(a, b);
+    Integer x = std::get<0>(t), y = std::get<1>(t);
 
     Integer significand = x - y;
     Integer exponent = std::max(a.exponent, b.exponent);
@@ -171,6 +172,15 @@ Rational Float::operator/(Float b) { return Rational(*this, b); }
 
 exprptr_t Float::pow(Integer n)
 {
+    if (*this == 0)
+    {
+        if (n < 0)
+            return exprptr_t(new Infinity());
+        else if (n == 0)
+            return exprptr_t(new Integer(1));
+        else
+            return exprptr_t(new Integer(0));
+    }
     if (n >= 0)
     {
         Float a(*this), ans(1);
@@ -195,7 +205,7 @@ Float Float::pow(Float exp, Integer keep)
     Float b(exp);
     b.significand.sign = SIGN_POSITIVE;
     Rational fraction(b);
-    Rational a = *(Float *)this->pow(fraction.nume).get();
+    Rational a = *dynamic_cast<Float *>(this->pow(fraction.nume).get());
     if (exp < 0)
         a = Rational(a.deno, a.nume);
     Integer n = fraction.deno;
@@ -206,17 +216,17 @@ Float Float::pow(Float exp, Integer keep)
         k = x1;
         x1 = (((n - 1) * x1.pow(n) + a) / (n * x1.pow(n - 1)));
     }
-    return *(Float *)x1.eval(keep).get();
+    return *dynamic_cast<Float *>(x1.eval(keep).get());
 }
 
 Float Float::pow(Integer exp, Integer keep)
 {
     Integer a(exp);
     a.sign = SIGN_POSITIVE;
-    Float b = *(Float *)this->pow(a).get();
+    Float b = *dynamic_cast<Float *>(this->pow(a).get());
     if (exp >= 0)
-        return *(Float *)b.eval(keep).get();
-    return *(Float *)Rational(1, b).eval(keep).get();
+        return *dynamic_cast<Float *>(b.eval(keep).get());
+    return *dynamic_cast<Float *>(Rational(1, b).eval(keep).get());
 }
 
 exprptr_t Float::reciprocal()
@@ -227,93 +237,93 @@ exprptr_t Float::reciprocal()
 exprptr_t Float::operator+(exprptr_t _1)
 {
     if (isinstance<Rational>(_1))
-        return exprptr_t(new Rational((*this) + *(Rational *)_1.get()));
+        return exprptr_t(new Rational((*this) + *dynamic_cast<Rational *>(_1.get())));
     if (isinstance<Integer>(_1))
-        return exprptr_t(new Float((*this) + *(Integer *)_1.get()));
+        return exprptr_t(new Float((*this) + *dynamic_cast<Integer *>(_1.get())));
     if (isinstance<Float>(_1))
-        return exprptr_t(new Float((*this) + *(Float *)_1.get()));
+        return exprptr_t(new Float((*this) + *dynamic_cast<Float *>(_1.get())));
     return Number::operator+(_1);
 }
 
 exprptr_t Float::operator-(exprptr_t _1)
 {
     if (isinstance<Rational>(_1))
-        return exprptr_t(new Rational((*this) - *(Rational *)_1.get()));
+        return exprptr_t(new Rational((*this) - *dynamic_cast<Rational *>(_1.get())));
     if (isinstance<Integer>(_1))
-        return exprptr_t(new Float((*this) - *(Integer *)_1.get()));
+        return exprptr_t(new Float((*this) - *dynamic_cast<Integer *>(_1.get())));
     if (isinstance<Float>(_1))
-        return exprptr_t(new Float((*this) - *(Float *)_1.get()));
+        return exprptr_t(new Float((*this) - *dynamic_cast<Float *>(_1.get())));
     return Number::operator-(_1);
 }
 
 exprptr_t Float::operator*(exprptr_t _1)
 {
     if (isinstance<Rational>(_1))
-        return exprptr_t(new Rational((*this) * *(Rational *)_1.get()));
+        return exprptr_t(new Rational((*this) * *dynamic_cast<Rational *>(_1.get())));
     if (isinstance<Integer>(_1))
-        return exprptr_t(new Float((*this) * *(Integer *)_1.get()));
+        return exprptr_t(new Float((*this) * *dynamic_cast<Integer *>(_1.get())));
     if (isinstance<Float>(_1))
-        return exprptr_t(new Float((*this) * *(Float *)_1.get()));
+        return exprptr_t(new Float((*this) * *dynamic_cast<Float *>(_1.get())));
     return Number::operator*(_1);
 }
 
 exprptr_t Float::operator/(exprptr_t _1)
 {
     if (isinstance<Rational>(_1))
-        return exprptr_t(new Rational((*this) / *(Rational *)_1.get()));
+        return exprptr_t(new Rational((*this) / *dynamic_cast<Rational *>(_1.get())));
     if (isinstance<Integer>(_1))
-        return exprptr_t(new Rational((*this) / *(Integer *)_1.get()));
+        return exprptr_t(new Rational((*this) / *dynamic_cast<Integer *>(_1.get())));
     if (isinstance<Float>(_1))
-        return exprptr_t(new Rational((*this) / *(Float *)_1.get()));
+        return exprptr_t(new Rational((*this) / *dynamic_cast<Float *>(_1.get())));
     return Number::operator/(_1);
 }
 
 boolptr_t Float::operator>(exprptr_t _1)
 {
     if (isinstance<Rational>(_1))
-        return to_boolean((*this) > *(Rational *)_1.get());
+        return to_boolean((*this) > *dynamic_cast<Rational *>(_1.get()));
     if (isinstance<Integer>(_1))
-        return to_boolean((*this) > *(Integer *)_1.get());
+        return to_boolean((*this) > *dynamic_cast<Integer *>(_1.get()));
     if (isinstance<Float>(_1))
-        return to_boolean((*this) > *(Float *)_1.get());
+        return to_boolean((*this) > *dynamic_cast<Float *>(_1.get()));
     return Number::operator>(_1);
 }
 
 boolptr_t Float::operator<(exprptr_t _1)
 {
     if (isinstance<Rational>(_1))
-        return to_boolean((*this) < *(Rational *)_1.get());
+        return to_boolean((*this) < *dynamic_cast<Rational *>(_1.get()));
     if (isinstance<Integer>(_1))
-        return to_boolean((*this) < *(Integer *)_1.get());
+        return to_boolean((*this) < *dynamic_cast<Integer *>(_1.get()));
     if (isinstance<Float>(_1))
-        return to_boolean((*this) < *(Float *)_1.get());
+        return to_boolean((*this) < *dynamic_cast<Float *>(_1.get()));
     return Number::operator<(_1);
 }
 
 boolptr_t Float::operator==(exprptr_t _1)
 {
     if (isinstance<Rational>(_1))
-        return to_boolean((*this) == *(Rational *)_1.get());
+        return to_boolean((*this) == *dynamic_cast<Rational *>(_1.get()));
     if (isinstance<Integer>(_1))
-        return to_boolean((*this) == *(Integer *)_1.get());
+        return to_boolean((*this) == *dynamic_cast<Integer *>(_1.get()));
     if (isinstance<Float>(_1))
-        return to_boolean((*this) == *(Float *)_1.get());
+        return to_boolean((*this) == *dynamic_cast<Float *>(_1.get()));
     return Number::operator==(_1);
 }
 
 exprptr_t Float::pow(exprptr_t _1)
 {
     if (isinstance<Integer>(_1))
-        return (*this).pow(*(Integer *)_1.get());
+        return (*this).pow(*dynamic_cast<Integer *>(_1.get()));
     return Number::pow(_1);
 }
 
 exprptr_t Float::pow(exprptr_t _1, Integer _2)
 {
     if (isinstance<Float>(_1))
-        return exprptr_t(new Float((*this).pow(*(Float *)_1.get(), _2)));
+        return exprptr_t(new Float((*this).pow(*dynamic_cast<Float *>(_1.get()), _2)));
     if (isinstance<Integer>(_1))
-        return exprptr_t(new Float((*this).pow(*(Integer *)_1.get(), _2)));
+        return exprptr_t(new Float((*this).pow(*dynamic_cast<Integer *>(_1.get()), _2)));
     return Number::pow(_1, _2);
 }
 
@@ -323,17 +333,36 @@ exprptr_t Float::eval(Integer keep)
         keep = 0;
     exprptr_t a = this->significand.eval(keep);
     if (isinstance<Integer>(a)) // 相当于Float的有效位数等于保留位数
-        return exprptr_t(new Float(*(Integer *)a.get(), this->exponent));
+        return exprptr_t(new Float(*dynamic_cast<Integer *>(a.get()), this->exponent));
     /*
     314.15926 = 3.1415926e+2
     31415926 (keep 2) = 3.1e+7
     3.1415926e+2 (keep 2) = 3.1e+2
     */
-    return exprptr_t(new Float((*(Float *)a.get()).significand, this->exponent));
+    return exprptr_t(new Float((*dynamic_cast<Float *>(a.get())).significand, this->exponent));
+}
+
+bool Float::operator>(Float b)
+{
+    std::tuple<Integer, Integer> t = exponent_matching(*this, b);
+    return std::get<0>(t) > std::get<1>(t);
+}
+
+bool Float::operator<(Float b)
+{
+    std::tuple<Integer, Integer> t = exponent_matching(*this, b);
+    return std::get<0>(t) < std::get<1>(t);
+}
+
+double Float::toDouble()
+{
+    double s = this->significand.toDouble();
+    double exp = (this->exponent - (this->significand.length() - 1)).toDouble();
+    return s * std::pow(10, exp);
 }
 
 /*对阶并返回有效位数字(保留各自的符号)*/
-std::vector<Integer> exponent_matching(Float a, Float b)
+std::tuple<Integer, Integer> exponent_matching(Float a, Float b)
 {
     //  a和b的小数部分长度
     Integer aflen = a.significand.length() - 1 - a.exponent;
@@ -344,5 +373,5 @@ std::vector<Integer> exponent_matching(Float a, Float b)
         y = y * 10;
     for (; aflen < bflen; aflen = aflen + 1)
         x = x * 10;
-    return {x, y};
+    return std::make_tuple(x, y);
 }

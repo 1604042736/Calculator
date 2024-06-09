@@ -12,6 +12,8 @@
 ExprOp::ExprOp(expropargs_t args)
 {
     this->args = args;
+    if (args.size() < 2)
+        throw std::runtime_error("ExprOp参数必须大于等于2");
 }
 
 boolptr_t ExprOp::operator==(exprptr_t b)

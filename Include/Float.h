@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <tuple>
 
 #include "Object.h"
 #include "Integer.h"
@@ -26,6 +27,8 @@ public:
 
     virtual Object *copyThis() { return new Float(*this); }
 
+    virtual double toDouble();
+
     virtual Float operator+(Float);
     virtual Float operator-(Float);
     virtual Float operator*(Float);
@@ -36,9 +39,9 @@ public:
     friend Float operator*(Integer a, Float b) { return Float(a) * b; }
     friend Rational operator/(Integer a, Float b);
 
-    virtual bool operator>(Float b) { return this->exponent > b.exponent || this->significand > b.significand; }
+    virtual bool operator>(Float b);
     virtual bool operator>=(Float b) { return (*this > b) || (*this == b); }
-    virtual bool operator<(Float b) { return this->exponent < b.exponent || this->significand < b.significand; }
+    virtual bool operator<(Float b);
     virtual bool operator<=(Float b) { return (*this < b) || (*this == b); }
     virtual bool operator==(Float b) { return this->exponent == b.exponent && this->significand == b.significand; }
     virtual bool operator!=(Float b) { return !(*this == b); }
@@ -63,7 +66,7 @@ public:
     virtual Float pow(Integer, Integer);
 
     virtual exprptr_t reciprocal();
-    virtual exprptr_t opposite() { return exprptr_t(new Float(*(Integer *)this->significand.opposite().get(), this->exponent)); }
+    virtual exprptr_t opposite() { return exprptr_t(new Float(*dynamic_cast<Integer *>(this->significand.opposite().get()), this->exponent)); }
 
     virtual exprptr_t operator+(exprptr_t);
     virtual exprptr_t operator-(exprptr_t);
@@ -82,4 +85,4 @@ public:
     Integer exponent;    // 指数
 };
 
-std::vector<Integer> exponent_matching(Float, Float);
+std::tuple<Integer, Integer> exponent_matching(Float, Float);

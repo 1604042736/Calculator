@@ -27,6 +27,8 @@ public:
 
     virtual Object *copyThis() { return new Rational(*this); }
 
+    virtual double toDouble() { return this->nume.toDouble() / this->deno.toDouble(); }
+
     virtual Rational operator+(Rational);
     virtual Rational operator-(Rational);
     virtual Rational operator*(Rational);
@@ -68,7 +70,7 @@ public:
     virtual Float pow(Integer, Integer);
 
     virtual exprptr_t reciprocal() { return exprptr_t(new Rational(this->deno, this->nume)); }
-    virtual exprptr_t opposite() { return exprptr_t(new Rational(*(Integer *)this->nume.opposite().get(), this->deno)); }
+    virtual exprptr_t opposite() { return exprptr_t(new Rational(*dynamic_cast<Integer *>(this->nume.opposite().get()), this->deno)); }
 
     virtual exprptr_t operator+(exprptr_t);
     virtual exprptr_t operator-(exprptr_t);

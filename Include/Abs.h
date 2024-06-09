@@ -7,7 +7,7 @@
 #include "Infinity.h"
 
 /*绝对值函数*/
-class Abs : public ExprFunction
+class Abs : public SArgExprFunction
 {
 public:
     Abs(exprptr_t);
@@ -20,8 +20,6 @@ public:
 
     virtual std::string toString();
     virtual prettystring_t toPrettyString();
-
-    exprptr_t arg;
 };
 
 class AbsMapping : public ExprMapping

@@ -16,8 +16,7 @@ public:
     ExprOp(expropargs_t);
 
     virtual boolptr_t operator==(exprptr_t);
-    virtual boolptr_t operator==(Expression &b) { return Expression::operator==(b); }
-    virtual boolptr_t operator==(Expression &&b) { return Expression::operator==(b); }
+    using Expression::operator==;
 
     /*获取运算符字符串*/
     virtual inline std::string getOpStr() = 0;

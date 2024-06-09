@@ -28,8 +28,8 @@ public:
     virtual exprptr_t abs() { return exprptr_t(new Infinity()); }
     virtual exprptr_t opposite() { return exprptr_t(new Infinity(-sign)); }
 
-    virtual boolptr_t operator>(exprptr_t) { return boolptr_t(new True()); }
-    virtual boolptr_t operator<(exprptr_t) { return boolptr_t(new False()); }
+    virtual boolptr_t operator>(exprptr_t) { return sign == SIGN_POSITIVE ? to_boolean(true) : to_boolean(false); }
+    virtual boolptr_t operator<(exprptr_t) { return sign == SIGN_POSITIVE ? to_boolean(false) : to_boolean(true); }
     virtual boolptr_t operator==(exprptr_t);
 
     Sign sign;

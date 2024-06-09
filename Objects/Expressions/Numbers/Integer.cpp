@@ -230,10 +230,10 @@ Float Integer::pow(Integer n, Integer keep)
 {
     Integer a(n);
     a.sign = SIGN_POSITIVE;
-    Integer b = *(Integer *)this->pow(a).get(); // 可以保证这里返回的一定是Integer
+    Integer b = *dynamic_cast<Integer *>(this->pow(a).get()); // 可以保证这里返回的一定是Integer
     if (n >= 0)
-        return *(Float *)b.eval(keep).get();
-    return *(Float *)Rational(1, b).eval(keep).get();
+        return *dynamic_cast<Float *>(b.eval(keep).get());
+    return *dynamic_cast<Float *>(Rational(1, b).eval(keep).get());
 }
 
 Float Integer::pow(int n, Integer keep) { return this->pow(Integer(n), keep); }
@@ -246,91 +246,91 @@ exprptr_t Integer::reciprocal()
 exprptr_t Integer::operator+(exprptr_t _1)
 {
     if (isinstance<Rational>(_1))
-        return exprptr_t(new Rational((*this) + *(Rational *)_1.get()));
+        return exprptr_t(new Rational((*this) + *dynamic_cast<Rational *>(_1.get())));
     if (isinstance<Integer>(_1))
-        return exprptr_t(new Integer((*this) + *(Integer *)_1.get()));
+        return exprptr_t(new Integer((*this) + *dynamic_cast<Integer *>(_1.get())));
     if (isinstance<Float>(_1))
-        return exprptr_t(new Float((*this) + *(Float *)_1.get()));
+        return exprptr_t(new Float((*this) + *dynamic_cast<Float *>(_1.get())));
     return Number::operator+(_1);
 }
 
 exprptr_t Integer::operator-(exprptr_t _1)
 {
     if (isinstance<Rational>(_1))
-        return exprptr_t(new Rational((*this) - *(Rational *)_1.get()));
+        return exprptr_t(new Rational((*this) - *dynamic_cast<Rational *>(_1.get())));
     if (isinstance<Integer>(_1))
-        return exprptr_t(new Integer((*this) - *(Integer *)_1.get()));
+        return exprptr_t(new Integer((*this) - *dynamic_cast<Integer *>(_1.get())));
     if (isinstance<Float>(_1))
-        return exprptr_t(new Float((*this) - *(Float *)_1.get()));
+        return exprptr_t(new Float((*this) - *dynamic_cast<Float *>(_1.get())));
     return Number::operator-(_1);
 }
 
 exprptr_t Integer::operator*(exprptr_t _1)
 {
     if (isinstance<Rational>(_1))
-        return exprptr_t(new Rational((*this) * *(Rational *)_1.get()));
+        return exprptr_t(new Rational((*this) * *dynamic_cast<Rational *>(_1.get())));
     if (isinstance<Integer>(_1))
-        return exprptr_t(new Integer((*this) * *(Integer *)_1.get()));
+        return exprptr_t(new Integer((*this) * *dynamic_cast<Integer *>(_1.get())));
     if (isinstance<Float>(_1))
-        return exprptr_t(new Float((*this) * *(Float *)_1.get()));
+        return exprptr_t(new Float((*this) * *dynamic_cast<Float *>(_1.get())));
     return Number::operator*(_1);
 }
 
 exprptr_t Integer::operator/(exprptr_t _1)
 {
     if (isinstance<Rational>(_1))
-        return exprptr_t(new Rational((*this) / *(Rational *)_1.get()));
+        return exprptr_t(new Rational((*this) / *dynamic_cast<Rational *>(_1.get())));
     if (isinstance<Integer>(_1))
-        return exprptr_t(new Rational((*this) / *(Integer *)_1.get()));
+        return exprptr_t(new Rational((*this) / *dynamic_cast<Integer *>(_1.get())));
     if (isinstance<Float>(_1))
-        return exprptr_t(new Rational((*this) / *(Float *)_1.get()));
+        return exprptr_t(new Rational((*this) / *dynamic_cast<Float *>(_1.get())));
     return Number::operator/(_1);
 }
 
 boolptr_t Integer::operator>(exprptr_t _1)
 {
     if (isinstance<Rational>(_1))
-        return to_boolean((*this) > *(Rational *)_1.get());
+        return to_boolean((*this) > *dynamic_cast<Rational *>(_1.get()));
     if (isinstance<Integer>(_1))
-        return to_boolean((*this) > *(Integer *)_1.get());
+        return to_boolean((*this) > *dynamic_cast<Integer *>(_1.get()));
     if (isinstance<Float>(_1))
-        return to_boolean((*this) > *(Float *)_1.get());
+        return to_boolean((*this) > *dynamic_cast<Float *>(_1.get()));
     return Number::operator>(_1);
 }
 
 boolptr_t Integer::operator<(exprptr_t _1)
 {
     if (isinstance<Rational>(_1))
-        return to_boolean((*this) < *(Rational *)_1.get());
+        return to_boolean((*this) < *dynamic_cast<Rational *>(_1.get()));
     if (isinstance<Integer>(_1))
-        return to_boolean((*this) < *(Integer *)_1.get());
+        return to_boolean((*this) < *dynamic_cast<Integer *>(_1.get()));
     if (isinstance<Float>(_1))
-        return to_boolean((*this) < *(Float *)_1.get());
+        return to_boolean((*this) < *dynamic_cast<Float *>(_1.get()));
     return Number::operator<(_1);
 }
 
 boolptr_t Integer::operator==(exprptr_t _1)
 {
     if (isinstance<Rational>(_1))
-        return to_boolean((*this) == *(Rational *)_1.get());
+        return to_boolean((*this) == *dynamic_cast<Rational *>(_1.get()));
     if (isinstance<Integer>(_1))
-        return to_boolean((*this) == *(Integer *)_1.get());
+        return to_boolean((*this) == *dynamic_cast<Integer *>(_1.get()));
     if (isinstance<Float>(_1))
-        return to_boolean((*this) == *(Float *)_1.get());
+        return to_boolean((*this) == *dynamic_cast<Float *>(_1.get()));
     return Number::operator==(_1);
 }
 
 exprptr_t Integer::pow(exprptr_t _1)
 {
     if (isinstance<Integer>(_1))
-        return (*this).pow(*(Integer *)_1.get());
+        return (*this).pow(*dynamic_cast<Integer *>(_1.get()));
     return Number::pow(_1);
 }
 
 exprptr_t Integer::pow(exprptr_t _1, Integer _2)
 {
     if (isinstance<Integer>(_1))
-        return exprptr_t(new Float((*this).pow(*(Integer *)_1.get(), _2)));
+        return exprptr_t(new Float((*this).pow(*dynamic_cast<Integer *>(_1.get()), _2)));
     else if (isinstance<Float>(_1))
         return Float(*this).pow(_1, _2);
     return Number::pow(_1, _2);

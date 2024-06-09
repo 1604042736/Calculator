@@ -11,9 +11,6 @@ public:
 
     virtual Object *copyThis() { return new Opposite(*this); }
 
-    virtual exprptr_t operator+(exprptr_t);
-    virtual exprptr_t operator*(exprptr_t);
-    virtual exprptr_t reciprocal();
     virtual exprptr_t abs() { return this->opposite()->abs(); }
 
     virtual boolptr_t operator>(exprptr_t b) { return !(this->opposite() > b); }

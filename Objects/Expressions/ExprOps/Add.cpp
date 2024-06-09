@@ -100,11 +100,14 @@ exprptr_t Add::operator+(exprptr_t b)
         else
         {
             flag = true;
-            args.push_back(t);
+            if (!isinstance<True>(t == Integer(0)))
+                args.push_back(t);
         }
     }
     if (!flag)
         args.push_back(b);
+    if (args.size() == 1)
+        return args[0];
     return exprptr_t(new Add(args));
 }
 
@@ -166,6 +169,16 @@ exprptr_t Add::diff(exprptr_t target)
     for (size_t i = 1; i < this->args.size(); i++)
         result = result + this->args[i]->diff(target);
     return result;
+}
+
+exprptr_t Add::getCoef(exprptr_t target)
+{
+    if (isinstance<True>(this->operator==(target)))
+        return exprptr_t(new Integer(1));
+    exprptr_t coef = this->args[0]->getCoef(target);
+    for (size_t i = 1; i < this->args.size(); i++)
+        coef = coef + this->args[i]->getCoef(target);
+    return coef;
 }
 
 exprptr_t Add::_simplify()

@@ -3,38 +3,6 @@
 #include "Rational.h"
 #include "Common.h"
 
-exprptr_t E::operator+(exprptr_t _1)
-{
-    if (isinstance<E>(_1))
-        return ((*this) + *(E *)_1.get()).copyToExprPtr();
-    return Number::operator+(_1);
-}
-exprptr_t E::operator-(exprptr_t _1)
-{
-    if (isinstance<E>(_1))
-        return ((*this) - *(E *)_1.get()).copyToExprPtr();
-    return Number::operator-(_1);
-}
-exprptr_t E::operator*(exprptr_t _1)
-{
-    if (isinstance<E>(_1))
-        return ((*this) * *(E *)_1.get()).copyToExprPtr();
-    return Number::operator*(_1);
-}
-exprptr_t E::operator/(exprptr_t _1)
-{
-    if (isinstance<E>(_1))
-        return ((*this) / *(E *)_1.get()).copyToExprPtr();
-    return Number::operator/(_1);
-}
-
-boolptr_t E::operator==(exprptr_t _1)
-{
-    if (isinstance<E>(_1))
-        return to_boolean((*this) == *(E *)_1.get());
-    return Number::operator==(_1);
-}
-
 exprptr_t E::eval(Integer keep)
 {
     if (keep < 0)

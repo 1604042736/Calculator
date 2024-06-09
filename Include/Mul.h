@@ -28,6 +28,9 @@ public:
     virtual exprptr_t operator*(exprptr_t);
     virtual exprptr_t reciprocal();
     virtual exprptr_t diff(exprptr_t);
+    virtual exprptr_t opposite();
+
+    virtual exprptr_t getCoef(exprptr_t);
 
     virtual exprptr_t _simplify();
     virtual exprptr_t _eval(Integer);

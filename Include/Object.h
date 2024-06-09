@@ -70,6 +70,8 @@ public:
     virtual bool isBaseclass(objptr_t b) { return typeid(*this) == typeid(*b.get()); }
     /*属于哪个集合*/
     virtual setptr_t belongto();
+
+    virtual ~Object() = default;
 };
 
 prettystring_t normalize(prettystring_t);

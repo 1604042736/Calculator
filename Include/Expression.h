@@ -98,9 +98,9 @@ public:
     virtual boolptr_t operator>(objptr_t);
     virtual boolptr_t operator<(objptr_t);
 
-    /*复制成exprptr_t类型, 主要用于解决多继承带来的问题*/
     virtual exprptr_t inline copyToExprPtr() { return exprptr_t(dynamic_cast<Expression *>(this->copyThis())); }
 
+    virtual exprptr_t getCoef(exprptr_t);
     /*化简*/
     virtual exprptr_t simplify();
     /*化简一次*/

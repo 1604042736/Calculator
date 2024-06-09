@@ -7,30 +7,20 @@
 #include "Integer.h"
 #include "Pow.h"
 #include "Interval.h"
+#include "ExprSymbol.h"
 
 /*自然常数*/
-class E : public Number
+class E : public Number, public ExprSymbol
 {
 public:
-    virtual std::string toString() { return "e"; }
+    E() : ExprSymbol("e") {}
 
-    virtual bool operator==(E) { return true; }
-
-    virtual Mul operator+(E) { return Mul({this->copyToExprPtr(), exprptr_t(new Integer(2))}); }
-    virtual Integer operator-(E) { return 0; }
-    virtual Pow operator*(E) { return Pow({this->copyToExprPtr(), exprptr_t(new Integer(2))}); }
-    virtual Integer operator/(E) { return 1; }
-
-    virtual exprptr_t operator+(exprptr_t);
-    virtual exprptr_t operator-(exprptr_t);
-    virtual exprptr_t operator*(exprptr_t);
-    virtual exprptr_t operator/(exprptr_t);
-
-    virtual boolptr_t operator==(exprptr_t);
+    virtual double toDouble() { return 2.7182818284590452; }
 
     virtual exprptr_t eval(Integer);
 
     virtual Object *copyThis() { return new E(*this); }
+    virtual exprptr_t copyToExprPtr() { return exprptr_t(new E(*this)); }
 
     virtual setptr_t belongto() { return setptr_t(new Interval(exprptr_t(new Integer(2)), exprptr_t(new Integer(3)), true, true)); }
 };

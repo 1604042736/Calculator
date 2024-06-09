@@ -7,7 +7,7 @@
 #include "Common.h"
 #include "Sgn.h"
 
-Abs::Abs(exprptr_t arg)
+Abs::Abs(exprptr_t arg) : SArgExprFunction("abs", arg)
 {
     exprptr_t _0(new Integer(0));
     exprptr_t inf(new Infinity());

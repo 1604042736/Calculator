@@ -7,32 +7,23 @@
 #include "Pow.h"
 #include "Integer.h"
 #include "Interval.h"
+#include "ExprSymbol.h"
 
 class Integer;
 /*圆周率*/
-class PI : public Number
+class PI : public Number, public ExprSymbol
 {
 public:
-    virtual std::string toString() { return "π"; }
+    PI() : ExprSymbol("pi") {}
+
+    virtual double toDouble() { return 3.1415926535897932; }
+
     virtual std::string toLateX() { return "\\pi"; }
-
-    virtual bool operator==(PI) { return true; }
-
-    virtual Mul operator+(PI) { return Mul({this->copyToExprPtr(), exprptr_t(new Integer(2))}); }
-    virtual Integer operator-(PI) { return 0; }
-    virtual Pow operator*(PI) { return Pow({this->copyToExprPtr(), exprptr_t(new Integer(2))}); }
-    virtual Integer operator/(PI) { return 1; }
-
-    virtual exprptr_t operator+(exprptr_t);
-    virtual exprptr_t operator-(exprptr_t);
-    virtual exprptr_t operator*(exprptr_t);
-    virtual exprptr_t operator/(exprptr_t);
-
-    virtual boolptr_t operator==(exprptr_t);
 
     virtual exprptr_t eval(Integer);
 
     virtual Object *copyThis() { return new PI(*this); }
+    virtual exprptr_t copyToExprPtr() { return exprptr_t(new PI(*this)); }
 
     virtual setptr_t belongto() { return setptr_t(new Interval(exprptr_t(new Integer(3)), exprptr_t(new Integer(4)), true, true)); }
 };

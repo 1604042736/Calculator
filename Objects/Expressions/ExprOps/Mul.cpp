@@ -68,7 +68,12 @@ exprptr_t Mul::operator+(exprptr_t b)
     if (isinstance<Mul>(b))
         return *this + *(Mul *)b.get();
     else
-        return *this + Mul({b});
+    {
+        exprptr_t t = *this + Mul({b, exprptr_t(new Integer(1))});
+        if (isinstance<Add>(t))
+            t = Expression::operator+(b);
+        return t;
+    }
 }
 
 exprptr_t Mul::operator*(Mul b)
@@ -95,6 +100,8 @@ exprptr_t Mul::operator*(exprptr_t b)
         else
         {
             flag = true;
+            if (isinstance<True>(t == Integer(0)))
+                return exprptr_t(new Integer(0));
             args.push_back(t);
         }
     }
@@ -154,6 +161,34 @@ exprptr_t Mul::opposite()
     if (has__1)
         return result;
     return result * Integer(-1);
+}
+
+exprptr_t Mul::getCoef(exprptr_t target)
+{
+    if (isinstance<True>(this->operator==(target)))
+        return exprptr_t(new Integer(1));
+    exprptr_t coef = nullptr;
+    bool has_coef = false;
+    for (size_t i = 0; i < this->args.size(); i++)
+    {
+        if (isinstance<True>(this->args[i] == target))
+        {
+            if (!has_coef)
+                has_coef = true;
+            else // 防止有两个相同的对象
+                return exprptr_t(new Integer(0));
+        }
+        else
+        {
+            if (coef == nullptr)
+                coef = this->args[i];
+            else
+                coef = coef * this->args[i];
+        }
+    }
+    if (has_coef)
+        return coef;
+    return exprptr_t(new Integer(0));
 }
 
 /*获取分子*/

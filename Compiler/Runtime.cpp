@@ -19,6 +19,9 @@
 #include "Abs.h"
 #include "Ln.h"
 #include "Lg.h"
+#include "Sin.h"
+#include "Cos.h"
+#include "Tan.h"
 
 Runtime::Runtime()
 {
@@ -43,6 +46,9 @@ Runtime::Runtime()
         {"abs", objptr_t(new AbsMapping())},
         {"ln", objptr_t(new LnMapping())},
         {"lg", objptr_t(new LgMapping())},
+        {"sin", objptr_t(new SinMapping())},
+        {"cos", objptr_t(new CosMapping())},
+        {"tan", objptr_t(new TanMapping())},
     });
 }
 
