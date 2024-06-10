@@ -55,26 +55,26 @@ boolptr_t Boolean::operator!()
     return boolptr_t(new Not(this->copyToBoolPtr()));
 }
 
-bool Boolean::operator==(boolptr_t _1) { return false; }
+bool Boolean::operator==(boolptr_t _1) { return this == _1.get(); }
 bool Boolean::operator==(Boolean &_1)
 {
-    return (*this) == (_1.copyToBoolPtr());
+    return this->operator==(_1.copyToBoolPtr());
 }
 bool Boolean::operator==(Boolean &&_1)
 {
-    return (*this) == (_1.copyToBoolPtr());
+    return this->operator==(_1.copyToBoolPtr());
 }
 bool operator==(boolptr_t _1, boolptr_t _2) { return _1->operator==(_2); }
 bool operator==(boolptr_t _1, Boolean &_2) { return _1->operator==(_2); }
 bool operator==(boolptr_t _1, Boolean &&_2) { return _1->operator==(_2); }
-bool Boolean::operator!=(boolptr_t _1) { return !(*this == _1); }
+bool Boolean::operator!=(boolptr_t _1) { return !(this->operator==(_1)); }
 bool Boolean::operator!=(Boolean &_1)
 {
-    return (*this) != (_1.copyToBoolPtr());
+    return this->operator!=(_1.copyToBoolPtr());
 }
 bool Boolean::operator!=(Boolean &&_1)
 {
-    return (*this) != (_1.copyToBoolPtr());
+    return this->operator!=(_1.copyToBoolPtr());
 }
 bool operator!=(boolptr_t _1, boolptr_t _2) { return _1->operator!=(_2); }
 bool operator!=(boolptr_t _1, Boolean &_2) { return _1->operator!=(_2); }

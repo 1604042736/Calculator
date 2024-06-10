@@ -19,8 +19,8 @@ public:
         if (args.size() != 1 || !isinstance<Relation>(args[0]))
             throw std::runtime_error("[PlotMapping]超出定义域");
         Relation *r = dynamic_cast<Relation *>(args[0].get());
-        exprptr_t expr1 = r->lhs;
-        exprptr_t expr2 = r->rhs;
+        exprptr_t expr1 = r->lhs->simplify();
+        exprptr_t expr2 = r->rhs->simplify();
 
         Generator::Relation relation;
         if (isinstance<Equality>(args[0]))

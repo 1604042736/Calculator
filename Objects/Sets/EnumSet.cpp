@@ -154,3 +154,27 @@ setptr_t EnumSet::productpow(Integer n)
         return setptr_t(new EmptySet());
     return setptr_t(new EnumSet(elements));
 }
+
+boolptr_t EnumSet::operator==(EnumSet *b)
+{
+    if (this->elements.size() != b->elements.size())
+        return to_boolean(false);
+    boolptr_t result = boolptr_t(new True());
+    elements_t aelements(this->elements);
+    elements_t belements(b->elements);
+    for (size_t i = 0; i < aelements.size(); i++)
+    {
+        boolptr_t t = boolptr_t(new False());
+        for (size_t j = 0; j < belements.size(); j++)
+            t = t->operator||(aelements[i] == belements[j]);
+        result = result->operator&&(t);
+    }
+    return result;
+}
+
+boolptr_t EnumSet::operator==(setptr_t b)
+{
+    if (isinstance<EnumSet>(b))
+        return this->operator==(dynamic_cast<EnumSet *>(b.get()));
+    return Set::operator==(b);
+}

@@ -156,3 +156,18 @@ void print(prettystring_t pstr)
     for (size_t i = 0; i < pstr.size(); i++)
         std::cout << pstr[i] << std::endl;
 }
+
+/*
+化简
+对于无法化简的对象不做任何操作
+*/
+objptr_t simplify(objptr_t a)
+{
+    if (isinstance<Expression>(a))
+        return dynamic_cast<Expression *>(a.get())->simplify();
+    else if (isinstance<Boolean>(a))
+        return dynamic_cast<Boolean *>(a.get())->simplify();
+    else if (isinstance<Set>(a))
+        return dynamic_cast<Set *>(a.get())->simplify();
+    return a;
+}

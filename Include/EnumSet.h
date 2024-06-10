@@ -29,5 +29,8 @@ public:
     virtual std::string toString();
     virtual prettystring_t toPrettyString();
 
+    virtual boolptr_t operator==(EnumSet *);
+    virtual boolptr_t operator==(setptr_t);
+
     elements_t elements; // 集合元素
 };

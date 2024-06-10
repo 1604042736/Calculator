@@ -61,7 +61,8 @@ void import_code(std::string filename, Runtime *runtime)
 
 objptr_t ImportAST::exec(Runtime *runtime)
 {
-    auto t = splitext(this->name);
+    std::string filename = this->name;
+    auto t = splitext(filename);
     std::string name = std::get<0>(t);
     std::string ext = std::get<1>(t);
     try
@@ -75,14 +76,15 @@ objptr_t ImportAST::exec(Runtime *runtime)
                 if (access((name + avai_ext[i]).data(), F_OK) == 0)
                 {
                     ext = avai_ext[i];
+                    filename = name + ext;
                     break;
                 }
             }
         }
         if (std::find(lib_ext.begin(), lib_ext.end(), ext) != lib_ext.end())
-            import_lib(this->name, runtime);
+            import_lib(filename, runtime);
         else if (std::find(code_ext.begin(), code_ext.end(), ext) != code_ext.end())
-            import_code(this->name, runtime);
+            import_code(filename, runtime);
         else
             throw Error("import不支持的文件", this->context);
     }

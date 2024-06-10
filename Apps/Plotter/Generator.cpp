@@ -57,7 +57,7 @@ Generator::generate(exprptr_t expr1, exprptr_t expr2, Relation relation, QPointF
     {
         auto h = que.dequeue();
         memory.push_back(h);
-        // qDebug() << que.size();
+        std::cout << que.size() << "        \r";
         QPointF nx(x.x() + h.first.x() * (x.y() - x.x()) / size.width(),
                    x.x() + h.first.y() * (x.y() - x.x()) / size.width());
         QPointF ny(y.x() + h.second.x() * (y.y() - y.x()) / size.height(),

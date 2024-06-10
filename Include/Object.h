@@ -76,3 +76,5 @@ public:
 
 prettystring_t normalize(prettystring_t);
 void print(prettystring_t);
+
+objptr_t simplify(objptr_t);

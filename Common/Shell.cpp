@@ -25,7 +25,7 @@ void shell(Runtime *runtime, bool verbose)
                 if (obj != nullptr)
                 {
                     printf("Out [%d]: \n", out_count++);
-                    print(obj->toPrettyString());
+                    print(simplify(obj)->toPrettyString());
                 }
             }
             catch (TooFewTokenError &)

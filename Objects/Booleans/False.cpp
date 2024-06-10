@@ -1,5 +1,6 @@
 #include "False.h"
 #include "True.h"
+#include "Common.h"
 
 boolptr_t False::operator&&(boolptr_t)
 {
@@ -9,4 +10,9 @@ boolptr_t False::operator&&(boolptr_t)
 boolptr_t False::operator!()
 {
     return boolptr_t(new True());
+}
+
+bool False::operator==(boolptr_t b)
+{
+    return isinstance<False>(b);
 }

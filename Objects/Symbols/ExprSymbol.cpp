@@ -49,7 +49,7 @@ boolptr_t ExprSymbol::operator==(exprptr_t _1)
 
 exprptr_t ExprSymbol::operator+(ExprSymbol *b)
 {
-    if ((*this) == b) // a + a = 2 * a
+    if (isinstance<True>(this->operator==(b))) // a + a = 2 * a
         return exprptr_t(new Mul({exprptr_t(new Integer(2)),
                                   this->copyToExprPtr()}));
     return Expression::operator+(b->copyToExprPtr());
@@ -57,21 +57,21 @@ exprptr_t ExprSymbol::operator+(ExprSymbol *b)
 
 exprptr_t ExprSymbol::operator-(ExprSymbol *b)
 {
-    if ((*this) == b) // a - a = 0
+    if (isinstance<True>(this->operator==(b))) // a - a = 0
         return exprptr_t(new Integer(0));
     return Expression::operator-(b->copyToExprPtr());
 }
 
 exprptr_t ExprSymbol::operator*(ExprSymbol *b)
 {
-    if ((*this) == b) // a * a = a ^ 2
+    if (isinstance<True>(this->operator==(b))) // a * a = a ^ 2
         return this->pow(Integer(2));
     return Expression::operator*(b->copyToExprPtr());
 }
 
 exprptr_t ExprSymbol::operator/(ExprSymbol *b)
 {
-    if ((*this) == b) // a / a = 1
+    if (isinstance<True>(this->operator==(b))) // a / a = 1
         return exprptr_t(new Integer(1));
     return Expression::operator/(b->copyToExprPtr());
 }

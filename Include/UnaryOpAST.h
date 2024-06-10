@@ -13,3 +13,5 @@ public:
 
     std::string op;
 };
+
+exprptr_t opposite(exprptr_t);

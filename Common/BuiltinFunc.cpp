@@ -11,9 +11,9 @@
 
 objptr_t SimplifyMapping::operator()(funcargs_t args)
 {
-    if (args.size() != 1 || !isinstance<Expression>(args[0]))
+    if (args.size() != 1)
         throw std::runtime_error("超出定义域");
-    return this->operator()(dynamic_cast<Expression *>(args[0].get())->copyToExprPtr());
+    return simplify(args[0]);
 }
 
 objptr_t EvalMapping::operator()(funcargs_t args)
@@ -28,6 +28,7 @@ objptr_t PrintMapping::operator()(funcargs_t args)
 {
     for (size_t i = 0; i < args.size(); i++)
     {
+        args[i] = simplify(args[i]);
         print(args[i]->toPrettyString());
         if (isinstance<DefinedFunction>(args[i]))
         {

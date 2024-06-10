@@ -22,9 +22,8 @@ void shell(bool verbose = false);
 class SimplifyMapping : public ExprMapping
 {
 public:
-    SimplifyMapping() : ExprMapping("simplify", setptr_t(new RealSet()), setptr_t(new RealSet())) {}
+    SimplifyMapping() : ExprMapping("simplify") {}
 
-    virtual exprptr_t operator()(exprptr_t b) { return b->simplify(); }
     virtual objptr_t operator()(funcargs_t);
 };
 

@@ -12,5 +12,7 @@ public:
 
     virtual boolptr_t contains(objptr_t element);
 
+    virtual setptr_t _simplify();
+
     virtual std::string getOpStr() { return "∪"; }
 };

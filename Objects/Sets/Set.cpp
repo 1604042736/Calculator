@@ -64,11 +64,7 @@ setptr_t Set::productpow(Integer b)
         throw std::runtime_error("集合的pow运算指数必须>=0");
     if (b == 0)
         return setptr_t(new EnumSet({objptr_t(new Tuple({}))}));
-    setopargs_t args;
-    setptr_t self = this->copyToSetPtr();
-    for (Integer i = 0; i < b; i = i + 1)
-        args.push_back(self);
-    return setptr_t(new ProductSet(args));
+    return setptr_t(new ProductSet(this->copyToSetPtr(), b));
 }
 
 boolptr_t Set::contains(Object &&element)
@@ -107,4 +103,24 @@ objptr_t Set::pow(objptr_t b)
     else if (isinstance<Set>(b))
         return this->pow(dynamic_cast<Set *>(b.get())->copyToSetPtr());
     return Object::pow(b);
+}
+
+boolptr_t Set::operator==(objptr_t b)
+{
+    if (isinstance<Set>(b))
+        return this->operator==(dynamic_cast<Set *>(b.get())->copyToSetPtr());
+    return Object::operator==(b);
+}
+
+setptr_t Set::simplify()
+{
+    setptr_t result = this->_simplify();
+    setptr_t pre;
+    do
+    {
+        pre = result;
+        result = result->_simplify();
+    } while (isinstance<True>(result->operator!=(pre)));
+
+    return result;
 }

@@ -44,8 +44,6 @@ public:
         if (t == nullptr)
             throw std::runtime_error("[SArgFuncMapping(" + this->name + ")::operator()]超出定义域");
         ArgT ret(new FuncT(ArgT(dynamic_cast<ArgBaseT *>(t->copyThis()))));
-        if (std::is_base_of<Expression, ArgBaseT>::value)
-            ret = ret->simplify();
         return ret;
     }
 };

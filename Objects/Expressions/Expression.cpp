@@ -56,37 +56,37 @@ exprptr_t Expression::operator+(exprptr_t b)
     return exprptr_t(new Add({this->copyToExprPtr(), b}));
 }
 
-exprptr_t Expression::operator+(Expression &_1) { return (*this) + (_1.copyToExprPtr()); }
-exprptr_t Expression::operator+(Expression &&_1) { return (*this) + (_1.copyToExprPtr()); }
+exprptr_t Expression::operator+(Expression &_1) { return this->operator+(_1.copyToExprPtr()); }
+exprptr_t Expression::operator+(Expression &&_1) { return this->operator+(_1.copyToExprPtr()); }
 exprptr_t operator+(exprptr_t _1, exprptr_t _2) { return _1->operator+(_2); }
 exprptr_t operator+(exprptr_t _1, Expression &_2) { return _1->operator+(_2); }
 exprptr_t operator+(exprptr_t _1, Expression &&_2) { return _1->operator+(_2); }
 exprptr_t Expression::operator-(exprptr_t _1) { return this->operator+(_1->opposite()); }
-exprptr_t Expression::operator-(Expression &_1) { return (*this) - (_1.copyToExprPtr()); }
-exprptr_t Expression::operator-(Expression &&_1) { return (*this) - (_1.copyToExprPtr()); }
+exprptr_t Expression::operator-(Expression &_1) { return this->operator-(_1.copyToExprPtr()); }
+exprptr_t Expression::operator-(Expression &&_1) { return this->operator-(_1.copyToExprPtr()); }
 exprptr_t operator-(exprptr_t _1, exprptr_t _2) { return _1->operator-(_2); }
 exprptr_t operator-(exprptr_t _1, Expression &_2) { return _1->operator-(_2); }
 exprptr_t operator-(exprptr_t _1, Expression &&_2) { return _1->operator-(_2); }
-exprptr_t Expression::operator*(Expression &_1) { return (*this) * (_1.copyToExprPtr()); }
-exprptr_t Expression::operator*(Expression &&_1) { return (*this) * (_1.copyToExprPtr()); }
+exprptr_t Expression::operator*(Expression &_1) { return this->operator*(_1.copyToExprPtr()); }
+exprptr_t Expression::operator*(Expression &&_1) { return this->operator*(_1.copyToExprPtr()); }
 exprptr_t operator*(exprptr_t _1, exprptr_t _2) { return _1->operator*(_2); }
 exprptr_t operator*(exprptr_t _1, Expression &_2) { return _1->operator*(_2); }
 exprptr_t operator*(exprptr_t _1, Expression &&_2) { return _1->operator*(_2); }
 exprptr_t Expression::operator/(exprptr_t _1) { return this->operator*(_1->reciprocal()); }
-exprptr_t Expression::operator/(Expression &_1) { return (*this) / (_1.copyToExprPtr()); }
-exprptr_t Expression::operator/(Expression &&_1) { return (*this) / (_1.copyToExprPtr()); }
+exprptr_t Expression::operator/(Expression &_1) { return this->operator/(_1.copyToExprPtr()); }
+exprptr_t Expression::operator/(Expression &&_1) { return this->operator/(_1.copyToExprPtr()); }
 exprptr_t operator/(exprptr_t _1, exprptr_t _2) { return _1->operator/(_2); }
 exprptr_t operator/(exprptr_t _1, Expression &_2) { return _1->operator/(_2); }
 exprptr_t operator/(exprptr_t _1, Expression &&_2) { return _1->operator/(_2); }
 boolptr_t Expression::operator>(exprptr_t _1) { return boolptr_t(new StrictGreaterThan(this->copyToExprPtr(), _1)); }
-boolptr_t Expression::operator>(Expression &_1) { return (*this) > (_1.copyToExprPtr()); }
-boolptr_t Expression::operator>(Expression &&_1) { return (*this) > (_1.copyToExprPtr()); }
+boolptr_t Expression::operator>(Expression &_1) { return this->operator>(_1.copyToExprPtr()); }
+boolptr_t Expression::operator>(Expression &&_1) { return this->operator>(_1.copyToExprPtr()); }
 boolptr_t operator>(exprptr_t _1, exprptr_t _2) { return _1->operator>(_2); }
 boolptr_t operator>(exprptr_t _1, Expression &_2) { return _1->operator>(_2); }
 boolptr_t operator>(exprptr_t _1, Expression &&_2) { return _1->operator>(_2); }
-boolptr_t Expression::operator>=(exprptr_t _1) { return (*this == _1) || (*this > _1); }
-boolptr_t Expression::operator>=(Expression &_1) { return (*this) >= (_1.copyToExprPtr()); }
-boolptr_t Expression::operator>=(Expression &&_1) { return (*this) >= (_1.copyToExprPtr()); }
+boolptr_t Expression::operator>=(exprptr_t _1) { return (this->operator==(_1)) || (this->operator>(_1)); }
+boolptr_t Expression::operator>=(Expression &_1) { return this->operator>=(_1.copyToExprPtr()); }
+boolptr_t Expression::operator>=(Expression &&_1) { return this->operator>=(_1.copyToExprPtr()); }
 boolptr_t operator>=(exprptr_t _1, exprptr_t _2) { return _1->operator>=(_2); }
 boolptr_t operator>=(exprptr_t _1, Expression &_2) { return _1->operator>=(_2); }
 boolptr_t operator>=(exprptr_t _1, Expression &&_2) { return _1->operator>=(_2); }
@@ -94,26 +94,26 @@ boolptr_t Expression::operator<(exprptr_t _1)
 {
     return boolptr_t(new StrictLessThan(this->copyToExprPtr(), _1));
 }
-boolptr_t Expression::operator<(Expression &_1) { return (*this) < (_1.copyToExprPtr()); }
-boolptr_t Expression::operator<(Expression &&_1) { return (*this) < (_1.copyToExprPtr()); }
+boolptr_t Expression::operator<(Expression &_1) { return this->operator<(_1.copyToExprPtr()); }
+boolptr_t Expression::operator<(Expression &&_1) { return this->operator<(_1.copyToExprPtr()); }
 boolptr_t operator<(exprptr_t _1, exprptr_t _2) { return _1->operator<(_2); }
 boolptr_t operator<(exprptr_t _1, Expression &_2) { return _1->operator<(_2); }
 boolptr_t operator<(exprptr_t _1, Expression &&_2) { return _1->operator<(_2); }
-boolptr_t Expression::operator<=(exprptr_t _1) { return (*this == _1) || (*this < _1); }
-boolptr_t Expression::operator<=(Expression &_1) { return (*this) <= (_1.copyToExprPtr()); }
-boolptr_t Expression::operator<=(Expression &&_1) { return (*this) <= (_1.copyToExprPtr()); }
+boolptr_t Expression::operator<=(exprptr_t _1) { return (this->operator==(_1)) || (this->operator<(_1)); }
+boolptr_t Expression::operator<=(Expression &_1) { return this->operator<=(_1.copyToExprPtr()); }
+boolptr_t Expression::operator<=(Expression &&_1) { return this->operator<=(_1.copyToExprPtr()); }
 boolptr_t operator<=(exprptr_t _1, exprptr_t _2) { return _1->operator<=(_2); }
 boolptr_t operator<=(exprptr_t _1, Expression &_2) { return _1->operator<=(_2); }
 boolptr_t operator<=(exprptr_t _1, Expression &&_2) { return _1->operator<=(_2); }
 boolptr_t Expression::operator==(exprptr_t _1) { return boolptr_t(new Equality(this->copyToExprPtr(), _1)); }
-boolptr_t Expression::operator==(Expression &_1) { return (*this) == (_1.copyToExprPtr()); }
-boolptr_t Expression::operator==(Expression &&_1) { return (*this) == (_1.copyToExprPtr()); }
+boolptr_t Expression::operator==(Expression &_1) { return this->operator==(_1.copyToExprPtr()); }
+boolptr_t Expression::operator==(Expression &&_1) { return this->operator==(_1.copyToExprPtr()); }
 boolptr_t operator==(exprptr_t _1, exprptr_t _2) { return _1->operator==(_2); }
 boolptr_t operator==(exprptr_t _1, Expression &_2) { return _1->operator==(_2); }
 boolptr_t operator==(exprptr_t _1, Expression &&_2) { return _1->operator==(_2); }
-boolptr_t Expression::operator!=(exprptr_t _1) { return !(*this == _1); }
-boolptr_t Expression::operator!=(Expression &_1) { return (*this) != (_1.copyToExprPtr()); }
-boolptr_t Expression::operator!=(Expression &&_1) { return (*this) != (_1.copyToExprPtr()); }
+boolptr_t Expression::operator!=(exprptr_t _1) { return !(this->operator==(_1)); }
+boolptr_t Expression::operator!=(Expression &_1) { return this->operator!=(_1.copyToExprPtr()); }
+boolptr_t Expression::operator!=(Expression &&_1) { return this->operator!=(_1.copyToExprPtr()); }
 boolptr_t operator!=(exprptr_t _1, exprptr_t _2) { return _1->operator!=(_2); }
 boolptr_t operator!=(exprptr_t _1, Expression &_2) { return _1->operator!=(_2); }
 boolptr_t operator!=(exprptr_t _1, Expression &&_2) { return _1->operator!=(_2); }
@@ -134,17 +134,17 @@ exprptr_t Expression::pow(exprptr_t _1)
         return this->copyToExprPtr();
     return std::shared_ptr<Pow>(new Pow({this->copyToExprPtr(), _1}));
 }
-exprptr_t Expression::pow(Expression &_1) { return (*this).pow(_1.copyToExprPtr()); }
-exprptr_t Expression::pow(Expression &&_1) { return (*this).pow(_1.copyToExprPtr()); }
+exprptr_t Expression::pow(Expression &_1) { return this->pow(_1.copyToExprPtr()); }
+exprptr_t Expression::pow(Expression &&_1) { return this->pow(_1.copyToExprPtr()); }
 exprptr_t pow(exprptr_t _1, exprptr_t _2) { return _1->pow(_2); }
 exprptr_t Expression::pow(exprptr_t _1, Integer _2) { return this->pow(_1); }
 exprptr_t Expression::pow(Expression &_1, Integer _2)
 {
-    return (*this).pow(_1.copyToExprPtr(), _2);
+    return this->pow(_1.copyToExprPtr(), _2);
 }
 exprptr_t Expression::pow(Expression &&_1, Integer _2)
 {
-    return (*this).pow(_1.copyToExprPtr(), _2);
+    return this->pow(_1.copyToExprPtr(), _2);
 }
 exprptr_t pow(exprptr_t _1, exprptr_t _2, Integer _3) { return _1->pow(_2, _3); }
 exprptr_t Expression::reciprocal()

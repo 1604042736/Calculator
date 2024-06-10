@@ -28,33 +28,23 @@ boolptr_t ExprOp::operator==(exprptr_t b)
         expropargs_t cargs(c->args);
         if (aargs.size() != cargs.size())
             return to_boolean(false);
+        boolptr_t result = boolptr_t(new True());
         if (a->isCommutative())
         {
             for (size_t i = 0; i < aargs.size(); i++)
             {
-                bool flag = false;
+                boolptr_t t = boolptr_t(new False());
                 for (size_t j = 0; j < cargs.size(); j++)
-                {
-                    if (isinstance<True>(aargs[i] == cargs[j]))
-                    {
-                        cargs.erase(cargs.begin() + j); // 防止重复查找
-                        flag = true;
-                        break;
-                    }
-                }
-                if (!flag)
-                    return to_boolean(false);
+                    t = t->operator||(aargs[i] == cargs[j]);
+                result = result->operator&&(t);
             }
         }
         else
         {
             for (size_t i = 0; i < aargs.size(); i++)
-            {
-                if (!isinstance<True>(aargs[i] == cargs[i]))
-                    return to_boolean(false);
-            }
+                result = result->operator&&(aargs[i] == cargs[i]);
         }
-        return to_boolean(true);
+        return result;
     }
     return Expression::operator==(b);
 }

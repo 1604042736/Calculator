@@ -24,7 +24,8 @@ public:
     friend setptr_t product(setptr_t a, setptr_t b) { return a->product(b); }
     virtual setptr_t productpow(Integer);
 
-    virtual boolptr_t operator==(setptr_t) { return to_boolean(false); }
+    virtual boolptr_t operator==(setptr_t b) { return to_boolean(this == b.get()); }
+    virtual boolptr_t operator==(objptr_t);
 
     /*这里的运算指的是集合中的元素参与运算后的结果所在的集合*/
     virtual setptr_t add(setptr_t);
@@ -38,4 +39,12 @@ public:
     virtual boolptr_t contains(objptr_t);
     virtual boolptr_t contains(Object &&);
     virtual boolptr_t includes(setptr_t);
+
+    /*化简*/
+    virtual setptr_t simplify();
+    /*化简一次*/
+    virtual setptr_t _simplify()
+    {
+        return this->copyToSetPtr();
+    }
 };
