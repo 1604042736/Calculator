@@ -20,7 +20,7 @@ objptr_t EvalMapping::operator()(funcargs_t args)
 {
     if (args.size() != 2 || !isinstance<Expression>(args[0]) || !isinstance<Integer>(args[1]))
         throw std::runtime_error("超出定义域");
-    return this->operator()(dynamic_cast<Expression *>(args[0].get())->copyToExprPtr(),
+    return this->operator()(dynamic_cast<Expression *>(args[0].get())->simplify(),
                             *dynamic_cast<Integer *>(args[1].get()));
 }
 

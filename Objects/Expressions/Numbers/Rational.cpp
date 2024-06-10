@@ -39,7 +39,7 @@ Rational::Rational(Integer nume)
 
 Rational::Rational(Float nume)
 {
-    std::tuple<Integer, Integer> t = exponent_matching(nume, deno);
+    std::tuple<Integer, Integer> t = exponent_matching(nume, 1);
     this->nume = std::get<0>(t);
     this->deno = std::get<1>(t);
     this->reduction();
@@ -47,7 +47,7 @@ Rational::Rational(Float nume)
 
 Rational::Rational(double nume)
 {
-    std::tuple<Integer, Integer> t = exponent_matching(nume, deno);
+    std::tuple<Integer, Integer> t = exponent_matching(nume, 1);
     this->nume = std::get<0>(t);
     this->deno = std::get<1>(t);
     this->reduction();
@@ -245,6 +245,8 @@ exprptr_t Rational::pow(exprptr_t _1, Integer _2)
 
 exprptr_t Rational::_simplify()
 {
+    if (this->deno == 0)
+        return exprptr_t(new Infinity(this->nume.sign));
     std::vector<Integer> dm = divmod(this->nume, this->deno);
     if (dm[1] == 0)
         return exprptr_t(new Integer(dm[0]));

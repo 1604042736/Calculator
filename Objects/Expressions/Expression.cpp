@@ -274,12 +274,12 @@ keep>=0
 */
 exprptr_t Expression::eval(Integer keep)
 {
-    exprptr_t result = this->_eval(keep);
+    exprptr_t result = this->simplify()->_eval(keep);
     exprptr_t pre;
     do
     {
         pre = result;
-        result = result->_eval(keep);
+        result = result->simplify()->_eval(keep);
     } while (isinstance<True>(result != pre));
 
     return result;
