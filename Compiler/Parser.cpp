@@ -14,6 +14,8 @@
 #include "ModifyAST.h"
 #include "EnumSetAST.h"
 #include "FuncDefAST.h"
+#include "ScopeAST.h"
+#include "ImportAST.h"
 
 void Parser::match(TokenType cur, TokenType expect)
 {
@@ -75,10 +77,49 @@ astptr_t Parser::parse_sentence()
     case TK_FUNC:
         a = parse_funcdef();
         break;
+    case TK_SCOPE:
+        a = parse_scope();
+        break;
+    case TK_IMPORT:
+        a = parse_import();
+        break;
     default:
         a = parse_expr();
     }
     return a;
+}
+
+/*
+import : 'import' STRING
+*/
+astptr_t Parser::parse_import()
+{
+    match(token.type, TK_IMPORT);
+    std::string name = token.str;
+    match(token.type, TK_STRING);
+    return astptr_t(new ImportAST(name, lexer->context));
+}
+
+/*
+scope : 'scope' '[' ( NAME ',' )* [NAME] ']' compound
+*/
+astptr_t Parser::parse_scope()
+{
+    match(token.type, TK_SCOPE);
+    match(token.type, TK_LMIDDLE);
+    std::vector<std::string> names;
+    while (token.type == TK_NAME)
+    {
+        names.push_back(token.str);
+        match(token.type, TK_NAME);
+        if (token.type == TK_COMMA)
+            match(token.type, TK_COMMA);
+        else
+            break;
+    }
+    match(token.type, TK_RMIDDLE);
+
+    return astptr_t(new ScopeAST(names, parse_compound(), lexer->context));
 }
 
 /*

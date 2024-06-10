@@ -103,6 +103,8 @@ setptr_t tan(Interval *b)
         return nullptr;
     double start = dynamic_cast<Number *>(b->start.get())->toDouble();
     double end = dynamic_cast<Number *>(b->end.get())->toDouble();
+    if (end < start)
+        std::swap(end, start);
     // 没有考虑单调性
     return setptr_t(new Interval(exprptr_t(new Float(std::tan(start))),
                                  exprptr_t(new Float(std::tan(end))), b->left_open, b->right_open));

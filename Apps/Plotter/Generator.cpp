@@ -64,8 +64,8 @@ Generator::generate(exprptr_t expr1, exprptr_t expr2, Relation relation, QPointF
                    y.x() + h.second.y() * (y.y() - y.x()) / size.height());
         exprptr_t sx(new ExprSymbol("x", to_interval(nx)));
         exprptr_t sy(new ExprSymbol("y", to_interval(ny)));
-        exprptr_t nexpr1 = dynamic_cast<Expression *>(expr1->replace(sx, sx).get())->copyToExprPtr();
-        exprptr_t nexpr2 = dynamic_cast<Expression *>(expr2->replace(sy, sy).get())->copyToExprPtr();
+        exprptr_t nexpr1 = dynamic_cast<Expression *>(expr1->replace(sx, sx)->replace(sy, sy).get())->copyToExprPtr();
+        exprptr_t nexpr2 = dynamic_cast<Expression *>(expr2->replace(sx, sx)->replace(sy, sy).get())->copyToExprPtr();
         setptr_t s1 = nexpr1->belongto();
         setptr_t s2 = nexpr2->belongto();
         // qDebug() << QString::fromStdString(s1->toString()) << QString::fromStdString(s2->toString());

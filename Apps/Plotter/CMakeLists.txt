@@ -10,7 +10,7 @@ file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/*.cpp)
 file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/*.h)
 file(GLOB_RECURSE UI_FILES CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/*.ui)
 
-add_executable(Plotter ${SOURCE_FILES} ${HEADER_FILES} ${UI_FILES})
+add_library(Plotter SHARED ${SOURCE_FILES} ${HEADER_FILES} ${UI_FILES})
 target_link_libraries(Plotter Qt5::Widgets Qt5::Svg)
 target_link_libraries(Plotter Core)
 add_custom_command(TARGET Plotter POST_BUILD
@@ -20,3 +20,8 @@ add_custom_command(TARGET Plotter POST_BUILD
     $<TARGET_FILE:Qt5::Widgets> $<TARGET_FILE_DIR:Numerical>
     $<TARGET_FILE:Qt5::Svg> $<TARGET_FILE_DIR:Numerical>
 )
+set_target_properties(Plotter PROPERTIES PREFIX "")
+
+add_executable(EPlotter)
+target_link_libraries(EPlotter Plotter)
+set_target_properties(EPlotter PROPERTIES OUTPUT_NAME "Plotter")

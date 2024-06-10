@@ -18,8 +18,8 @@ public:
     virtual exprptr_t operator-(ExprSymbol *);
     virtual exprptr_t operator*(ExprSymbol *);
     virtual exprptr_t operator/(ExprSymbol *);
-    /*暂且把名称一样的变量看成一样的*/
-    virtual bool operator==(ExprSymbol *b) { return this->name == b->name; }
+
+    virtual boolptr_t operator==(ExprSymbol *);
 
     virtual exprptr_t operator+(exprptr_t);
     virtual exprptr_t operator-(exprptr_t);

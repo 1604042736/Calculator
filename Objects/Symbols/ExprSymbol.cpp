@@ -6,6 +6,7 @@
 #include "Pow.h"
 #include "Common.h"
 #include "Derivative.h"
+#include "Number.h"
 
 std::vector<std::string> names = {"pi", "e"}; // 已经创建过的名字
 
@@ -42,7 +43,7 @@ exprptr_t ExprSymbol::operator/(exprptr_t _1)
 boolptr_t ExprSymbol::operator==(exprptr_t _1)
 {
     if (isinstance<ExprSymbol>(_1))
-        return to_boolean((*this) == dynamic_cast<ExprSymbol *>(_1.get()));
+        return (*this) == dynamic_cast<ExprSymbol *>(_1.get());
     return Expression::operator==(_1);
 }
 
@@ -73,6 +74,14 @@ exprptr_t ExprSymbol::operator/(ExprSymbol *b)
     if ((*this) == b) // a / a = 1
         return exprptr_t(new Integer(1));
     return Expression::operator/(b->copyToExprPtr());
+}
+
+boolptr_t ExprSymbol::operator==(ExprSymbol *b)
+{
+    bool c = this->name == b->name;
+    if (c || (isinstance<Number>(this) && isinstance<Number>(b)))
+        return to_boolean(c);
+    return Expression::operator==(b->copyToExprPtr());
 }
 
 Integer ExprSymbol::getWeight()

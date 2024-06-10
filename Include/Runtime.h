@@ -14,6 +14,7 @@
 #define BOOL_FLAG 1
 
 typedef std::bitset<16> flags_t;
+typedef std::map<std::string, objptr_t> scope_t;
 
 /*运行时*/
 class Runtime
@@ -24,6 +25,10 @@ public:
     objptr_t findName(std::string);
     void defName(std::string, objptr_t);
 
-    std::vector<std::map<std::string, objptr_t>> scopes; // 作用域, 上层作用域放在大索引处
-    flags_t flags;                                       // 标志位
+    void enterScope();
+    void leaveScope();
+    scope_t &curScope();
+
+    std::vector<scope_t> scopes; // 作用域, 上层作用域放在大索引处
+    flags_t flags;               // 标志位
 };

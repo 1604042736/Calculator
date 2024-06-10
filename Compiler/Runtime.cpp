@@ -68,3 +68,18 @@ void Runtime::defName(std::string name, objptr_t val)
 {
     this->scopes[0][name] = val;
 }
+
+void Runtime::enterScope()
+{
+    this->scopes.insert(this->scopes.begin(), scope_t());
+}
+
+void Runtime::leaveScope()
+{
+    this->scopes.erase(this->scopes.begin());
+}
+
+scope_t &Runtime::curScope()
+{
+    return this->scopes[0];
+}

@@ -108,6 +108,10 @@ Token Lexer::getToken()
             this->tokens.push_back(Token(TK_NOT, this->context, token_str, indent));
         else if (token_str == "func")
             this->tokens.push_back(Token(TK_FUNC, this->context, token_str, indent));
+        else if (token_str == "scope")
+            this->tokens.push_back(Token(TK_SCOPE, this->context, token_str, indent));
+        else if (token_str == "import")
+            this->tokens.push_back(Token(TK_IMPORT, this->context, token_str, indent));
         else
             this->tokens.push_back(Token(TK_NAME, this->context, token_str, indent));
         this->ungetChar();
@@ -145,6 +149,10 @@ Token Lexer::getToken()
         this->tokens.push_back(Token(TK_LLITTLE, this->context, "(", indent));
     else if (ch == ')')
         this->tokens.push_back(Token(TK_RLITTLE, this->context, ")", indent));
+    else if (ch == '[')
+        this->tokens.push_back(Token(TK_LMIDDLE, this->context, "[", indent));
+    else if (ch == ']')
+        this->tokens.push_back(Token(TK_RMIDDLE, this->context, "]", indent));
     else if (ch == '{')
         this->tokens.push_back(Token(TK_LLARGE, this->context, "{", indent));
     else if (ch == '}')

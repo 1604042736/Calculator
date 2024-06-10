@@ -59,24 +59,13 @@ int main(int argc, char *argv[])
         {
             for (auto filename : filenames)
             {
-                std::ifstream file(filename);
-                if (!file)
-                {
-                    printf("无法打开文件: %s\n", filename.data());
-                    continue;
-                }
-                std::stringstream buffer;
-                buffer << file.rdbuf();
-                std::string code(buffer.str());
                 try
                 {
-                    exec(code, filename, &runtime, verbose);
+                    exec(filename, &runtime, verbose, true);
                 }
-                catch (Error &e)
+                catch (std::exception &e)
                 {
-                    printf("%s:%d:%d 错误: %s\n",
-                           e.context.filename.data(), e.context.line, e.context.column,
-                           e.message.data());
+                    std::cout << e.what() << "\n";
                 }
             }
         }

@@ -20,6 +20,8 @@ enum TokenType
     TK_DIV,     // /
     TK_LLITTLE, // (
     TK_RLITTLE, // )
+    TK_LMIDDLE, // [
+    TK_RMIDDLE, // ]
     TK_LLARGE,  // {
     TK_RLARGE,  // }
     TK_COMMA,   // ,
@@ -40,6 +42,8 @@ enum TokenType
     TK_OR,
     TK_NOT,
     TK_FUNC,
+    TK_SCOPE,
+    TK_IMPORT,
     TK_EOF
 };
 

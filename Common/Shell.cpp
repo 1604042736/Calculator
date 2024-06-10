@@ -38,7 +38,7 @@ void shell(Runtime *runtime, bool verbose)
             }
             catch (Error &e)
             {
-                printf("%s:%d:%d 错误: %s\n",
+                printf("%s:%lld:%lld 错误: %s\n",
                        e.context.filename.data(), e.context.line, e.context.column,
                        e.message.data());
             }
