@@ -7,7 +7,6 @@
 #include "Mul.h"
 #include "Integer.h"
 #include "Pow.h"
-#include "Common.h"
 
 ExprOp::ExprOp(expropargs_t args)
 {

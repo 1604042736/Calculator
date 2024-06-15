@@ -3,7 +3,6 @@
 #include "Lambda.h"
 #include "Tuple.h"
 #include "True.h"
-#include "Common.h"
 
 Lambda::Lambda(lambdaargs_t args, funcbodyptr_t body, setptr_t domain, setptr_t range)
     : Function(domain, range)
@@ -65,8 +64,8 @@ prettystring_t Lambda::toPrettyString()
 
 objptr_t Lambda::operator()(funcargs_t args)
 {
-    if(isinstance<False>(this->inDomain(args)))
-            throw std::runtime_error("超出定义域");
+    if (isinstance<False>(this->inDomain(args)))
+        throw std::runtime_error("超出定义域");
     objptr_t result = this->body;
     for (size_t i = 0; i < this->args.size(); i++)
         result = result->replace(this->args[i], args[i]);

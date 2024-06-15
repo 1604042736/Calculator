@@ -4,7 +4,6 @@
 #include "Or.h"
 #include "True.h"
 #include "False.h"
-#include "Common.h"
 
 boolptr_t Boolean::operator&&(boolptr_t b)
 {

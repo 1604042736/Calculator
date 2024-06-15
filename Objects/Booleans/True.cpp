@@ -1,6 +1,5 @@
 #include "True.h"
 #include "False.h"
-#include "Common.h"
 
 boolptr_t True::operator||(boolptr_t)
 {

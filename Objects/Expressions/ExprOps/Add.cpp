@@ -4,7 +4,7 @@
 #include "Integer.h"
 #include "Opposite.h"
 #include "Pow.h"
-#include "Common.h"
+
 #include "Derivative.h"
 
 std::string Add::toString()

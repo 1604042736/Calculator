@@ -9,7 +9,7 @@
 #include "Tuple.h"
 #include "Lambda.h"
 #include "ExprSymbol.h"
-#include "Common.h"
+
 #include "Ln.h"
 
 Log::Log(exprptr_t base, exprptr_t tnum) : base(base), tnum(tnum)

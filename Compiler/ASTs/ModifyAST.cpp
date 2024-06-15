@@ -8,6 +8,8 @@ objptr_t ModifyAST::exec(Runtime *runtime)
         runtime->flags[EXPR_FLAG] = 1;
     else if (this->mode == "bool")
         runtime->flags[BOOL_FLAG] = 1;
+    else if (this->mode == "set")
+        runtime->flags[SET_FLAG] = 1;
     else
         throw Error("未知的修改模式: " + this->mode, this->context);
 

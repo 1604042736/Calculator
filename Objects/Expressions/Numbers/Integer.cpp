@@ -5,7 +5,6 @@
 #include "Integer.h"
 #include "Rational.h"
 #include "Pow.h"
-#include "Common.h"
 
 Integer::Integer()
 {

@@ -1,5 +1,5 @@
 #include "Opposite.h"
-#include "Common.h"
+
 #include "Integer.h"
 
 std::string Opposite::toString()

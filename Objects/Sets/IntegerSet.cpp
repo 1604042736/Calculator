@@ -1,5 +1,6 @@
 #include "IntegerSet.h"
-#include "Common.h"
+#include "Number.h"
+#include "Integer.h"
 
 boolptr_t IntegerSet::contains(objptr_t b)
 {

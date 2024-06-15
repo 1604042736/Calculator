@@ -1,5 +1,5 @@
 #include "RationalSet.h"
-#include "Common.h"
+
 #include "Integer.h"
 #include "Rational.h"
 #include "Float.h"

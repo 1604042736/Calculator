@@ -12,6 +12,7 @@
 
 #define EXPR_FLAG 0
 #define BOOL_FLAG 1
+#define SET_FLAG 2
 
 typedef std::bitset<16> flags_t;
 typedef std::map<std::string, objptr_t> scope_t;

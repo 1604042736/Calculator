@@ -10,9 +10,10 @@ namespace Win
 {
 #include <windows.h>
 }
+using Win::SetConsoleOutputCP;
 #endif
 
-#include "Common.h"
+#include "Parser.h"
 #include "Error.h"
 
 void print_help()
@@ -29,7 +30,7 @@ void print_help()
 int main(int argc, char *argv[])
 {
 #ifdef _WIN32
-    Win::SetConsoleOutputCP(CP_UTF8);
+    SetConsoleOutputCP(CP_UTF8);
 #endif
 
     if (argc == 1)

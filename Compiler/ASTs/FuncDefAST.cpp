@@ -8,7 +8,7 @@
 #include "ExprDefFunction.h"
 #include "Lambda.h"
 #include "NameAST.h"
-#include "Common.h"
+
 #include "Error.h"
 
 std::map<std::string, deffuncsec_t> funcsec_map;

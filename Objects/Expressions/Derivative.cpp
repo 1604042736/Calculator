@@ -1,7 +1,7 @@
 #include <stdexcept>
 
 #include "Derivative.h"
-#include "Common.h"
+
 #include "ExprSymbol.h"
 #include "Mul.h"
 #include "Pow.h"

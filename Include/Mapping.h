@@ -47,3 +47,35 @@ public:
         return ret;
     }
 };
+
+template <class Base, class ArgBaseT, class FuncT, class SymbolT>
+class MArgFuncMapping : public Base
+{
+    static_assert(std::is_base_of<Mapping, Base>::value, "MArgFuncMapping的基类必须是Mapping及其派生类");
+    typedef std::shared_ptr<ArgBaseT> ArgT;
+    typedef std::vector<ArgT> ArgsT;
+
+public:
+    MArgFuncMapping() : Base("???")
+    {
+        ArgsT args(2, ArgT(new SymbolT("x")));
+        FuncT func(args);
+        this->name = func.name;
+        this->domain = func.domain;
+        this->range = func.range;
+    }
+
+    virtual objptr_t operator()(funcargs_t args)
+    {
+        ArgsT nargs;
+        for (size_t i = 0; i < args.size(); i++)
+        {
+            ArgBaseT *t = dynamic_cast<ArgBaseT *>(args[i].get());
+            if (t == nullptr)
+                throw std::runtime_error("[MArgFuncMapping(" + this->name + ")::operator()]超出定义域");
+            nargs.push_back(ArgT(dynamic_cast<ArgBaseT *>(t->copyThis())));
+        }
+        ArgT ret(new FuncT(nargs));
+        return ret;
+    }
+};

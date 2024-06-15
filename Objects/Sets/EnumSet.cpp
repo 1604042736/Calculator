@@ -3,7 +3,7 @@
 #include "EnumSet.h"
 #include "True.h"
 #include "EmptySet.h"
-#include "Common.h"
+#include "Integer.h"
 #include "Tuple.h"
 
 std::string EnumSet::toString()
@@ -52,12 +52,10 @@ prettystring_t EnumSet::toPrettyString()
 
 boolptr_t EnumSet::contains(objptr_t element)
 {
+    boolptr_t result(new False());
     for (size_t i = 0; i < this->elements.size(); i++)
-    {
-        if (isinstance<True>(this->elements[i] == element))
-            return to_boolean(true);
-    }
-    return Set::contains(element);
+        result = result->operator||(this->elements[i] == element);
+    return result;
 }
 
 EnumSet EnumSet::operator|(EnumSet b)
@@ -177,4 +175,32 @@ boolptr_t EnumSet::operator==(setptr_t b)
     if (isinstance<EnumSet>(b))
         return this->operator==(dynamic_cast<EnumSet *>(b.get()));
     return Set::operator==(b);
+}
+
+setptr_t EnumSet::_simplify()
+{
+    elements_t elements;
+    for (size_t i = 0; i < this->elements.size(); i++)
+    {
+        objptr_t t = ::simplify(this->elements[i]);
+        if (t != nullptr)
+            elements.push_back(t);
+    }
+    if (elements.size() == 0)
+        return setptr_t(new EmptySet());
+    return setptr_t(new EnumSet(elements));
+}
+
+objptr_t EnumSet::replace(objptr_t old, objptr_t _new)
+{
+    elements_t elements;
+    for (size_t i = 0; i < this->elements.size(); i++)
+    {
+        objptr_t t = this->elements[i]->replace(old, _new);
+        if (t != nullptr)
+            elements.push_back(t);
+    }
+    if (elements.size() == 0)
+        return setptr_t(new EmptySet());
+    return setptr_t(new EnumSet(elements));
 }

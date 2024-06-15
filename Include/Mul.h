@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ExprOp.h"
-#include "Common.h"
 
 /*乘法运算*/
 class Mul : public ExprOp

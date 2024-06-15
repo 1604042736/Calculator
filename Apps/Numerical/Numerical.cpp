@@ -10,7 +10,6 @@
 #include "Numerical.h"
 #include "Lexer.h"
 #include "Parser.h"
-#include "Common.h"
 
 Numerical::Numerical(QWidget *parent) : QWidget(parent), ui(new Ui_Numerical)
 {

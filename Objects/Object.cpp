@@ -5,8 +5,9 @@
 #include "Object.h"
 #include "Boolean.h"
 #include "True.h"
-#include "Common.h"
+#include "Expression.h"
 #include "UniversalSet.h"
+#include "DefinedFunction.h"
 
 /*转换成字符串*/
 std::string Object::toString()
@@ -61,13 +62,12 @@ boolptr_t Object::operator!()
 {
     throw std::runtime_error("Unsupported operator! for " + std::string(typeid(*this).name()));
 }
-boolptr_t operator!(objptr_t a) { return a->operator!(); }
 
 boolptr_t Object::operator==(objptr_t b) { return to_boolean(this == b.get()); }
 boolptr_t operator==(objptr_t a, objptr_t b) { return a->operator==(b); }
 
 boolptr_t Object::operator!=(objptr_t b) { return !this->operator==(b); }
-boolptr_t operator!=(objptr_t a, objptr_t b) { return a->operator==(b); }
+boolptr_t operator!=(objptr_t a, objptr_t b) { return a->operator!=(b); }
 
 boolptr_t Object::operator>(objptr_t b)
 {
@@ -161,7 +161,7 @@ void print(prettystring_t pstr)
 化简
 对于无法化简的对象不做任何操作
 */
-objptr_t simplify(objptr_t a)
+objptr_t _simplify(objptr_t a)
 {
     if (isinstance<Expression>(a))
         return dynamic_cast<Expression *>(a.get())->simplify();
@@ -169,5 +169,22 @@ objptr_t simplify(objptr_t a)
         return dynamic_cast<Boolean *>(a.get())->simplify();
     else if (isinstance<Set>(a))
         return dynamic_cast<Set *>(a.get())->simplify();
+    else if (isinstance<DefinedFunction>(a))
+        return dynamic_cast<DefinedFunction *>(a.get())->match();
     return a;
+}
+
+objptr_t simplify(objptr_t a)
+{
+    objptr_t result = _simplify(a);
+    objptr_t pre;
+    do
+    {
+        pre = result;
+        result = _simplify(result);
+        if (result == nullptr || pre == nullptr)
+            break;
+    } while (isinstance<True>(result != pre));
+
+    return result;
 }

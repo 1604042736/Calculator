@@ -32,5 +32,9 @@ public:
     virtual boolptr_t operator==(EnumSet *);
     virtual boolptr_t operator==(setptr_t);
 
+    virtual setptr_t _simplify();
+
+    virtual objptr_t replace(objptr_t, objptr_t);
+
     elements_t elements; // 集合元素
 };

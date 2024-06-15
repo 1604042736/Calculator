@@ -4,7 +4,7 @@
 #include "Interval.h"
 #include "Integer.h"
 #include "Infinity.h"
-#include "Common.h"
+
 #include "Sgn.h"
 
 Abs::Abs(exprptr_t arg) : SArgExprFunction("abs", arg)

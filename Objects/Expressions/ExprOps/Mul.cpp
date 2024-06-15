@@ -4,7 +4,7 @@
 #include "Integer.h"
 #include "Reciprocal.h"
 #include "Add.h"
-#include "Common.h"
+
 #include "Derivative.h"
 #include "ExprSymbol.h"
 

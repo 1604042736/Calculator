@@ -4,7 +4,7 @@
 #include <unistd.h>
 
 #include "ImportAST.h"
-#include "Common.h"
+#include "Parser.h"
 #include "Error.h"
 
 #ifdef _WIN32

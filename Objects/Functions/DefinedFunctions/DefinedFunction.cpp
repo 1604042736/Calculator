@@ -3,7 +3,6 @@
 #include "DefinedFunction.h"
 #include "ExprDefFunction.h"
 #include "Tuple.h"
-#include "Common.h"
 
 std::string DefinedFunction::toString()
 {
@@ -44,24 +43,35 @@ objptr_t DefinedFunction::operator()(funcargs_t args)
     funcargs_t n_args(this->args);
     for (size_t i = 0; i < (*sections)[0].args.size(); i++)
         n_args[i] = n_args[i]->replace((*sections)[0].args[i], args[i]);
+    DefinedFunction *df = dynamic_cast<DefinedFunction *>(this->copyThis());
+    df->args = n_args;
+    objptr_t t = df->match();
+    delete df;
+    if (t != nullptr)
+        return t;
+    if (isinstance<ExprDefFunction>(this))
+        return objptr_t(new ExprDefFunction(this->name, n_args, this->sections, this->domain, this->range));
+    return objptr_t(new DefinedFunction(this->name, n_args, this->sections, this->domain, this->range));
+}
+
+objptr_t DefinedFunction::match()
+{
     bool flag = true;
     for (size_t i = 0; i < this->sections->size(); i++)
     {
         boolptr_t contain;
-        if (n_args.size() == 1)
-            contain = (*this->sections)[i].domain->contains(n_args[0]);
+        if (this->args.size() == 1)
+            contain = (*this->sections)[i].domain->contains(this->args[0]);
         else
-            contain = (*this->sections)[i].domain->contains(Tuple(n_args));
+            contain = (*this->sections)[i].domain->contains(Tuple(this->args));
         if (isinstance<True>(contain))
-            return (*this->sections)[i](n_args);
+            return ((*this->sections)[i](this->args));
         if (!isinstance<False>(contain))
             flag = false;
     }
     if (flag)
         throw std::runtime_error("超出定义域");
-    if (isinstance<ExprDefFunction>(this))
-        return objptr_t(new ExprDefFunction(this->name, n_args, this->sections, this->domain, this->range));
-    return objptr_t(new DefinedFunction(this->name, n_args, this->sections, this->domain, this->range));
+    return nullptr;
 }
 
 objptr_t DefinedFunction::replace(objptr_t old, objptr_t _new)

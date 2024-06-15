@@ -1,6 +1,6 @@
 #include "Infinity.h"
 #include "Integer.h"
-#include "Common.h"
+
 #include "Mul.h"
 #include "Add.h"
 

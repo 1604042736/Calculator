@@ -1,7 +1,6 @@
 #include "PI.h"
 #include "Integer.h"
 #include "Rational.h"
-#include "Common.h"
 
 /*
 梅钦公式求pi

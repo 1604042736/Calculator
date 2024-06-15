@@ -6,7 +6,7 @@
 #include "Rational.h"
 #include "Pow.h"
 #include "Integer.h"
-#include "Common.h"
+
 #include "Infinity.h"
 
 Rational::Rational(Integer nume, Integer deno)

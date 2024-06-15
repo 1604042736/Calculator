@@ -10,7 +10,7 @@
 #include "Integer.h"
 #include "ExprMapping.h"
 #include "ExprSymbol.h"
-#include "Common.h"
+
 #include "Add.h"
 #include "Mul.h"
 
@@ -37,8 +37,8 @@ public:
 
     virtual exprptr_t matchSpecial();
 
-    Integer period;                                       // 最小正周期(不含pi)
-    std::vector<std::pair<exprptr_t, exprptr_t>> special; // 特殊值
+    Integer period;                                        // 最小正周期(不含pi)
+    std::vector<std::pair<exprptr_t, exprptr_t> > special; // 特殊值
 };
 
 template <typename FuncT>

@@ -2,6 +2,7 @@
 #include "Error.h"
 #include "ExprSymbol.h"
 #include "BoolSymbol.h"
+#include "SetSymbol.h"
 
 objptr_t SymDefAST::exec(Runtime *runtime)
 {
@@ -16,8 +17,16 @@ objptr_t SymDefAST::exec(Runtime *runtime)
         f = [](std::string name)
         { return objptr_t(new BoolSymbol(name)); };
     }
+    else if (runtime->flags.test(SET_FLAG))
+    {
+        f = [](std::string name)
+        { return objptr_t(new SetSymbol(name)); };
+    }
     else
-        throw Error("无法确定如何定义符号", this->context);
+    {
+        f = [](std::string name)
+        { return objptr_t(new Symbol(name)); };
+    }
     for (size_t i = 0; i < this->names.size(); i++)
         runtime->defName(this->names[i], f(this->names[i]));
     return nullptr;

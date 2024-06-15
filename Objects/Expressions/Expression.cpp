@@ -15,7 +15,7 @@
 #include "StrictGreaterThan.h"
 #include "LessThan.h"
 #include "StrictLessThan.h"
-#include "Common.h"
+
 #include "Derivative.h"
 #include "Equality.h"
 #include "ExprSymbol.h"

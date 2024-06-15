@@ -1,7 +1,6 @@
 #include <stdexcept>
 
 #include "ExprUndefFunction.h"
-#include "Common.h"
 
 exprptr_t ExprUndefFunction::diff(exprptr_t target)
 {

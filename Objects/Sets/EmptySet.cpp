@@ -11,3 +11,8 @@ boolptr_t EmptySet::includes(setptr_t)
 {
     return boolptr_t(new False());
 }
+
+boolptr_t EmptySet::operator==(setptr_t b)
+{
+    return to_boolean(isinstance<EmptySet>(b));
+}

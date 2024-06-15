@@ -78,3 +78,9 @@ prettystring_t normalize(prettystring_t);
 void print(prettystring_t);
 
 objptr_t simplify(objptr_t);
+
+template <typename T, typename T2>
+bool inline isinstance(std::shared_ptr<T2> a) { return dynamic_cast<T *>(a.get()) != nullptr; }
+
+template <typename T, typename T2>
+bool inline isinstance(T2 *a) { return dynamic_cast<T *>(a) != nullptr; }

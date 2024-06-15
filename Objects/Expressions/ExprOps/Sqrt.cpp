@@ -3,7 +3,6 @@
 #include "Sqrt.h"
 #include "Float.h"
 #include "False.h"
-#include "Common.h"
 
 Sqrt::Sqrt(exprptr_t arg) : Pow({arg, std::shared_ptr<Float>(new Float(0.5))})
 {

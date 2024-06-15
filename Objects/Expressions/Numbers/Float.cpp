@@ -5,7 +5,7 @@
 #include "Float.h"
 #include "Rational.h"
 #include "Pow.h"
-#include "Common.h"
+
 #include "Infinity.h"
 
 Float::Float(Integer significand, Integer exponent)

@@ -42,3 +42,9 @@ public:
     Lexer *lexer;
     Token token;
 };
+
+objptr_t exec(std::string, std::string, Runtime *runtime = nullptr, bool verbose = false);
+objptr_t exec(std::string, Runtime *runtime = nullptr, bool verbose = false, bool run_only = false);
+
+void shell(Runtime *, bool verbose = false);
+void shell(bool verbose = false);

@@ -10,7 +10,7 @@ class Integer;
 
 class EmptySet;
 /*集合*/
-class Set : public Object
+class Set : virtual public Object
 {
 public:
     virtual setptr_t operator&(setptr_t);

@@ -1,6 +1,5 @@
 #include "Or.h"
 #include "And.h"
-#include "Common.h"
 
 boolptr_t Or::operator||(Or b)
 {

@@ -1,7 +1,6 @@
 #include "E.h"
 #include "Integer.h"
 #include "Rational.h"
-#include "Common.h"
 
 exprptr_t E::eval(Integer keep)
 {

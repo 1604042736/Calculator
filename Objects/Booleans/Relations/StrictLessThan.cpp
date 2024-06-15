@@ -2,7 +2,6 @@
 #include "GreaterThan.h"
 #include "LessThan.h"
 #include "Equality.h"
-#include "Common.h"
 
 boolptr_t StrictLessThan::operator||(Equality b)
 {

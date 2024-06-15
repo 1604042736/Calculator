@@ -1,6 +1,6 @@
 #include "UnaryOpAST.h"
 #include "Error.h"
-#include "Common.h"
+
 #include "Opposite.h"
 #include "Not.h"
 

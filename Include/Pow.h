@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ExprOp.h"
-#include "Common.h"
 
 /*幂运算*/
 class Pow : public ExprOp

@@ -1,7 +1,6 @@
 #include <stdexcept>
 
 #include "Lg.h"
-#include "Common.h"
 
 objptr_t LgMapping::operator()(funcargs_t args)
 {

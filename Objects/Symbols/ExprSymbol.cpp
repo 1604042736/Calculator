@@ -4,7 +4,7 @@
 #include "Mul.h"
 #include "Integer.h"
 #include "Pow.h"
-#include "Common.h"
+
 #include "Derivative.h"
 #include "Number.h"
 

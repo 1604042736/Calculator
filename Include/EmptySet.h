@@ -15,4 +15,6 @@ public:
 
     virtual boolptr_t contains(objptr_t);
     virtual boolptr_t includes(setptr_t);
+
+    virtual boolptr_t operator==(setptr_t);
 };

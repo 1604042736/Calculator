@@ -2,7 +2,7 @@
 #include "Integer.h"
 #include "Mul.h"
 #include "Add.h"
-#include "Common.h"
+
 #include "Derivative.h"
 #include "Ln.h"
 #include "ExprSymbol.h"

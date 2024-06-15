@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "Parser.h"
 #include "NameAST.h"
 #include "NumAST.h"
@@ -16,6 +18,7 @@
 #include "FuncDefAST.h"
 #include "ScopeAST.h"
 #include "ImportAST.h"
+#include "Config.h"
 
 void Parser::match(TokenType cur, TokenType expect)
 {
@@ -514,4 +517,100 @@ astptr_t Parser::parse_enumset()
     }
     match(token.type, TK_RLARGE);
     return a;
+}
+
+objptr_t exec(std::string code, std::string filename, Runtime *runtime, bool verbose)
+{
+    Lexer lexer(code, filename);
+    Parser parser(&lexer);
+    astptr_t ast = parser.parse_start();
+    if (ast == nullptr)
+        return nullptr;
+    if (verbose)
+        ast->print();
+    objptr_t ret;
+    if (runtime == nullptr)
+    {
+        runtime = new Runtime;
+        ret = ast->exec(runtime);
+        delete runtime;
+    }
+    else
+        ret = ast->exec(runtime);
+    return ret;
+}
+
+objptr_t exec(std::string filename, Runtime *runtime, bool verbose, bool run_only)
+{
+    std::ifstream file(filename);
+    if (!file)
+        throw std::runtime_error("无法打开文件: " + std::string(filename.data()));
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    std::string code(buffer.str());
+    if (!run_only)
+        return exec(code, filename, runtime, verbose);
+    try
+    {
+        exec(code, filename, runtime, verbose);
+    }
+    catch (Error &e)
+    {
+        printf("%s:%d:%d 错误: %s\n",
+               e.context.filename.data(), e.context.line, e.context.column,
+               e.message.data());
+    }
+    return nullptr;
+}
+
+void shell(Runtime *runtime, bool verbose)
+{
+    printf("Calculator %d.%d.%d (%s) [%s v%s %s (%s)] on %s\n",
+           VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, COMPILE_TIME,
+           COMPILER_ID, COMPILER_VERSION, ADDRESS_MODEL,
+           SYSTEM_PROCESSOR, SYSTEM_NAME);
+    size_t in_count = 1, out_count = 1;
+    while (true)
+    {
+        printf("In [%d]: ", in_count++);
+        std::string code;
+        std::getline(std::cin, code);
+        while (true)
+        {
+            try
+            {
+                objptr_t obj = exec(code, "<input>", runtime, verbose);
+                if (obj != nullptr)
+                {
+                    objptr_t s = simplify(obj);
+                    if (s != nullptr)
+                    {
+                        printf("Out [%d]: \n", out_count++);
+                        print(s->toPrettyString());
+                    }
+                }
+            }
+            catch (TooFewTokenError &)
+            {
+                std::string more;
+                printf("More[%d]:", in_count - 1);
+                std::getline(std::cin, more);
+                code += "\n" + more;
+                continue;
+            }
+            catch (Error &e)
+            {
+                printf("%s:%lld:%lld 错误: %s\n",
+                       e.context.filename.data(), e.context.line, e.context.column,
+                       e.message.data());
+            }
+            break;
+        }
+    }
+}
+
+void shell(bool verbose)
+{
+    Runtime runtime;
+    shell(&runtime, verbose);
 }
