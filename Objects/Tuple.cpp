@@ -5,7 +5,11 @@ std::string Tuple::toString()
 {
     std::string result = "(";
     for (size_t i = 0; i < this->args.size(); i++)
-        result += this->args[i]->toString() + ", ";
+    {
+        result += this->args[i]->toString();
+        if (i != this->args.size() - 1)
+            result += ", ";
+    }
     result += ")";
     return result;
 }

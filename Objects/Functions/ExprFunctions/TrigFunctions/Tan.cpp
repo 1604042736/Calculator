@@ -5,7 +5,7 @@
 #include "Float.h"
 #include "Rational.h"
 
-Tan::Tan(exprptr_t arg) : TrigFunction("tan", arg, setptr_t(new RealSet()), setptr_t(new RealSet()))
+Tan::Tan(exprptr_t arg) : TrigFunction("tan", arg)
 {
     this->period = 1;
     exprptr_t pi(new PI());
@@ -35,6 +35,8 @@ Tan::Tan(exprptr_t arg) : TrigFunction("tan", arg, setptr_t(new RealSet()), setp
     this->special.push_back({_5 * pi / _12, _2 + sqrt_3});
     // tan(90°=pi/2)=oo
     this->special.push_back({pi / _2, inf});
+
+    this->mapping = mappingptr_t(new TanMapping());
 }
 
 exprptr_t Tan::_simplify()

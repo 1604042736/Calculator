@@ -7,7 +7,7 @@
 #include "True.h"
 #include "Expression.h"
 #include "UniversalSet.h"
-#include "DefinedFunction.h"
+#include "Function.h"
 
 /*转换成字符串*/
 std::string Object::toString()
@@ -169,8 +169,8 @@ objptr_t _simplify(objptr_t a)
         return dynamic_cast<Boolean *>(a.get())->simplify();
     else if (isinstance<Set>(a))
         return dynamic_cast<Set *>(a.get())->simplify();
-    else if (isinstance<DefinedFunction>(a))
-        return dynamic_cast<DefinedFunction *>(a.get())->match();
+    else if (isinstance<Function>(a))
+        return dynamic_cast<Function *>(a.get())->_simplify_();
     return a;
 }
 

@@ -39,6 +39,8 @@ Sin::Sin(exprptr_t arg) : TrigFunction("sin", arg)
     this->special.push_back({_5 * pi / _12, (sqrt_6 + sqrt_2) / _4});
     // sin(90°=pi/2)=1
     this->special.push_back({pi / _2, _1});
+
+    this->mapping=mappingptr_t(new SinMapping());
 }
 
 exprptr_t Sin::_simplify()

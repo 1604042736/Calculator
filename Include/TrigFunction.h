@@ -18,15 +18,10 @@
 typedef std::tuple<exprptr_t, Integer> redres_t;
 
 /*三角函数*/
-class TrigFunction : public SArgExprFunction
+class TrigFunction : public ExprFunction
 {
 public:
-    TrigFunction(std::string name,
-                 exprptr_t arg,
-                 setptr_t domain = setptr_t(new RealSet()),
-                 setptr_t range = setptr_t(new Interval(exprptr_t(new Integer(-1)),
-                                                        exprptr_t(new Integer(1)), false, false)))
-        : SArgExprFunction(name, arg, domain, range) {}
+    TrigFunction(std::string name, exprptr_t arg) : arg(arg), ExprFunction(name, {arg}) {}
 
     virtual std::string toString() { return this->name + "(" + this->arg->toString() + ")"; }
 
@@ -37,8 +32,15 @@ public:
 
     virtual exprptr_t matchSpecial();
 
-    Integer period;                                        // 最小正周期(不含pi)
-    std::vector<std::pair<exprptr_t, exprptr_t> > special; // 特殊值
+    virtual void setArgs(funcargs_t args)
+    {
+        this->arg = dynamic_cast<Expression *>(args[0].get())->copyToExprPtr();
+        ExprFunction::setArgs(args);
+    }
+
+    Integer period;                                       // 最小正周期(不含pi)
+    std::vector<std::pair<exprptr_t, exprptr_t>> special; // 特殊值
+    exprptr_t arg;
 };
 
 template <typename FuncT>

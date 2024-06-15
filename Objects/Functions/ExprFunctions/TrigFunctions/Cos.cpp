@@ -34,6 +34,8 @@ Cos::Cos(exprptr_t arg) : TrigFunction("cos", arg)
     this->special.push_back({_5 * pi / _12, (sqrt_6 - sqrt_2) / _4});
     // cos(90°=pi/2)=0
     this->special.push_back({pi / _2, _0});
+
+    this->mapping=mappingptr_t(new CosMapping());
 }
 
 exprptr_t Cos::_simplify()

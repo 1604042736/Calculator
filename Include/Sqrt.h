@@ -34,6 +34,7 @@ class SqrtMapping : public ExprMapping
 {
 public:
     SqrtMapping() : ExprMapping("sqrt",
+                                {},
                                 setptr_t(new Interval(exprptr_t(new Integer(0)),
                                                       exprptr_t(new Infinity()), false, true)),
                                 setptr_t(new Interval(exprptr_t(new Integer(0)),

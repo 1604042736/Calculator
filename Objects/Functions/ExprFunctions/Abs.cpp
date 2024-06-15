@@ -4,16 +4,11 @@
 #include "Interval.h"
 #include "Integer.h"
 #include "Infinity.h"
-
 #include "Sgn.h"
 
-Abs::Abs(exprptr_t arg) : SArgExprFunction("abs", arg)
+Abs::Abs(exprptr_t arg) : arg(arg), ExprFunction("abs", {arg})
 {
-    exprptr_t _0(new Integer(0));
-    exprptr_t inf(new Infinity());
-    this->range = setptr_t(new Interval(_0, inf, false, true));
-
-    this->arg = arg;
+    this->mapping = mappingptr_t(new AbsMapping());
 }
 
 std::string Abs::toString()

@@ -12,11 +12,13 @@ public:
     virtual exprptr_t copyToExprPtr() { return exprptr_t(new Ln(*this)); }
 
     virtual std::string toString() { return "ln(" + this->tnum->toString() + ")"; }
+
+    virtual exprptr_t diff(exprptr_t);
 };
 
 class LnMapping : public ExprMapping
 {
 public:
-    LnMapping() : ExprMapping("ln", setptr_t(new RealSet())) {}
+    LnMapping() : ExprMapping("ln", {}, setptr_t(new RealSet())) {}
     virtual objptr_t operator()(funcargs_t);
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TrigFunction.h"
+#include "ExprMapping.h"
 
 class Cos : public TrigFunction
 {
@@ -17,4 +18,22 @@ public:
     virtual setptr_t belongto();
 };
 
-typedef SArgFuncMapping<ExprMapping, Expression, Cos, ExprSymbol> CosMapping;
+class CosMapping : public ExprMapping
+{
+public:
+    CosMapping()
+        : ExprMapping("cos",
+                      {},
+                      setptr_t(new RealSet()),
+                      setptr_t(new Interval(exprptr_t(new Integer(-1)),
+                                            exprptr_t(new Integer(1)),
+                                            false,
+                                            false))) {}
+
+    objptr_t operator()(funcargs_t args)
+    {
+        if (args.size() != 1 || !isinstance<Expression>(args[0]))
+            throw std::runtime_error("[Cos]超出定义域");
+        return Cos(dynamic_cast<Expression *>(args[0].get())->copyToExprPtr()).simplify();
+    }
+};

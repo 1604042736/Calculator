@@ -2,48 +2,21 @@
 
 #include "Expression.h"
 #include "Function.h"
-#include "UniversalSet.h"
+#include "Mapping.h"
 
 /*可以作为表达式的函数*/
-class ExprFunction : virtual public Function, virtual public Expression
+class ExprFunction : public Function, public Expression
 {
 public:
-    ExprFunction(setptr_t domain = setptr_t(new UniversalSet()), setptr_t range = setptr_t(new RealSet()))
-        : Function(domain, range)
-    {
-        // 这里调用父类构造函数似乎没有更新domain和range(由SArgExprFunction和MArgExprFunction调用该构造函数)
-        this->domain = domain;
-        this->range = range;
-    }
-};
+    ExprFunction(std::string name, funcargs_t args) : Function(name, args) {}
+    ExprFunction(mappingptr_t mapping, funcargs_t args) : Function(mapping, args) {}
 
-class SArgExprFunction : public SArgFunction_T<ExprFunction, Expression>
-{
-public:
-    SArgExprFunction(std::string name,
-                     exprptr_t arg,
-                     setptr_t domain = setptr_t(new UniversalSet()),
-                     setptr_t range = setptr_t(new RealSet()))
-        : SArgFunction_T<ExprFunction, Expression>(name, arg, domain, range)
-    {
-        this->domain = domain;
-        this->range = range;
-    }
+    virtual Object *copyThis() { return new ExprFunction(*this); }
 
-    virtual exprptr_t diff(exprptr_t target)
-    {
-        return Expression::diff(target) * this->arg->diff(target);
-    }
-};
+    virtual boolptr_t operator==(exprptr_t);
+    virtual boolptr_t operator==(objptr_t b) { return Expression::operator==(b); }
 
-class MArgExprFunction : public MArgFunction_T<ExprFunction, Expression>
-{
-public:
-    MArgExprFunction(std::string name,
-                     std::vector<exprptr_t> args,
-                     setptr_t domain = setptr_t(new UniversalSet()),
-                     setptr_t range = setptr_t(new RealSet()))
-        : MArgFunction_T<ExprFunction, Expression>(name, args, domain, range)
-    {
-    }
+    virtual exprptr_t diff(exprptr_t);
+
+    virtual objptr_t _simplify_() { return Expression::simplify(); }
 };

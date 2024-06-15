@@ -16,9 +16,14 @@ public:
     virtual exprptr_t diff(exprptr_t);
     virtual boolptr_t operator==(exprptr_t);
 
-    virtual objptr_t replace(objptr_t, objptr_t);
-
     virtual exprptr_t _simplify();
+
+    virtual void setArgs(funcargs_t args)
+    {
+        this->base = dynamic_cast<Expression *>(args[0].get())->copyToExprPtr();
+        this->tnum = dynamic_cast<Expression *>(args[1].get())->copyToExprPtr();
+        ExprFunction::setArgs(args);
+    }
 
     exprptr_t base; // 底数
     exprptr_t tnum; // 真数

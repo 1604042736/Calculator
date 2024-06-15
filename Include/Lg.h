@@ -17,6 +17,6 @@ public:
 class LgMapping : public ExprMapping
 {
 public:
-    LgMapping() : ExprMapping("lg", setptr_t(new RealSet())) {}
+    LgMapping() : ExprMapping("lg", {}, setptr_t(new RealSet())) {}
     virtual objptr_t operator()(funcargs_t);
 };

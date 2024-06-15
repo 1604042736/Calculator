@@ -1,24 +1,22 @@
 #pragma once
 
 #include "ExprFunction.h"
-#include "EnumSet.h"
-#include "Integer.h"
 
-class Sgn : public SArgExprFunction
+class Sgn : public ExprFunction
 {
 public:
-    Sgn(exprptr_t arg) : SArgExprFunction("sgn", arg)
-    {
-        domain = setptr_t(new RealSet());
-        range = setptr_t(new EnumSet({
-            exprptr_t(new Integer(1)),
-            exprptr_t(new Integer(0)),
-            exprptr_t(new Integer(-1)),
-        }));
-    }
+    Sgn(exprptr_t arg) : arg(arg), ExprFunction("sgn", {arg}) {}
 
     virtual Object *copyThis() { return new Sgn(*this); }
     virtual exprptr_t copyToExprPtr() { return exprptr_t(new Sgn(*this)); }
 
     virtual exprptr_t _simplify();
+
+    virtual void setArgs(funcargs_t args)
+    {
+        this->arg = dynamic_cast<Expression *>(args[0].get())->copyToExprPtr();
+        ExprFunction::setArgs(args);
+    }
+
+    exprptr_t arg;
 };

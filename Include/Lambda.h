@@ -2,6 +2,7 @@
 
 #include "Function.h"
 #include "Symbol.h"
+#include "UniversalSet.h"
 
 // 匿名函数的参数一定是某种类型的符号
 typedef std::vector<symptr_t> lambdaargs_t;
@@ -22,6 +23,8 @@ public:
 
     virtual objptr_t operator()(funcargs_t);
 
-    funcbodyptr_t body; // 函数表达式, 注意和bodyession(代数表达式)区分
+    funcbodyptr_t body; // 函数表达式, 注意和expression(代数表达式)区分
     lambdaargs_t args;
+    setptr_t domain;
+    setptr_t range;
 };

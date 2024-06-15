@@ -15,4 +15,6 @@ public:
     virtual setptr_t _simplify();
 
     virtual std::string getOpStr() { return "∩"; }
+
+    virtual objptr_t replace(objptr_t, objptr_t);
 };

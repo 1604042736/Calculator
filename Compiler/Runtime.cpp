@@ -15,7 +15,6 @@
 #include "RationalSet.h"
 #include "IntegerSet.h"
 #include "EmptySet.h"
-#include "DefinedFunction.h"
 #include "Abs.h"
 #include "Ln.h"
 #include "Lg.h"
@@ -26,50 +25,81 @@
 #include "SetFunction.h"
 #include "SetSymbol.h"
 #include "SetMapping.h"
+#include "ExprFunction.h"
+#include "Tuple.h"
 
-class SimplifyFunction : public SArgFunction
+class Simplify : public Function
 {
 public:
-    SimplifyFunction(objptr_t arg)
-        : SArgFunction("simplify", arg) {}
+    Simplify(objptr_t);
 
-    virtual Object *copyThis() { return new SimplifyFunction(*this); }
+    virtual Object *copyThis() { return new Simplify(*this); }
 
-    virtual objptr_t simplify() { return ::simplify(arg); }
+    virtual objptr_t _simplify_() { return ::simplify(arg); }
+
+    objptr_t arg;
 };
-typedef SArgFuncMapping<Mapping, Object, SimplifyFunction, Symbol> SimplifyMapping;
-
-class EvalFunction : public MArgExprFunction
+class SimplifyMapping : public Mapping
 {
 public:
-    EvalFunction(std::vector<exprptr_t> args)
-        : MArgExprFunction("eval", args, RealSet().product(IntegerSet()), setptr_t(new RationalSet()))
-    {
-    }
+    SimplifyMapping() : Mapping("simplify") {}
 
-    virtual Object *copyThis() { return new EvalFunction(*this); }
+    virtual objptr_t operator()(funcargs_t args)
+    {
+        if (args.size() != 1)
+            throw std::runtime_error("[Simplify]超出定义域");
+        return objptr_t(new Simplify(args[0]));
+    }
+};
+
+Simplify::Simplify(objptr_t arg) : Function("simplify", {arg})
+{
+    this->mapping = mappingptr_t(new SimplifyMapping());
+}
+
+class Eval : public ExprFunction
+{
+public:
+    Eval(exprptr_t, Integer);
+
+    virtual Object *copyThis() { return new Eval(*this); }
 
     virtual exprptr_t _simplify()
     {
-        if (args.size() != 2 || !isinstance<Integer>(args[1]))
-            throw std::runtime_error("[EvalFunction]超出定义域");
-        return args[0]->eval(*dynamic_cast<Integer *>(args[1].get()));
+        return target->eval(keep);
     }
+    exprptr_t target;
+    Integer keep;
 };
-typedef MArgFuncMapping<ExprMapping, Expression, EvalFunction, ExprSymbol> EvalMapping;
-
-class PrintFunction : public MArgFunction
+class EvalMapping : public ExprMapping
 {
 public:
-    PrintFunction(std::vector<objptr_t> args)
-        : MArgFunction("print",
-                       args,
-                       setptr_t(new UniversalSet()),
-                       setptr_t((new EmptySet()))) {}
+    EvalMapping() : ExprMapping("eval", {}, RealSet().product(IntegerSet()), setptr_t(new RationalSet())) {}
 
-    virtual Object *copyThis() { return new PrintFunction(*this); }
+    virtual objptr_t operator()(funcargs_t args)
+    {
+        if (args.size() != 2 || !isinstance<Expression>(args[0]) || !isinstance<Integer>(args[1]))
+            throw std::runtime_error("[Eval]超出定义域");
+        exprptr_t target = dynamic_cast<Expression *>(args[0].get())->copyToExprPtr();
+        Integer keep = *dynamic_cast<Integer *>(args[1].get());
+        return objptr_t(new Eval(target, keep));
+    }
+};
 
-    virtual objptr_t simplify()
+Eval::Eval(exprptr_t target, Integer keep)
+    : target(target), keep(keep), ExprFunction("eval", {target, keep.copyToExprPtr()})
+{
+    this->mapping = mappingptr_t(new EvalMapping());
+}
+
+class Print : public Function
+{
+public:
+    Print(funcargs_t);
+
+    virtual Object *copyThis() { return new Print(*this); }
+
+    virtual objptr_t _simplify_()
     {
         for (size_t i = 0; i < args.size(); i++)
         {
@@ -77,67 +107,79 @@ public:
             if (arg == nullptr)
                 continue;
             print(arg->toPrettyString());
-            if (isinstance<DefinedFunction>(arg))
-            {
-                DefinedFunction *f = dynamic_cast<DefinedFunction *>(arg.get());
-                std::cout << "||\n";
-                std::cout << "\\/\n";
-                for (size_t j = 0; j < f->sections->size(); j++)
-                    print((*f->sections)[j].toPrettyString());
-            }
         }
         return nullptr;
     }
 };
-typedef MArgFuncMapping<Mapping, Object, PrintFunction, Symbol> PrintMapping;
-
-class DiffFunction : public MArgExprFunction
+class PrintMapping : public Mapping
 {
 public:
-    DiffFunction(std::vector<exprptr_t> args)
-        : MArgExprFunction("diff", args, setptr_t(new RealSet()), setptr_t(new RealSet())) {}
+    PrintMapping() : Mapping("print") {}
 
-    virtual Object *copyThis() { return new DiffFunction(*this); }
+    virtual objptr_t operator()(funcargs_t args) { return objptr_t(new Print(args)); }
+};
+
+Print::Print(funcargs_t args) : Function("print", args)
+{
+    this->mapping = mappingptr_t(new PrintMapping());
+}
+
+class Diff : public ExprFunction
+{
+public:
+    Diff(std::vector<exprptr_t>);
+
+    virtual Object *copyThis() { return new Diff(*this); }
 
     virtual exprptr_t _simplify()
     {
-        if (args.size() < 2)
-            throw std::runtime_error("参数不够");
-        std::vector<exprptr_t> expr_args;
+        exprptr_t result = args[0]->simplify()->diff(args[1]);
+        for (size_t i = 2; i < args.size(); i++)
+            result = result->diff(args[i]);
+        return result;
+    }
+
+    std::vector<exprptr_t> args;
+};
+class DiffMapping : public ExprMapping
+{
+public:
+    DiffMapping() : ExprMapping("diff", {}, setptr_t(new UniversalSet()), setptr_t(new RealSet())) {}
+
+    virtual objptr_t operator()(funcargs_t args)
+    {
+        if (args.size() <= 1)
+            throw std::runtime_error("[Diff]超出定义域");
+        std::vector<exprptr_t> e_args;
         for (size_t i = 0; i < args.size(); i++)
         {
             if (!isinstance<Expression>(args[i]))
-                throw std::runtime_error("超出定义域");
-            expr_args.push_back(dynamic_cast<Expression *>(args[i].get())->copyToExprPtr());
+                throw std::runtime_error("[Diff]超出定义域");
+            e_args.push_back(dynamic_cast<Expression *>(args[i].get())->copyToExprPtr());
         }
-        exprptr_t result = expr_args[0]->diff(expr_args[1]);
-        for (size_t i = 2; i < expr_args.size(); i++)
-            result = result->diff(expr_args[i]);
-        return result;
+        return objptr_t(new Diff(e_args));
     }
 };
-typedef MArgFuncMapping<ExprMapping, Expression, DiffFunction, ExprSymbol> DiffMapping;
 
-class FactorintFunction : public SArgExprFunction
+Diff::Diff(std::vector<exprptr_t> args)
+    : args(args), ExprFunction("diff", funcargs_t(args.begin(), args.end()))
+{
+    this->mapping = mappingptr_t(new DiffMapping());
+}
+
+class Factorint : public SetFunction
 {
 public:
-    FactorintFunction(exprptr_t arg)
-        : SArgExprFunction("factorint", arg, setptr_t(new RealSet()), setptr_t(new RealSet()))
-    {
-        this->domain = Interval(exprptr_t(new Integer(2)), exprptr_t(new Infinity()), false, true) & setptr_t(new IntegerSet());
-        this->range = this->domain;
-    }
+    Factorint(Integer);
 
-    virtual Object *copyThis() { return new FactorintFunction(*this); }
+    virtual Object *copyThis() { return new Factorint(*this); }
 
-    virtual exprptr_t simplify()
+    virtual setptr_t _simplify()
     {
-        if (!isinstance<Integer>(arg))
-            throw std::runtime_error("超出定义域");
-        Integer n = *dynamic_cast<Integer *>(arg.get());
+        Integer n = arg;
         if (n < 2)
-            throw std::runtime_error("超出定义域");
-        expropargs_t exprop_args;
+            throw std::runtime_error("[Factorint]超出定义域");
+        elements_t elements;
         for (Integer i = 2; n != 1; i = i + 1)
         {
             Integer t = 0;
@@ -147,20 +189,41 @@ public:
                 t = t + 1;
             }
             if (t == 1)
-                exprop_args.push_back(i.copyToExprPtr());
+                elements.push_back(i.copyToExprPtr());
             else if (t > 1)
-                exprop_args.push_back(exprptr_t(new Pow({i.copyToExprPtr(), t.copyToExprPtr()})));
+                elements.push_back(objptr_t(new Tuple({i.copyToExprPtr(), t.copyToExprPtr()})));
         }
-        return exprptr_t(new Mul(exprop_args));
+        return setptr_t(new EnumSet(elements));
     }
-};
-typedef SArgFuncMapping<ExprMapping, Expression, FactorintFunction, ExprSymbol> FactorintMapping;
 
-class ProductSetFunction : public MArgSetFunction
+    Integer arg;
+};
+class FactorintMapping : public SetMapping
 {
 public:
-    ProductSetFunction(std::vector<setptr_t> args)
-        : MArgSetFunction("productset", args) {}
+    FactorintMapping()
+        : SetMapping("factorint",
+                     {},
+                     Interval(exprptr_t(new Integer(2)), exprptr_t(new Infinity()), false, true) & setptr_t(new IntegerSet()),
+                     setptr_t(new EnumSet({setptr_t(new UniversalSet())}))) {}
+
+    virtual objptr_t operator()(funcargs_t args)
+    {
+        if (args.size() != 1 || !isinstance<Integer>(args[0]))
+            throw std::runtime_error("[Factorint]超出定义域");
+        return objptr_t(new Factorint(*dynamic_cast<Integer *>(args[0].get())));
+    }
+};
+
+Factorint::Factorint(Integer arg) : arg(arg), SetFunction("factorint", {arg.copyToExprPtr()})
+{
+    this->mapping = mappingptr_t(new FactorintMapping());
+}
+
+class ProductSetFunction : public SetFunction
+{
+public:
+    ProductSetFunction(std::vector<setptr_t>);
 
     virtual Object *copyThis() { return new ProductSetFunction(*this); }
 
@@ -168,20 +231,39 @@ public:
     {
         if (args.size() == 0)
             throw std::runtime_error("[ProductSetFunction]超出定义域");
-        setptr_t result = nullptr;
+        setptr_t result = args[0];
+        for (size_t i = 1; i < args.size(); i++)
+            result = result->product(args[i]);
+        return result;
+    }
+
+    std::vector<setptr_t> args;
+};
+class ProductSetMapping : public SetMapping
+{
+public:
+    ProductSetMapping() : SetMapping("productset") {}
+
+    virtual objptr_t operator()(funcargs_t args)
+    {
+        if (args.size() == 0)
+            throw std::runtime_error("[ProductSetFunction]超出定义域");
+        std::vector<setptr_t> set_args;
         for (size_t i = 0; i < args.size(); i++)
         {
             if (!isinstance<Set>(args[i]))
-                throw std::runtime_error("超出定义域");
-            if (result == nullptr)
-                result = dynamic_cast<Set *>(args[i].get())->copyToSetPtr();
-            else
-                result = result->product(dynamic_cast<Set *>(args[i].get())->copyToSetPtr());
+                throw std::runtime_error("[ProductSetFunction]超出定义域");
+            set_args.push_back(dynamic_cast<Set *>(args[i].get())->copyToSetPtr());
         }
-        return result;
+        return objptr_t(new ProductSetFunction(set_args));
     }
 };
-typedef MArgFuncMapping<SetMapping, Set, ProductSetFunction, SetSymbol> ProductSetMapping;
+
+ProductSetFunction::ProductSetFunction(std::vector<setptr_t> args)
+    : args(args), SetFunction("productset", funcargs_t(args.begin(), args.end()))
+{
+    this->mapping = mappingptr_t(new ProductSetMapping());
+}
 
 Runtime::Runtime()
 {

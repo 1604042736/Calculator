@@ -2,17 +2,18 @@
 
 #include "Set.h"
 #include "Function.h"
-#include "UniversalSet.h"
+#include "Mapping.h"
 
-class SetFunction : virtual public Function, virtual public Set
+class SetFunction : public Function, public Set
 {
 public:
-    SetFunction(setptr_t domain = setptr_t(new UniversalSet()), setptr_t range = setptr_t(new UniversalSet()))
-        : Function(domain, range)
-    {
-        this->domain = domain;
-        this->range = range;
-    }
+    SetFunction(std::string name, funcargs_t args) : Function(name, args) {}
+    SetFunction(mappingptr_t mapping, funcargs_t args) : Function(mapping, args) {}
+
+    virtual Object *copyThis() { return new SetFunction(*this); }
+
+    virtual boolptr_t operator==(setptr_t);
+    virtual boolptr_t operator==(objptr_t b) { return Set::operator==(b); }
+
+    virtual objptr_t _simplify_() { return Set::simplify(); }
 };
-typedef SArgFunction_T<SetFunction, Set> SArgSetFunction;
-typedef MArgFunction_T<SetFunction, Set> MArgSetFunction;

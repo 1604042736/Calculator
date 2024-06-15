@@ -1,7 +1,4 @@
-#include <stdexcept>
-
 #include "Sgn.h"
-
 #include "Integer.h"
 #include "True.h"
 

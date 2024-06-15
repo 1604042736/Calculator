@@ -16,3 +16,11 @@ setptr_t Union::_simplify()
         result = result->operator|(this->args[i]);
     return result;
 }
+
+objptr_t Union::replace(objptr_t old, objptr_t _new)
+{
+    setptr_t result = dynamic_cast<Set *>(this->args[0]->replace(old, _new).get())->copyToSetPtr();
+    for (size_t i = 1; i < this->args.size(); i++)
+        result = result->operator|(dynamic_cast<Set *>(this->args[i]->replace(old, _new).get())->copyToSetPtr());
+    return result;
+}
