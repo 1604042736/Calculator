@@ -40,7 +40,7 @@ Sin::Sin(exprptr_t arg) : TrigFunction("sin", arg)
     // sin(90°=pi/2)=1
     this->special.push_back({pi / _2, _1});
 
-    this->mapping=mappingptr_t(new SinMapping());
+    this->mapping = mappingptr_t(new SinMapping());
 }
 
 exprptr_t Sin::_simplify()
@@ -106,10 +106,9 @@ exprptr_t Sin::_simplify()
 
 exprptr_t Sin::diff(exprptr_t target)
 {
-    exprptr_t result = Expression::diff(target);
-    if (!isinstance<Derivative>(result) && isinstance<Symbol>(target))
-        result = exprptr_t(new Cos(this->arg)) * this->arg->diff(target);
-    return result;
+    if (!isinstance<Symbol>(target))
+        return ExprFunction::diff(target);
+    return exprptr_t(new Cos(this->arg)) * this->arg->diff(target);
 }
 
 setptr_t sin(Interval *b)

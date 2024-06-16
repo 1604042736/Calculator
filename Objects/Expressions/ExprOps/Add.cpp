@@ -4,7 +4,7 @@
 #include "Integer.h"
 #include "Opposite.h"
 #include "Pow.h"
-
+#include "Symbol.h"
 #include "Derivative.h"
 
 std::string Add::toString()
@@ -162,10 +162,9 @@ exprptr_t Add::pow(exprptr_t _1)
 
 exprptr_t Add::diff(exprptr_t target)
 {
-    exprptr_t result = Expression::diff(target);
-    if (!isinstance<Derivative>(result))
-        return result;
-    result = this->args[0]->diff(target);
+    if (!isinstance<Symbol>(target))
+        return Expression::diff(target);
+    exprptr_t result = this->args[0]->diff(target);
     for (size_t i = 1; i < this->args.size(); i++)
         result = result + this->args[i]->diff(target);
     return result;

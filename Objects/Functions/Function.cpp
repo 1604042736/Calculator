@@ -1,6 +1,7 @@
 #include "Function.h"
 #include "Mapping.h"
 #include "Tuple.h"
+#include "True.h"
 
 Function::Function(mappingptr_t mapping, funcargs_t args) : mapping(mapping), args(args)
 {
@@ -24,6 +25,8 @@ boolptr_t Function::operator==(objptr_t b)
 
 objptr_t Function::replace(objptr_t old, objptr_t _new)
 {
+    if (isinstance<True>(this->operator==(old)))
+        return _new;
     funcargs_t n_args;
     for (size_t i = 0; i < this->args.size(); i++)
         n_args.push_back(this->args[i]->replace(old, _new));

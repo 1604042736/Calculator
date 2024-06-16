@@ -93,10 +93,9 @@ exprptr_t Tan::_simplify()
 
 exprptr_t Tan::diff(exprptr_t target)
 {
-    exprptr_t result = Expression::diff(target);
-    if (!isinstance<Derivative>(result) && isinstance<Symbol>(target))
-        result = (exprptr_t(new Tan(this->arg))->pow(Integer(2)) + Integer(1)) * this->arg->diff(target);
-    return result;
+    if (!isinstance<Symbol>(target))
+        return ExprFunction::diff(target);
+    return (exprptr_t(new Tan(this->arg))->pow(Integer(2)) + Integer(1)) * this->arg->diff(target);
 }
 
 setptr_t tan(Interval *b)

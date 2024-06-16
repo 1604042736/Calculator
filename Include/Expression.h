@@ -84,6 +84,7 @@ public:
     virtual exprptr_t pow(Expression &, Integer);
     virtual exprptr_t pow(Expression &&, Integer);
     friend exprptr_t pow(exprptr_t, exprptr_t, Integer);
+    virtual exprptr_t rpow(exprptr_t);
     virtual exprptr_t reciprocal();
     virtual exprptr_t opposite();
     virtual exprptr_t abs();

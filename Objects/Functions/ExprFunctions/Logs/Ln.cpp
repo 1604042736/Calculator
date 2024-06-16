@@ -1,9 +1,13 @@
 #include <stdexcept>
 
 #include "Ln.h"
+#include "Derivative.h"
+#include "True.h"
 
 exprptr_t Ln::diff(exprptr_t target)
 {
+    if (!isinstance<Symbol>(target))
+        return ExprFunction::diff(target);
     return this->tnum->reciprocal() * this->tnum->diff(target);
 }
 

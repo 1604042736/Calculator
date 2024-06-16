@@ -5,6 +5,7 @@
 #include "Integer.h"
 #include "Infinity.h"
 #include "Sgn.h"
+#include "Derivative.h"
 
 Abs::Abs(exprptr_t arg) : arg(arg), ExprFunction("abs", {arg})
 {

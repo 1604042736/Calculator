@@ -1,4 +1,5 @@
 #include "ExprFunction.h"
+#include "Derivative.h"
 
 boolptr_t ExprFunction::operator==(exprptr_t b)
 {
@@ -20,7 +21,10 @@ exprptr_t ExprFunction::diff(exprptr_t target)
     if (this->args.size() > 1)
         throw std::runtime_error("暂不支持对多参函数求导");
     exprptr_t result = Expression::diff(target);
-    if (isinstance<Expression>(args[0]))
-        result = result * dynamic_cast<Expression *>(this->args[0].get())->diff(target);
+    if (isinstance<Derivative>(result) && isinstance<Expression>(args[0]))
+    {
+        exprptr_t e_arg = dynamic_cast<Expression *>(this->args[0].get())->copyToExprPtr();
+        result = Expression::diff(e_arg) * e_arg->diff(target);
+    }
     return result;
 }

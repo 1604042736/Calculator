@@ -11,6 +11,7 @@
 #include "ExprSymbol.h"
 #include "Ln.h"
 #include "Lg.h"
+#include "Derivative.h"
 
 Log::Log(exprptr_t base, exprptr_t tnum) : base(base), tnum(tnum), ExprFunction("log", {base, tnum})
 {
@@ -49,6 +50,13 @@ boolptr_t Log::operator==(exprptr_t b)
         return this->base == c->base && this->tnum == c->tnum;
     }
     return to_boolean(false);
+}
+
+exprptr_t Log::rpow(exprptr_t b)
+{
+    if (isinstance<True>(b == this->base))
+        return this->tnum;
+    return ExprFunction::rpow(b);
 }
 
 LogMapping::LogMapping()

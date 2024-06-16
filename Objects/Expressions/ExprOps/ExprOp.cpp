@@ -163,6 +163,8 @@ exprptr_t ExprOp::simplify()
 
 objptr_t ExprOp::replace(objptr_t old, objptr_t _new)
 {
+    if (isinstance<True>(this->operator==(old)))
+        return _new;
     ExprOp *o = dynamic_cast<ExprOp *>(this->copyThis());
     for (size_t i = 0; i < o->args.size(); i++)
         // 假设替换完后一定为Expression

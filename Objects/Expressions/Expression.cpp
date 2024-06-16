@@ -22,38 +22,62 @@
 
 exprptr_t Expression::operator*(exprptr_t b)
 {
-    if (isinstance<True>(this->operator==(b)))
-        return this->pow(Integer(2));
-    else if (!isinstance<Infinity>(this) && isinstance<Infinity>(b))
-        return b * *this;
-    else if (!isinstance<Add>(this) && isinstance<Add>(b))
-        return b * *this;
-    else if (!isinstance<Mul>(this) && isinstance<Mul>(b))
-        return b * *this;
-    else if (!isinstance<Pow>(this) && isinstance<Pow>(b))
-        return b * *this;
-    else if (isinstance<True>(*this == Integer(0)) || isinstance<True>(b == Integer(0)))
+    static std::vector<std::tuple<exprptr_t, exprptr_t>> on_cal; // 正在计算的数据
+
+    exprptr_t self = this->copyToExprPtr();
+
+    if (isinstance<True>(*this == Integer(0)) || isinstance<True>(b == Integer(0)))
         return exprptr_t(new Integer(0));
     else if (isinstance<True>(*this == Integer(1)))
         return b;
     else if (isinstance<True>(b == Integer(1)))
-        return this->copyToExprPtr();
-    return exprptr_t(new Mul({this->copyToExprPtr(), b}));
+        return self;
+    exprptr_t ret(new Mul({self, b}));
+    for (auto t : on_cal)
+    {
+        // 防止递归调用
+        if (!isinstance<False>(std::get<0>(t) == self) && !isinstance<False>(std::get<1>(t) == b))
+            return ret;
+        if (!isinstance<False>(std::get<1>(t) == self) && !isinstance<False>(std::get<0>(t) == b))
+            return ret;
+    }
+    on_cal.push_back(std::make_tuple(self, b));
+
+    exprptr_t t = b * self;
+    if (!isinstance<True>(ret == t))
+        ret = t;
+    on_cal.pop_back();
+    return ret;
 }
 
 exprptr_t Expression::operator+(exprptr_t b)
 {
+    static std::vector<std::tuple<exprptr_t, exprptr_t>> on_cal; // 正在计算的数据
+
+    exprptr_t self = this->copyToExprPtr();
+
     if (isinstance<True>(this->operator==(Integer(0))))
         return b;
     else if (isinstance<True>(b == Integer(0)))
-        return this->copyToExprPtr();
-    else if (!isinstance<Infinity>(this) && isinstance<Infinity>(b))
-        return b + *this;
-    else if (!isinstance<Add>(this) && isinstance<Add>(b))
-        return b + *this;
-    else if (!isinstance<Mul>(this) && isinstance<Mul>(b))
-        return b + *this;
-    return exprptr_t(new Add({this->copyToExprPtr(), b}));
+        return self;
+
+    exprptr_t ret(new Add({self, b}));
+    for (auto t : on_cal)
+    {
+        // 防止递归调用
+        if (!isinstance<False>(std::get<0>(t) == self) && !isinstance<False>(std::get<1>(t) == b))
+            return ret;
+        if (!isinstance<False>(std::get<1>(t) == self) && !isinstance<False>(std::get<0>(t) == b))
+            return ret;
+    }
+    on_cal.push_back(std::make_tuple(self, b));
+
+    exprptr_t t = b + self;
+    if (!isinstance<True>(ret == t))
+        ret = t;
+
+    on_cal.pop_back();
+    return ret;
 }
 
 exprptr_t Expression::operator+(Expression &_1) { return this->operator+(_1.copyToExprPtr()); }
@@ -119,20 +143,53 @@ boolptr_t operator!=(exprptr_t _1, Expression &_2) { return _1->operator!=(_2); 
 boolptr_t operator!=(exprptr_t _1, Expression &&_2) { return _1->operator!=(_2); }
 exprptr_t Expression::sqrt()
 {
+    static std::vector<std::tuple<exprptr_t>> on_cal; // 正在计算的数据
+
+    exprptr_t self = this->copyToExprPtr();
     exprptr_t _0_5(new Float("0.5"));
+    exprptr_t d(new Pow({self, _0_5}));
+
+    for (auto t : on_cal)
+    {
+        // 防止递归调用
+        if (!isinstance<False>(std::get<0>(t) == self))
+            return exprptr_t(new Sqrt(self));
+    }
+    on_cal.push_back(std::make_tuple(self));
+
     exprptr_t t = this->pow(_0_5);
-    Pow *p = dynamic_cast<Pow *>(t.get());
-    if (p != nullptr && isinstance<True>(p->args.back() == _0_5))
-        return std::shared_ptr<Sqrt>(new Sqrt(this->copyToExprPtr())); // 没有被化简掉就用默认的方式
+    if (isinstance<True>(t == d))
+        return exprptr_t(new Sqrt(self));
+
+    on_cal.pop_back();
     return t;
 }
 exprptr_t Expression::sqrt(Integer _1) { return this->pow(exprptr_t(new Float("0.5")), _1); }
 exprptr_t sqrt(exprptr_t _1, Integer _2) { return _1->sqrt(_2); }
-exprptr_t Expression::pow(exprptr_t _1)
+exprptr_t Expression::pow(exprptr_t b)
 {
-    if (isinstance<True>(_1 == Integer(1)))
-        return this->copyToExprPtr();
-    return std::shared_ptr<Pow>(new Pow({this->copyToExprPtr(), _1}));
+    static std::vector<std::tuple<exprptr_t, exprptr_t>> on_cal; // 正在计算的数据
+
+    exprptr_t self = this->copyToExprPtr();
+
+    if (isinstance<True>(b == Integer(1)))
+        return self;
+
+    exprptr_t ret(new Pow({self, b}));
+    for (auto t : on_cal)
+    {
+        // 防止递归调用
+        if (!isinstance<False>(std::get<0>(t) == self) && !isinstance<False>(std::get<1>(t) == b))
+            return ret;
+    }
+    on_cal.push_back(std::make_tuple(self, b));
+
+    exprptr_t t = b->rpow(self);
+    if (!isinstance<True>(ret == t))
+        ret = t;
+
+    on_cal.pop_back();
+    return ret;
 }
 exprptr_t Expression::pow(Expression &_1) { return this->pow(_1.copyToExprPtr()); }
 exprptr_t Expression::pow(Expression &&_1) { return this->pow(_1.copyToExprPtr()); }
@@ -147,29 +204,59 @@ exprptr_t Expression::pow(Expression &&_1, Integer _2)
     return this->pow(_1.copyToExprPtr(), _2);
 }
 exprptr_t pow(exprptr_t _1, exprptr_t _2, Integer _3) { return _1->pow(_2, _3); }
+
+exprptr_t Expression::rpow(exprptr_t b)
+{
+    if (isinstance<True>(this->operator==(Integer(1))))
+        return b;
+    return std::shared_ptr<Pow>(new Pow({b, this->copyToExprPtr()}));
+}
+
 exprptr_t Expression::reciprocal()
 {
+    static std::vector<std::tuple<exprptr_t>> on_cal; // 正在计算的数据
+
+    exprptr_t self = this->copyToExprPtr();
     exprptr_t __1(new Integer(-1));
+    exprptr_t d(new Pow({self, __1}));
+
+    for (auto t : on_cal)
+    {
+        // 防止递归调用
+        if (!isinstance<False>(std::get<0>(t) == self))
+            return exprptr_t(new Reciprocal(self));
+    }
+    on_cal.push_back(std::make_tuple(self));
+
     exprptr_t t = this->pow(__1);
-    Pow *p = dynamic_cast<Pow *>(t.get());
-    if (p != nullptr && isinstance<True>(p->getExp() == __1))
-        return std::shared_ptr<Reciprocal>(new Reciprocal(this->copyToExprPtr()));
+    if (isinstance<True>(d == t))
+        return exprptr_t(new Reciprocal(self));
+
+    on_cal.pop_back();
     return t;
 }
 
 exprptr_t Expression::opposite()
 {
+    static std::vector<std::tuple<exprptr_t>> on_cal; // 正在计算的数据
+
+    exprptr_t self = this->copyToExprPtr();
     exprptr_t __1(new Integer(-1));
-    exprptr_t t = this->operator*(__1);
-    Mul *m = dynamic_cast<Mul *>(t.get());
-    if (m != nullptr)
+    exprptr_t d(new Mul({self, __1}));
+
+    for (auto t : on_cal)
     {
-        for (size_t i = 0; i < m->args.size(); i++)
-        {
-            if (isinstance<True>(m->args[i] == __1))
-                return std::shared_ptr<Opposite>(new Opposite(this->copyToExprPtr()));
-        }
+        // 防止递归调用
+        if (!isinstance<False>(std::get<0>(t) == self))
+            return exprptr_t(new Opposite(self));
     }
+    on_cal.push_back(std::make_tuple(self));
+
+    exprptr_t t = this->operator*(__1);
+    if (isinstance<True>(d == t))
+        return exprptr_t(new Opposite(self));
+
+    on_cal.pop_back();
     return t;
 }
 
@@ -237,13 +324,15 @@ boolptr_t Expression::operator<(objptr_t b)
 /*求导*/
 exprptr_t Expression::diff(exprptr_t target)
 {
+    exprptr_t self = this->copyToExprPtr();
+
     if (isinstance<True>(this->replace(target,
                                        exprptr_t(new ExprSymbol("_")))
-                             ->operator==(this->copyToExprPtr()))) // 当成常量
+                             ->operator==(self))) // 当成常量
         return exprptr_t(new Integer(0));
     if (isinstance<True>(this->operator==(target)))
         return exprptr_t(new Integer(1));
-    return exprptr_t(new Derivative(this->copyToExprPtr(), {{target, Integer(1)}}));
+    return exprptr_t(new Derivative(self, {{target, Integer(1)}}));
 }
 
 /*获取系数*/

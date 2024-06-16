@@ -35,7 +35,7 @@ Cos::Cos(exprptr_t arg) : TrigFunction("cos", arg)
     // cos(90°=pi/2)=0
     this->special.push_back({pi / _2, _0});
 
-    this->mapping=mappingptr_t(new CosMapping());
+    this->mapping = mappingptr_t(new CosMapping());
 }
 
 exprptr_t Cos::_simplify()
@@ -98,10 +98,9 @@ exprptr_t Cos::_simplify()
 
 exprptr_t Cos::diff(exprptr_t target)
 {
-    exprptr_t result = Expression::diff(target);
-    if (!isinstance<Derivative>(result) && isinstance<Symbol>(target))
-        result = exprptr_t(new Sin(this->arg))->opposite() * this->arg->diff(target);
-    return result;
+    if (!isinstance<Symbol>(target))
+        return ExprFunction::diff(target);
+    return exprptr_t(new Sin(this->arg))->opposite() * this->arg->diff(target);
 }
 
 setptr_t cos(Interval *b)

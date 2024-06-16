@@ -552,7 +552,7 @@ objptr_t exec(std::string filename, Runtime *runtime, bool verbose, bool run_onl
         return exec(code, filename, runtime, verbose);
     try
     {
-        exec(code, filename, runtime, verbose);
+        simplify(exec(code, filename, runtime, verbose));
     }
     catch (Error &e)
     {

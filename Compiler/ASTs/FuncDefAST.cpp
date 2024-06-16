@@ -42,7 +42,7 @@ objptr_t FuncDefAST::exec(Runtime *runtime)
             mapping->sections.push_back(
                 Lambda(lambdaargs,
                        expr_domain.args[0],
-                       setptr_t(dynamic_cast<Set *>(expr_domain.args[1]->copyThis()))));
+                       dynamic_cast<Set *>(expr_domain.args[1].get())->simplify()));
         }
         else
             mapping->sections.push_back(Lambda(lambdaargs, expr_domain.args[0]));
