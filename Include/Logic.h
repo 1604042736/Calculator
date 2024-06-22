@@ -13,7 +13,7 @@ public:
     virtual std::string toString();
     virtual prettystring_t toPrettyString();
 
-    virtual bool operator==(boolptr_t);
+    virtual boolptr_t operator==(boolptr_t);
 
     virtual void sortArgs();
 

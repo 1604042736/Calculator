@@ -170,13 +170,15 @@ Diff::Diff(std::vector<exprptr_t> args)
 class Factorint : public SetFunction
 {
 public:
-    Factorint(Integer);
+    Factorint(exprptr_t);
 
     virtual Object *copyThis() { return new Factorint(*this); }
 
     virtual setptr_t _simplify()
     {
-        Integer n = arg;
+        if (!isinstance<Integer>(arg))
+            return SetFunction::_simplify();
+        Integer n = *dynamic_cast<Integer *>(arg.get());
         if (n < 2)
             throw std::runtime_error("[Factorint]超出定义域");
         elements_t elements;
@@ -196,7 +198,7 @@ public:
         return setptr_t(new EnumSet(elements));
     }
 
-    Integer arg;
+    exprptr_t arg;
 };
 class FactorintMapping : public SetMapping
 {
@@ -209,13 +211,13 @@ public:
 
     virtual objptr_t operator()(funcargs_t args)
     {
-        if (args.size() != 1 || !isinstance<Integer>(args[0]))
+        if (args.size() != 1 || isinstance<Expression>(args[0]) || isinstance<False>(IntegerSet().contains(args[0])))
             throw std::runtime_error("[Factorint]超出定义域");
-        return objptr_t(new Factorint(*dynamic_cast<Integer *>(args[0].get())));
+        return Factorint(dynamic_cast<Expression *>(args[0].get())->copyToExprPtr()).simplify();
     }
 };
 
-Factorint::Factorint(Integer arg) : arg(arg), SetFunction("factorint", {arg.copyToExprPtr()})
+Factorint::Factorint(exprptr_t arg) : arg(arg), SetFunction("factorint", {arg})
 {
     this->mapping = mappingptr_t(new FactorintMapping());
 }
@@ -255,7 +257,7 @@ public:
                 throw std::runtime_error("[ProductSetFunction]超出定义域");
             set_args.push_back(dynamic_cast<Set *>(args[i].get())->copyToSetPtr());
         }
-        return objptr_t(new ProductSetFunction(set_args));
+        return ProductSetFunction(set_args).simplify();
     }
 };
 

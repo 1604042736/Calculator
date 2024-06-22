@@ -1,4 +1,5 @@
 #include "Logic.h"
+#include "ExprOp.h"
 
 std::string Logic::toString()
 {
@@ -59,32 +60,17 @@ prettystring_t Logic::toPrettyString()
     return normalize(result);
 }
 
-bool Logic::operator==(boolptr_t b)
+boolptr_t Logic::operator==(boolptr_t b)
 {
     if (this->isBaseclass(b))
     {
         Logic *a = this;
         Logic *c = (Logic *)b.get();
-        logicargs_t aargs(a->args);
-        logicargs_t cargs(c->args);
-        if (aargs.size() != cargs.size())
-            return false;
-        for (size_t i = 0; i < aargs.size(); i++)
-        {
-            bool flag = false;
-            for (size_t j = 0; j < cargs.size(); j++)
-            {
-                if (aargs[i] == cargs[j])
-                {
-                    cargs.erase(cargs.begin() + j); // 防止重复查找
-                    flag = true;
-                    break;
-                }
-            }
-            if (!flag)
-                return false;
-        }
-        return true;
+        int t = eq_disorder_vec(a->args, c->args);
+        if (t == 1)
+            return to_boolean(true);
+        if (t == -1)
+            return to_boolean(false);
     }
     return Boolean::operator==(b);
 }

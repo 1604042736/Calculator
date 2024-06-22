@@ -11,7 +11,7 @@ boolptr_t True::operator!()
     return boolptr_t(new False());
 }
 
-bool True::operator==(boolptr_t b)
+boolptr_t True::operator==(boolptr_t b)
 {
-    return isinstance<True>(b);
+    return to_boolean(isinstance<True>(b));
 }

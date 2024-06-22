@@ -5,6 +5,7 @@
 #include "EmptySet.h"
 #include "Integer.h"
 #include "Tuple.h"
+#include "ExprOp.h"
 
 std::string EnumSet::toString()
 {
@@ -155,19 +156,12 @@ setptr_t EnumSet::productpow(Integer n)
 
 boolptr_t EnumSet::operator==(EnumSet *b)
 {
-    if (this->elements.size() != b->elements.size())
+    int t = eq_disorder_vec(this->elements, b->elements);
+    if (t == 1)
+        return to_boolean(true);
+    if (t == -1)
         return to_boolean(false);
-    boolptr_t result = boolptr_t(new True());
-    elements_t aelements(this->elements);
-    elements_t belements(b->elements);
-    for (size_t i = 0; i < aelements.size(); i++)
-    {
-        boolptr_t t = boolptr_t(new False());
-        for (size_t j = 0; j < belements.size(); j++)
-            t = t->operator||(aelements[i] == belements[j]);
-        result = result->operator&&(t);
-    }
-    return result;
+    return Set::operator==(b->copyToSetPtr());
 }
 
 boolptr_t EnumSet::operator==(setptr_t b)

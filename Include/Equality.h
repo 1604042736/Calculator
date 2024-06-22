@@ -8,7 +8,7 @@
 class Equality : public Relation
 {
 public:
-    Equality(exprptr_t lhs, exprptr_t rhs) : Relation(lhs, rhs) {}
+    Equality(objptr_t lhs, objptr_t rhs) : Relation(lhs, rhs) {}
 
     virtual Object *copyThis() { return new Equality(*this); }
 
@@ -18,6 +18,8 @@ public:
     virtual boolptr_t operator!();
 
     virtual boolptr_t _simplify();
+
+    virtual setptr_t belongto();
 
     virtual std::string getRelationStr() { return "="; }
 };

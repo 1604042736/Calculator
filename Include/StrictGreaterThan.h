@@ -7,7 +7,7 @@ class Equality;
 class StrictGreaterThan : public Relation
 {
 public:
-    StrictGreaterThan(exprptr_t lhs, exprptr_t rhs) : Relation(lhs, rhs) {}
+    StrictGreaterThan(objptr_t lhs, objptr_t rhs) : Relation(lhs, rhs) {}
 
     virtual Object *copyThis() { return new StrictGreaterThan(*this); }
 
@@ -15,7 +15,7 @@ public:
     virtual boolptr_t operator||(boolptr_t);
     virtual boolptr_t operator!();
 
-    virtual boolptr_t _simplify() { return this->lhs->simplify() > this->rhs->simplify(); }
+    virtual boolptr_t _simplify() { return ::simplify(this->lhs) > ::simplify(this->rhs); }
 
     virtual std::string getRelationStr() { return ">"; }
 };

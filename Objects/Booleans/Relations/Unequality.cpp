@@ -8,5 +8,5 @@ boolptr_t Unequality::operator!()
 
 boolptr_t Unequality::_simplify()
 {
-    return this->lhs->simplify() != this->rhs->simplify();
+    return ::simplify(this->lhs) != ::simplify(this->rhs);
 }

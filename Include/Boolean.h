@@ -24,18 +24,18 @@ public:
     virtual boolptr_t operator!();
     friend boolptr_t operator!(boolptr_t);
 
-    virtual bool operator==(boolptr_t);
-    virtual bool operator==(Boolean &);
-    virtual bool operator==(Boolean &&);
-    friend bool operator==(boolptr_t, boolptr_t);
-    friend bool operator==(boolptr_t, Boolean &);
-    friend bool operator==(boolptr_t, Boolean &&);
-    virtual bool operator!=(boolptr_t);
-    virtual bool operator!=(Boolean &);
-    virtual bool operator!=(Boolean &&);
-    friend bool operator!=(boolptr_t, boolptr_t);
-    friend bool operator!=(boolptr_t, Boolean &);
-    friend bool operator!=(boolptr_t, Boolean &&);
+    virtual boolptr_t operator==(boolptr_t);
+    virtual boolptr_t operator==(Boolean &);
+    virtual boolptr_t operator==(Boolean &&);
+    friend boolptr_t operator==(boolptr_t, boolptr_t);
+    friend boolptr_t operator==(boolptr_t, Boolean &);
+    friend boolptr_t operator==(boolptr_t, Boolean &&);
+    virtual boolptr_t operator!=(boolptr_t);
+    virtual boolptr_t operator!=(Boolean &);
+    virtual boolptr_t operator!=(Boolean &&);
+    friend boolptr_t operator!=(boolptr_t, boolptr_t);
+    friend boolptr_t operator!=(boolptr_t, Boolean &);
+    friend boolptr_t operator!=(boolptr_t, Boolean &&);
 
     virtual boolptr_t operator&&(objptr_t);
     virtual boolptr_t operator||(objptr_t);

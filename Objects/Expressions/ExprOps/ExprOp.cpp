@@ -23,27 +23,25 @@ boolptr_t ExprOp::operator==(exprptr_t b)
         ExprOp *c = (ExprOp *)b.get();
         a->sortArgs();
         c->sortArgs();
-        expropargs_t aargs(a->args);
-        expropargs_t cargs(c->args);
-        if (aargs.size() != cargs.size())
-            return to_boolean(false);
-        boolptr_t result = boolptr_t(new True());
         if (a->isCommutative())
         {
-            for (size_t i = 0; i < aargs.size(); i++)
-            {
-                boolptr_t t = boolptr_t(new False());
-                for (size_t j = 0; j < cargs.size(); j++)
-                    t = t->operator||(aargs[i] == cargs[j]);
-                result = result->operator&&(t);
-            }
+            int t = eq_disorder_vec(a->args, c->args);
+            if (t == 1)
+                return to_boolean(true);
+            if (t == -1)
+                return to_boolean(false);
         }
         else
         {
+            expropargs_t aargs(a->args);
+            expropargs_t cargs(c->args);
+            if (aargs.size() != cargs.size())
+                return to_boolean(false);
+            boolptr_t result = boolptr_t(new True());
             for (size_t i = 0; i < aargs.size(); i++)
                 result = result->operator&&(aargs[i] == cargs[i]);
+            return result;
         }
-        return result;
     }
     return Expression::operator==(b);
 }

@@ -1,8 +1,11 @@
+#include <iostream>
+
 #include "Boolean.h"
 #include "Not.h"
 #include "And.h"
 #include "Or.h"
 #include "True.h"
+#include "Equality.h"
 #include "False.h"
 
 boolptr_t Boolean::operator&&(boolptr_t b)
@@ -54,30 +57,30 @@ boolptr_t Boolean::operator!()
     return boolptr_t(new Not(this->copyToBoolPtr()));
 }
 
-bool Boolean::operator==(boolptr_t _1) { return this == _1.get(); }
-bool Boolean::operator==(Boolean &_1)
+boolptr_t Boolean::operator==(boolptr_t _1) { return boolptr_t(new Equality(this->copyToBoolPtr(), _1)); }
+boolptr_t Boolean::operator==(Boolean &_1)
 {
     return this->operator==(_1.copyToBoolPtr());
 }
-bool Boolean::operator==(Boolean &&_1)
+boolptr_t Boolean::operator==(Boolean &&_1)
 {
     return this->operator==(_1.copyToBoolPtr());
 }
-bool operator==(boolptr_t _1, boolptr_t _2) { return _1->operator==(_2); }
-bool operator==(boolptr_t _1, Boolean &_2) { return _1->operator==(_2); }
-bool operator==(boolptr_t _1, Boolean &&_2) { return _1->operator==(_2); }
-bool Boolean::operator!=(boolptr_t _1) { return !(this->operator==(_1)); }
-bool Boolean::operator!=(Boolean &_1)
+boolptr_t operator==(boolptr_t _1, boolptr_t _2) { return _1->operator==(_2); }
+boolptr_t operator==(boolptr_t _1, Boolean &_2) { return _1->operator==(_2); }
+boolptr_t operator==(boolptr_t _1, Boolean &&_2) { return _1->operator==(_2); }
+boolptr_t Boolean::operator!=(boolptr_t _1) { return !(this->operator==(_1)); }
+boolptr_t Boolean::operator!=(Boolean &_1)
 {
     return this->operator!=(_1.copyToBoolPtr());
 }
-bool Boolean::operator!=(Boolean &&_1)
+boolptr_t Boolean::operator!=(Boolean &&_1)
 {
     return this->operator!=(_1.copyToBoolPtr());
 }
-bool operator!=(boolptr_t _1, boolptr_t _2) { return _1->operator!=(_2); }
-bool operator!=(boolptr_t _1, Boolean &_2) { return _1->operator!=(_2); }
-bool operator!=(boolptr_t _1, Boolean &&_2) { return _1->operator!=(_2); }
+boolptr_t operator!=(boolptr_t _1, boolptr_t _2) { return _1->operator!=(_2); }
+boolptr_t operator!=(boolptr_t _1, Boolean &_2) { return _1->operator!=(_2); }
+boolptr_t operator!=(boolptr_t _1, Boolean &&_2) { return _1->operator!=(_2); }
 
 boolptr_t Boolean::operator&&(objptr_t b)
 {
@@ -101,7 +104,7 @@ boolptr_t Boolean::simplify()
     {
         pre = result;
         result = result->_simplify();
-    } while (result != pre);
+    } while (isinstance<True>(result != pre));
 
     return result;
 }

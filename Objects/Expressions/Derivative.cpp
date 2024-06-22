@@ -24,7 +24,7 @@ std::string Derivative::toString()
     for (size_t i = 0; i < this->targets.size(); i++)
     {
         n = n + this->targets[i].second;
-        exprptr_t t(new Mul({d->pow(this->targets[i].second), this->targets[i].first}));
+        exprptr_t t(new Mul({d, exprptr_t(new Pow({this->targets[i].first, this->targets[i].second.copyToExprPtr()}))}));
         if (deno == nullptr)
             deno = t;
         else
@@ -42,7 +42,7 @@ prettystring_t Derivative::toPrettyString()
     for (size_t i = 0; i < this->targets.size(); i++)
     {
         n = n + this->targets[i].second;
-        exprptr_t t(new Mul({d->pow(this->targets[i].second), this->targets[i].first}));
+        exprptr_t t(new Mul({d, exprptr_t(new Pow({this->targets[i].first, this->targets[i].second.copyToExprPtr()}))}));
         if (deno == nullptr)
             deno = t;
         else

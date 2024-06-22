@@ -36,9 +36,9 @@ exprptr_t Expression::operator*(exprptr_t b)
     for (auto t : on_cal)
     {
         // 防止递归调用
-        if (!isinstance<False>(std::get<0>(t) == self) && !isinstance<False>(std::get<1>(t) == b))
+        if (isinstance<True>(std::get<0>(t) == self) && isinstance<True>(std::get<1>(t) == b))
             return ret;
-        if (!isinstance<False>(std::get<1>(t) == self) && !isinstance<False>(std::get<0>(t) == b))
+        if (isinstance<True>(std::get<1>(t) == self) && isinstance<True>(std::get<0>(t) == b))
             return ret;
     }
     on_cal.push_back(std::make_tuple(self, b));
@@ -65,9 +65,9 @@ exprptr_t Expression::operator+(exprptr_t b)
     for (auto t : on_cal)
     {
         // 防止递归调用
-        if (!isinstance<False>(std::get<0>(t) == self) && !isinstance<False>(std::get<1>(t) == b))
+        if (isinstance<True>(std::get<0>(t) == self) && isinstance<True>(std::get<1>(t) == b))
             return ret;
-        if (!isinstance<False>(std::get<1>(t) == self) && !isinstance<False>(std::get<0>(t) == b))
+        if (isinstance<True>(std::get<1>(t) == self) && isinstance<True>(std::get<0>(t) == b))
             return ret;
     }
     on_cal.push_back(std::make_tuple(self, b));
@@ -152,7 +152,7 @@ exprptr_t Expression::sqrt()
     for (auto t : on_cal)
     {
         // 防止递归调用
-        if (!isinstance<False>(std::get<0>(t) == self))
+        if (isinstance<True>(std::get<0>(t) == self))
             return exprptr_t(new Sqrt(self));
     }
     on_cal.push_back(std::make_tuple(self));
@@ -179,7 +179,7 @@ exprptr_t Expression::pow(exprptr_t b)
     for (auto t : on_cal)
     {
         // 防止递归调用
-        if (!isinstance<False>(std::get<0>(t) == self) && !isinstance<False>(std::get<1>(t) == b))
+        if (isinstance<True>(std::get<0>(t) == self) && isinstance<True>(std::get<1>(t) == b))
             return ret;
     }
     on_cal.push_back(std::make_tuple(self, b));
@@ -223,7 +223,7 @@ exprptr_t Expression::reciprocal()
     for (auto t : on_cal)
     {
         // 防止递归调用
-        if (!isinstance<False>(std::get<0>(t) == self))
+        if (isinstance<True>(std::get<0>(t) == self))
             return exprptr_t(new Reciprocal(self));
     }
     on_cal.push_back(std::make_tuple(self));
@@ -247,7 +247,7 @@ exprptr_t Expression::opposite()
     for (auto t : on_cal)
     {
         // 防止递归调用
-        if (!isinstance<False>(std::get<0>(t) == self))
+        if (isinstance<True>(std::get<0>(t) == self))
             return exprptr_t(new Opposite(self));
     }
     on_cal.push_back(std::make_tuple(self));

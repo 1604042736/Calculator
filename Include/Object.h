@@ -84,3 +84,6 @@ bool inline isinstance(std::shared_ptr<T2> a) { return dynamic_cast<T *>(a.get()
 
 template <typename T, typename T2>
 bool inline isinstance(T2 *a) { return dynamic_cast<T *>(a) != nullptr; }
+
+template <typename T>
+std::shared_ptr<T> copyToPtr(Object *a) { return std::shared_ptr<T>(dynamic_cast<T *>(a->copyThis())); }

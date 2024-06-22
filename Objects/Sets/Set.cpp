@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <iostream>
 
 #include "Set.h"
 #include "Contains.h"
@@ -9,7 +10,7 @@
 #include "Intersection.h"
 #include "EnumSet.h"
 #include "Includes.h"
-
+#include "Equality.h"
 #include "ProductSet.h"
 #include "Tuple.h"
 #include "UniversalSet.h"
@@ -103,6 +104,11 @@ objptr_t Set::pow(objptr_t b)
     else if (isinstance<Set>(b))
         return this->pow(dynamic_cast<Set *>(b.get())->copyToSetPtr());
     return Object::pow(b);
+}
+
+boolptr_t Set::operator==(setptr_t b)
+{
+    return boolptr_t(new Equality(this->copyToSetPtr(), b));
 }
 
 boolptr_t Set::operator==(objptr_t b)

@@ -6,13 +6,13 @@
 class GreaterThan : public Relation
 {
 public:
-    GreaterThan(exprptr_t lhs, exprptr_t rhs) : Relation(lhs, rhs) {}
+    GreaterThan(objptr_t lhs, objptr_t rhs) : Relation(lhs, rhs) {}
 
     virtual Object *copyThis() { return new GreaterThan(*this); }
 
     virtual boolptr_t operator!();
 
-    virtual boolptr_t _simplify() { return this->lhs->simplify() >= this->rhs->simplify(); }
+    virtual boolptr_t _simplify() { return ::simplify(this->lhs) >= ::simplify(this->rhs); }
 
     virtual std::string getRelationStr() { return ">="; }
 };

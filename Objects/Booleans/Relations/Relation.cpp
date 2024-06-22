@@ -28,15 +28,14 @@ prettystring_t Relation::toPrettyString()
     return normalize(result);
 }
 
-bool Relation::operator==(boolptr_t b)
+boolptr_t Relation::operator==(boolptr_t b)
 {
     if (this->isBaseclass(b))
     {
         Relation *x = this;
         Relation *y = (Relation *)b.get();
-        if (x->lhs == y->lhs && x->rhs == y->rhs)
-            return true;
-        return false;
+        if (isinstance<True>(x->lhs == y->lhs) && isinstance<True>(x->rhs == y->rhs))
+            return to_boolean(true);
     }
     return Boolean::operator==(b);
 }

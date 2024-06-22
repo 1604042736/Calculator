@@ -2,6 +2,11 @@
 #include "Unequality.h"
 #include "GreaterThan.h"
 #include "LessThan.h"
+#include "EnumSet.h"
+#include "Tuple.h"
+#include "True.h"
+#include "False.h"
+#include "EmptySet.h"
 
 boolptr_t Equality::operator||(StrictGreaterThan b)
 {
@@ -33,5 +38,20 @@ boolptr_t Equality::operator!()
 
 boolptr_t Equality::_simplify()
 {
-    return this->lhs->simplify() == this->rhs->simplify();
+    return ::simplify(this->lhs) == ::simplify(this->rhs);
+}
+
+setptr_t Equality::belongto()
+{
+    setptr_t a = this->lhs->belongto();
+    setptr_t b = this->rhs->belongto();
+    if (isinstance<True>(a->operator==(b))) // T,T
+        return setptr_t(new EnumSet({objptr_t(new Tuple({objptr_t(new True()),
+                                                         objptr_t(new True())}))}));
+    else if (isinstance<EmptySet>(a->operator&(b))) // F,F
+        return setptr_t(new EnumSet({objptr_t(new Tuple({objptr_t(new False()),
+                                                         objptr_t(new False())}))}));
+    else // F,T
+        return setptr_t(new EnumSet({objptr_t(new Tuple({objptr_t(new False()),
+                                                         objptr_t(new True())}))}));
 }

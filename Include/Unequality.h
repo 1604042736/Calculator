@@ -6,7 +6,7 @@
 class Unequality : public Relation
 {
 public:
-    Unequality(exprptr_t lhs, exprptr_t rhs) : Relation(lhs, rhs) {}
+    Unequality(objptr_t lhs, objptr_t rhs) : Relation(lhs, rhs) {}
 
     virtual Object *copyThis() { return new Unequality(*this); }
 

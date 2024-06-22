@@ -10,7 +10,7 @@ public:
     virtual boolptr_t operator&&(boolptr_t);
     virtual boolptr_t operator!();
 
-    virtual bool operator==(boolptr_t);
+    virtual boolptr_t operator==(boolptr_t);
 
     virtual std::string toString() { return "False"; }
 };

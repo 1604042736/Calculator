@@ -5,6 +5,8 @@
 
 #include "Object.h"
 #include "Expression.h"
+#include "True.h"
+#include "False.h"
 
 // 参数类型
 typedef std::vector<exprptr_t> expropargs_t;
@@ -38,3 +40,35 @@ public:
 
     expropargs_t args; // 参数
 };
+
+/*
+无序vector判等
+全部相同返回1
+全部不同或长度不同返回-1
+否则返回0
+*/
+template <typename T>
+int eq_disorder_vec(std::vector<T> a, std::vector<T> b)
+{
+    if (a.size() != b.size())
+        return -1;
+    bool all_false = true;
+    for (size_t i = 0; i < a.size(); i++)
+    {
+        for (size_t j = 0; j < b.size(); j++)
+        {
+            if (!isinstance<False>(a[i] == b[j]))
+                all_false = false;
+            if (isinstance<True>(a[i] == b[j]))
+            {
+                b.erase(b.begin() + j);
+                break;
+            }
+        }
+    }
+    if (all_false)
+        return -1;
+    if (b.size() == 0)
+        return 1;
+    return 0;
+}
