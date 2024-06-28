@@ -69,7 +69,7 @@ boolptr_t Object::operator!()
     throw std::runtime_error("Unsupported operator! for " + std::string(typeid(*this).name()));
 }
 
-boolptr_t Object::operator==(objptr_t b) { return boolptr_t(new Equality(copyToPtr<Object>(this), b)); }
+boolptr_t Object::operator==(objptr_t b) { return boolptr_t(new Equality(to_ptr<Object>(this), b)); }
 boolptr_t operator==(objptr_t a, objptr_t b) { return a->operator==(b); }
 
 boolptr_t Object::operator!=(objptr_t b) { return !this->operator==(b); }
@@ -77,7 +77,7 @@ boolptr_t operator!=(objptr_t a, objptr_t b) { return a->operator!=(b); }
 
 boolptr_t Object::operator>(objptr_t b)
 {
-    return boolptr_t(new StrictGreaterThan(copyToPtr<Object>(this), b));
+    return boolptr_t(new StrictGreaterThan(to_ptr<Object>(this), b));
 }
 boolptr_t operator>(objptr_t a, objptr_t b) { return a->operator>(b); }
 
@@ -86,7 +86,7 @@ boolptr_t operator>=(objptr_t a, objptr_t b) { return a->operator>=(b); }
 
 boolptr_t Object::operator<(objptr_t b)
 {
-    return boolptr_t(new StrictLessThan(copyToPtr<Object>(this), b));
+    return boolptr_t(new StrictLessThan(to_ptr<Object>(this), b));
 }
 boolptr_t operator<(objptr_t a, objptr_t b) { return a->operator<(b); }
 
