@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Set.h"
+#include "SetSymbol.h"
 
 /*空集*/
-class EmptySet : public Set
+class EmptySet : public SetSymbol
 {
 public:
+    EmptySet() : SetSymbol("∅") {}
     virtual Object *copyThis() { return new EmptySet(); }
-
-    virtual std::string toString() { return "∅"; }
 
     virtual setptr_t operator&(setptr_t) { return setptr_t(new EmptySet()); }
     virtual setptr_t operator|(setptr_t b) { return b; }

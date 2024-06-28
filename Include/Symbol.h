@@ -6,7 +6,7 @@
 class Symbol : virtual public Object
 {
 public:
-    Symbol(std::string name) : name(name) {}
+    Symbol(std::string name);
 
     virtual Object *copyThis() { return new Symbol(*this); }
 
@@ -16,3 +16,5 @@ public:
 };
 
 typedef std::shared_ptr<Symbol> symptr_t;
+
+extern std::vector<std::string> names;

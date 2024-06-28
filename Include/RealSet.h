@@ -4,14 +4,15 @@
 #include "IntegerSet.h"
 #include "RationalSet.h"
 #include "True.h"
+#include "SetSymbol.h"
 
 /*实数集*/
-class RealSet : public Set
+class RealSet : public SetSymbol
 {
 public:
-    virtual Object *copyThis() { return new RealSet(); }
+    RealSet() : SetSymbol("R") {}
 
-    virtual std::string toString() { return "R"; }
+    virtual Object *copyThis() { return new RealSet(); }
 
     virtual boolptr_t contains(objptr_t);
     virtual boolptr_t includes(setptr_t);

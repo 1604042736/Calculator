@@ -8,12 +8,8 @@
 #include "Derivative.h"
 #include "Number.h"
 
-std::vector<std::string> names = {"pi", "e"}; // 已经创建过的名字
-
 ExprSymbol::ExprSymbol(std::string name, setptr_t range) : range(range), Symbol(name)
 {
-    if (std::find(names.begin(), names.end(), name) == names.end())
-        names.push_back(name);
 }
 
 exprptr_t ExprSymbol::operator+(exprptr_t _1)

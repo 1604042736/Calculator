@@ -9,4 +9,6 @@ public:
     SetSymbol(std::string name) : Symbol(name) {}
 
     virtual Object *copyThis() { return new SetSymbol(*this); }
+
+    virtual boolptr_t operator==(setptr_t);
 };

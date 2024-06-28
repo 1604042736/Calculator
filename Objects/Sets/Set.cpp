@@ -17,6 +17,8 @@
 
 setptr_t Set::operator|(setptr_t b)
 {
+    if (isinstance<True>(this->operator==(b)))
+        return b;
     if (isinstance<True>(this->contains(b)))
         return setptr_t(dynamic_cast<Set *>(this->copyThis()));
     if (isinstance<True>(b->contains(setptr_t(dynamic_cast<Set *>(this->copyThis())))))
@@ -32,6 +34,8 @@ objptr_t Set::operator|(objptr_t b)
 
 setptr_t Set::operator&(setptr_t b)
 {
+    if (isinstance<True>(this->operator==(b)))
+        return b;
     if (isinstance<True>(this->contains(b)))
         return b;
     if (isinstance<True>(b->contains(this->copyToSetPtr())))
